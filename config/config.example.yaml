@@ -1,0 +1,9 @@
+server:
+  SECRET: "6568135b96cd0a3d6adcae0a475f0da473e8e2bee0d800b2ba5010186b37d950"
+  PORT: "8080"
+db:
+  DRIVER: "mysql"
+  DATABASE: "hospital"
+  USERNAME: "admin"
+  PASSWORD: ""
+  HOST: "localhost"
