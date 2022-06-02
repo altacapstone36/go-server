@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  db:
+    image: mysql
+    restart: always
+    volumes:
+      - './test_db/:/docket-entrypoint-initdb.d'
+    environment:
+      MYSQL_ROOT_PASSWORD: "animelovers"
+      MYSQL_DATABASE: "hospital"
+    ports: 
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysql", "-u", "root",  "-panimelovers", "-e", "show schemas"]
+      interval: 10s 
+  api:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy

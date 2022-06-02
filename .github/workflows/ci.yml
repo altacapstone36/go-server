@@ -1,0 +1,25 @@
+name: Code Integration
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.18
+
+      - name: Configure
+        run: cp ./config/config.example.yaml ./config/config.yaml
+
+      - name: Testing
+        run: go test -v ./...
+
+      - name: Building
+        run: go build main.go
