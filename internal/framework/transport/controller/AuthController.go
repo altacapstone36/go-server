@@ -5,7 +5,6 @@ import (
 	"go-hospital-server/internal/core/entity/request"
 	"go-hospital-server/internal/core/entity/response"
 	"go-hospital-server/internal/core/service"
-	"go-hospital-server/internal/framework/transport/middleware"
 	"go-hospital-server/internal/utils/errors"
 	"net/http"
 
@@ -43,14 +42,15 @@ func (acon AuthController) Login(c echo.Context) error {
 			Error: err.Error(),
 		})
 	}
-	jwt, err := middleware.CreateToken(int(res.ID), res.Level.Name)
+
+	jwt, err := acon.srv.CreateToken(res.ID, res.Level)
 	if err != nil {
 		return c.JSON(http.StatusExpectationFailed, response.Error{
 			Message: "Failed to Create Authentication Token",
 			Error: err.Error(),
 		})
 	}
-
+	
 	return c.JSON(http.StatusOK, response.MessageDataJWT{
 		Message: "User Logged In",
 		Data: res,
@@ -75,15 +75,42 @@ func (acon AuthController) RefreshToken(c echo.Context) error {
 	token, err := acon.srv.RefreshToken(rtoken)
 	
 	if err != nil {
+		return c.JSON(http.StatusExpectationFailed, response.Error{
+			Message: "Failed to Generate New Token",
+			Error: err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, response.MessageData{
+		Message: "New Token Generated",
+		Data: token,
+	})
+}
+
+// CreateResource godoc
+// @Summary Refresh Token
+// @Description Route Path for Get New Access Token
+// @Tags Authorization
+// @Accept json
+// @Produce json
+// @Param body  body  models.Token{}  true "send request access_token, refresh_token"
+// @Success 200 {object} models.Token{} success
+// @Failure 417 {object} response.Error{} error
+// @Failure 500 {object} response.Error{} error
+// @Router /login [post]
+func (acon AuthController) Logout(c echo.Context) error {
+	rtoken := models.Token{}
+	c.Bind(&rtoken)
+	err := acon.srv.Logout(rtoken)
+	
+	if err != nil {
 		return c.JSON(http.StatusExpectationFailed, echo.Map{
-			"message": "Failed to Refresh Token",
+			"message": "Failed to Revoke Token",
 			"error": err.Error(),
 		})
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{
-		"message": "Token Refreshed",
-		"jwt": token,
+		"message": "User Logged Out",
 	})
 }
-

@@ -33,7 +33,7 @@ func main() {
 	config.LoadConfig()
 
 	db, mongodb := database.InitDatabase()
-	repo := repository.NewRepository(db)
+	repo := repository.NewRepository(db, mongodb)
 	serv := service.NewService(repo)
 	ctrl := controller.NewController(serv)
 	logger.NewLogger(mongodb)
@@ -42,7 +42,7 @@ func main() {
 	e.GET("/*", echoSwagger.WrapHandler)
 
 	api := e.Group("/api")
-	routes.NewRoutes(api, ctrl, middleware.JWT())
+	routes.NewRoutes(api, ctrl, middleware.JWT)
 
 	middleware.Logging(e)
 

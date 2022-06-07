@@ -1,13 +1,14 @@
 package response
 
-import m "go-hospital-server/internal/core/entity/models"
-
 type (
 	User struct {
 		ID uint `json:"id"`
 		Email string `json:"email"`
-		Name string `json:"name"`
-		Level m.Level `json:"level"`
+		FullName string `json:"full_name"`
+		Password string `json:"-"`
+		Gender string `json:"gender"`
+		Level string `json:"roles"`
+		Facility string `json:"facility"`
 		Status int `json:"status"`
 	}
 )

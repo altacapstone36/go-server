@@ -11,7 +11,7 @@ import (
 
 func Logging(e *echo.Echo) {
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format: `${status} ${method} ${host}${path} ${latency_human}`,
+		Format: `[${time_rfc3339}] ${status} ${method} ${host}${path} ${latency_human}` + "\n",
 		Output: &logger.LogDriver,
 	}))
 	e.Logger.SetLevel(log.DEBUG)
