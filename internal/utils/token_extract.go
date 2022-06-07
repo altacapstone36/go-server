@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"go-hospital-server/internal/utils/config"
 	"strings"
 
 	"github.com/golang-jwt/jwt"
@@ -20,7 +21,7 @@ func ExtractToken(tkn string) (token interface{}, err error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", t.Header["alg"])
 		}
-		return SERVER_SECRET, nil
+		return config.SERVER_SECRET, nil
 	})
 	if err != nil {
 		return nil, err

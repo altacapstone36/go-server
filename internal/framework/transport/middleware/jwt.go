@@ -3,6 +3,7 @@ package middleware
 import (
 	"go-hospital-server/internal/core/entity/models"
 	"go-hospital-server/internal/utils"
+	"go-hospital-server/internal/utils/config"
 	"go-hospital-server/internal/utils/errors"
 	"net/http"
 	"time"
@@ -14,7 +15,7 @@ import (
 
 func JWT() echo.MiddlewareFunc {
 	return middleware.JWTWithConfig(middleware.JWTConfig{
-		SigningKey: utils.SERVER_SECRET,
+		SigningKey: config.SERVER_SECRET,
 	})
 }
 
@@ -78,7 +79,7 @@ func CreateToken(id int, level string) (t models.Token, err error) {
 	claims["iat"] = time.Now().Unix()
 	claims["nbf"] = time.Now().Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	t.AccessToken, err = token.SignedString(utils.SERVER_SECRET)
+	t.AccessToken, err = token.SignedString(config.SERVER_SECRET)
 
 	rexpTime := time.Now().Add(time.Hour * 24).Unix()
 	rclaims := jwt.MapClaims{}
@@ -86,7 +87,7 @@ func CreateToken(id int, level string) (t models.Token, err error) {
 	rclaims["iat"] = time.Now().Unix()
 	rclaims["nbf"] = time.Now().Unix()
 	rtoken := jwt.NewWithClaims(jwt.SigningMethodHS256, rclaims)
-	t.RefreshToken, err = rtoken.SignedString(utils.SERVER_SECRET)
+	t.RefreshToken, err = rtoken.SignedString(config.SERVER_SECRET)
 	return
 }
 

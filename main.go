@@ -7,7 +7,8 @@ import (
 	"go-hospital-server/internal/framework/routes"
 	"go-hospital-server/internal/framework/transport/controller"
 	"go-hospital-server/internal/framework/transport/middleware"
-	"go-hospital-server/internal/utils"
+	"go-hospital-server/internal/utils/config"
+	"go-hospital-server/internal/utils/logger"
 
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
@@ -29,12 +30,13 @@ import (
 // @schemes http
 func main() {
 
-	utils.LoadConfig()
+	config.LoadConfig()
 
-	db := database.InitDatabase()
+	db, mongodb := database.InitDatabase()
 	repo := repository.NewRepository(db)
 	serv := service.NewService(repo)
 	ctrl := controller.NewController(serv)
+	logger.NewLogger(mongodb)
 
 	e := echo.New()
 	e.GET("/*", echoSwagger.WrapHandler)
@@ -44,5 +46,5 @@ func main() {
 
 	middleware.Logging(e)
 
-	e.Start(":" + utils.SERVER_PORT)
+	e.Start(":" + config.SERVER_PORT)
 }
