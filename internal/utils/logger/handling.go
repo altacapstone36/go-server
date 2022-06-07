@@ -1,26 +1,50 @@
 package logger
 
 import (
-	"fmt"
+	"context"
 	"log"
-	"os"
+	"time"
+
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-type Logging struct {}
-var Logger = log.New(Logging{}, "", log.Lmicroseconds|log.Lshortfile)
+type (
+	mongoWriter struct {
+    client *mongo.Database
+	}
+	
+	logStruct struct {
+		Timestamp int64 `json:"timestamp"`
+		Logs string `json:"logs"`
+	}
+)
 
-func (e Logging) Write(p []byte) (n int, err error) {
-	fmt.Println("Error: " + string(p))
-	file, _ := os.OpenFile("question-board.log", os.O_RDWR|os.O_APPEND|os.O_CREATE, 0666)
-	file.WriteString(string(p))
+var LogDriver mongoWriter
 
-	// Close the file when the surrounding function exists
-	defer file.Close()
+func NewLogger(c *mongo.Database) {
+	LogDriver = mongoWriter{client: c}
+}
 
-	return n, err
+func (mw *mongoWriter) Write(p []byte) (n int, err error) {
+	var db = mw.client.Collection("logs")
+	doc := logStruct{
+		Timestamp: time.Now().Unix(),
+		Logs: string(p),
+	}
+
+	_, err = db.InsertOne(context.TODO(), doc)
+	if err != nil {
+		panic(err)
+	}
+	return len(p), nil
 }
 
 func WriteLog(logs interface{}) {
-	Logger.Println(logs)
+	if LogDriver.client != nil {
+		log.SetOutput(&LogDriver)
+		log.SetPrefix("")
+	}
+
+	log.Println(logs)
 }
 

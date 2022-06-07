@@ -7,6 +7,7 @@ import (
 	"go-hospital-server/internal/core/repository"
 	"go-hospital-server/internal/utils"
 	"go-hospital-server/internal/utils/errors"
+	"go-hospital-server/internal/utils/jwt"
 )
 
 type AuthService struct {
@@ -17,18 +18,15 @@ func NewAuthService(repo repository.AuthRepository) *AuthService {
 	return &AuthService{repo: repo}
 }
 
-func (srv AuthService) Login(login request.LoginRequest) (res *response.User, err error) {
-	var user models.User
+func (srv AuthService) Login(login request.LoginRequest) (res response.User, err error) {
 	var checkPassword bool
-	user, err  = srv.repo.Login(login.Email)
+	res, err  = srv.repo.Login(login.Email)
 
-	err = errors.CheckError(user, err)
+	err = errors.CheckError(res, err)
 
 	if err == nil {
-		checkPassword = utils.ComparePassword(login.Password, user.Password)
-		if checkPassword {
-			res, _ = utils.TypeConverter[response.User](&user)
-		} else {
+		checkPassword = utils.ComparePassword(login.Password, res.Password)
+		if !checkPassword {
 			err = errors.New(417, "Wrong Password")
 		}
 	}
@@ -36,7 +34,29 @@ func (srv AuthService) Login(login request.LoginRequest) (res *response.User, er
 	return
 }
 
-func (srv AuthService) RefreshToken(str models.Token) (token models.Token, err error) {
-	token, err = srv.repo.RefreshToken(str)
+func (srv AuthService) Logout(token models.Token) (err error) {
+	err = srv.repo.RevokeToken(token)
+	return
+}
+
+func (srv AuthService) CreateToken(id uint, level string) (t models.Token, err error) {
+	t, err = jwt.CreateToken(float64(id), level)
+	err = srv.repo.SaveToken(t)
+	return
+}
+
+func (srv AuthService) RefreshToken(tkn models.Token) (token models.Token, err error) {
+
+	if tkn.AccessToken == "" {
+		err = errors.New(401, "Token Not Provided")
+		return
+	}
+
+	new_token, err := jwt.RefreshToken(tkn)
+	if err != nil {
+		return
+	}
+	err = srv.repo.UpdateToken(tkn, new_token)
+	token = new_token
 	return
 }

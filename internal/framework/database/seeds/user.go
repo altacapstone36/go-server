@@ -11,22 +11,13 @@ func userSeeder() Seed {
 	password, _ := utils.HashPassword("password")
 	seeds := []models.User{
 		{
-			Name: "Administrator",
-			Email: "admin@web.io",
-			Password: password,
-			LevelID: 1,
-			Status: 1,
-		},
-		{
-			Name: "Ach. Dafid",
-			Email: "dafid@web.io",
+			Email: "alsyadahmad@holyhos.co.id",
 			Password: password,
 			LevelID: 2,
 			Status: 1,
 		},
 		{
-			Name: "Syarif Ubaidillah",
-			Email: "syarif@web.io",
+			Email: "priscillahalim@holyhos.co.id",
 			Password: password,
 			LevelID: 3,
 			Status: 1,

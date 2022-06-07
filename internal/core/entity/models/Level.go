@@ -1,7 +1,5 @@
 package models
 
-// import "github.com/jinzhu/gorm"
-
 
 type Level struct {
 	ID int `json:"id" gorm:"primaryKey"`

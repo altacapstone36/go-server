@@ -28,7 +28,9 @@ func NewSeeders(db *gorm.DB) {
 func seedAll() []Seed {
 	return []Seed{
 		levelSeeder(),
+		medicalFacilitySeeder(),
 		userSeeder(),
+		medicalStaffSeeder(),
 	}
 }
 
