@@ -7,12 +7,12 @@ import (
 )
 
 func levelSeeder() Seed {
-	seeds := []models.Level{
+	seeds := []models.Role{
 		{Name: "Admin"},
 		{Name: "Doctor"},
 		{Name: "Nurse"},
 	}
-	model := &models.Level{}
+	model := &models.Role{}
 
 	return Seed{
 		models: model,

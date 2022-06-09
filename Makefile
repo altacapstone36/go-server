@@ -18,7 +18,7 @@ test_html:
 
 build:
 	@clear
-	@go build -o bin/question-board main.go
+	@go build -o bin/go-hospital-server main.go
 
 build_docker:
 	@clear

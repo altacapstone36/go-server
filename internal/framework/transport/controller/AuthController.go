@@ -6,6 +6,7 @@ import (
 	"go-hospital-server/internal/core/entity/response"
 	"go-hospital-server/internal/core/service"
 	"go-hospital-server/internal/utils/errors"
+	"go-hospital-server/internal/utils/jwt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -64,16 +65,22 @@ func (acon AuthController) Login(c echo.Context) error {
 // @Tags Authorization
 // @Accept json
 // @Produce json
-// @Param body  body  models.Token{}  true "send request access_token, refresh_token"
+// @Param token  query  string  true "pass access token here"
 // @Success 200 {object} models.Token{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /refresh_token [post]
 func (acon AuthController) RefreshToken(c echo.Context) error {
-	rtoken := models.Token{}
-	c.Bind(&rtoken)
-	token, err := acon.srv.RefreshToken(rtoken)
-	
+	var t models.Token
+	token, err := jwt.GetToken(c)
+
+	if err == nil {
+		t.RefreshToken = token
+		t.AccessToken = c.QueryParam("token")
+
+		t, err = acon.srv.RefreshToken(t)
+	}
+
 	if err != nil {
 		return c.JSON(http.StatusExpectationFailed, response.Error{
 			Message: "Failed to Generate New Token",
@@ -83,7 +90,7 @@ func (acon AuthController) RefreshToken(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, response.MessageData{
 		Message: "New Token Generated",
-		Data: token,
+		Data: t,
 	})
 }
 
@@ -99,9 +106,12 @@ func (acon AuthController) RefreshToken(c echo.Context) error {
 // @Failure 500 {object} response.Error{} error
 // @Router /login [post]
 func (acon AuthController) Logout(c echo.Context) error {
-	rtoken := models.Token{}
-	c.Bind(&rtoken)
-	err := acon.srv.Logout(rtoken)
+	token, err := jwt.GetToken(c)
+
+	if err == nil {
+		err = acon.srv.Logout(token)
+
+	}
 	
 	if err != nil {
 		return c.JSON(http.StatusExpectationFailed, echo.Map{

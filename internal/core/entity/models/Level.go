@@ -1,11 +1,11 @@
 package models
 
 
-type Level struct {
-	ID int `json:"id" gorm:"primaryKey"`
+type Role struct {
+	ID uint `json:"id" gorm:"primaryKey"`
 	Name string `json:"name"`
 }
 
-func (*Level) TableName() string {
+func (*Role) TableName() string {
 	return "roles"
 }

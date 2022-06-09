@@ -1,7 +1,7 @@
 package models
 
 type MedicalStaff struct {
-	ID int `json:"id" gorm:"primaryKey"`
+	ID uint `json:"id" gorm:"primaryKey"`
 	FullName string `json:"full_name"`
 	Gender string `json:"gender"`
 	UserID uint `json:"user_id"`

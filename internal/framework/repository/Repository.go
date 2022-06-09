@@ -10,5 +10,6 @@ import (
 func NewRepository(db *gorm.DB, mongo *mongo.Database) *repository.Repository {
 	return &repository.Repository{
 		Auth: NewAuthRepository(db, mongo),
+		Patient: NewPatientRepository(db),
 	}
 }

@@ -25,7 +25,7 @@ func (repo authRepository) Login(email string) (users response.User, err error) 
 		Select(`users.id, users.email, users.password, users.status, medical_staff.full_name,
 						medical_staff.gender, roles.name as level, medical_facility.name as facility`).
 		Joins("left join users on users.id = medical_staff.user_id").
-		Joins("left join roles on users.level_id = roles.id").
+		Joins("left join roles on users.role_id = roles.id").
 		Joins("left join medical_facility on medical_facility.id = medical_staff.medical_facility_id").
 		Where("email = ?", email).Scan(&users).Error
 	return
@@ -43,15 +43,18 @@ func (repo authRepository) SaveToken(token m.Token) (err error) {
 	return
 }
 
-func (repo authRepository) RevokeToken(token m.Token) (err error) {
+func (repo authRepository) RevokeToken(token string) (err error) {
 	// check and skip token saving if in testing mode
 	if repo.mongo == nil {
 		return
 	}
 
+	filter := bson.D{
+		{Key: "access_token", Value: token},
+	}
 
 	db := repo.mongo.Collection("token")
-	res := db.FindOneAndDelete(context.TODO(), token)
+	res := db.FindOneAndDelete(context.TODO(), filter)
 
 	if res.Err() != nil {
 		err = errors.New("invalid or expired token")

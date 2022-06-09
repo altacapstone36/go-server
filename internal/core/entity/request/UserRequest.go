@@ -7,7 +7,7 @@ type User struct {
 	ID uint `json:"id"`
 	Email string `json:"email"`
 	Name string `json:"name"`
-	Level models.Level `json:"level"`
+	Role models.Role `json:"role"`
 	Status int `json:"status"`
 }
 

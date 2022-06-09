@@ -14,9 +14,9 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
-// @title           Question Board
+// @title           Holy Hospital Sever API
 // @version         1.0
-// @description     server API for Question Board Application.
+// @description     server API for Holy Hospital Application.
 
 // @securityDefinitions.apikey ApiKey
 // @in header
@@ -42,6 +42,7 @@ func main() {
 	e.GET("/*", echoSwagger.WrapHandler)
 
 	api := e.Group("/api")
+	middleware.NewJWTConnection(mongodb)
 	routes.NewRoutes(api, ctrl, middleware.JWT)
 
 	middleware.Logging(e)

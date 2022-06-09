@@ -11,6 +11,7 @@ func migrateDB(db *gorm.DB) (err error) {
 		models.User{},
 		models.MedicalFacility{},
 		models.MedicalStaff{},
+		models.Patient{},
 	)
 	return
 }

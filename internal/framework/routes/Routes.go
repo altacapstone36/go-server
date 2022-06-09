@@ -8,4 +8,5 @@ import (
 
 func NewRoutes (e *echo.Group, ctrl *controller.Controller, middleware ...echo.MiddlewareFunc) {
 	NewAuthRoutes(e, ctrl.Auth)
+	NewPatientRoutes(e, ctrl.Patient, middleware...)
 }
