@@ -19,14 +19,20 @@ func NewJWTConnection(mongo *mongo.Database) {
 
 func JWT(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		token, _ := ujwt.GetToken(c)
+		token, err := ujwt.GetToken(c)
+
+		if err != nil {
+			return c.JSON(http.StatusUnauthorized, response.MessageOnly{
+				Message: err.Error(),
+			})
+		}
 
 		filter := bson.D{
 			{Key: "access_token", Value: token},
 		}
 
 		db := client.Collection("token")
-		_, err := db.Find(context.TODO(), filter)
+		_, err = db.Find(context.TODO(), filter)
 		if err != nil {
 			return c.JSON(http.StatusUnauthorized, response.MessageOnly{
 				Message: "invalid or expired token",

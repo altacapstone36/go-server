@@ -25,7 +25,7 @@ func initMongoDB() (db *mongo.Database) {
 		log.Fatal(err)
 	}
 
-	db = client.Database("hospital")
+	db = client.Database(config.MONGODB_DATABASE)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
