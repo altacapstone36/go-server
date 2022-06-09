@@ -34,7 +34,7 @@ func (srv AuthService) Login(login request.LoginRequest) (res response.User, err
 	return
 }
 
-func (srv AuthService) Logout(token models.Token) (err error) {
+func (srv AuthService) Logout(token string) (err error) {
 	err = srv.repo.RevokeToken(token)
 	return
 }
