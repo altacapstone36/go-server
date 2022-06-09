@@ -3,12 +3,12 @@ package models
 import "time"
 
 type User struct {
-	ID        uint `gorm:"primary_key"`
+	ID uint `json:"id" gorm:"primary_key"`
 	Email string `json:"email"`
 	Password string `json:"password"`
 	Status int `json:"status"`
-	LevelID int `json:"level_id"`
-	Level Level `json:"level"`
+	RoleID int `json:"role_id"`
+	Role Role `json:"roles"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

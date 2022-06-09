@@ -13,13 +13,13 @@ func userSeeder() Seed {
 		{
 			Email: "alsyadahmad@holyhos.co.id",
 			Password: password,
-			LevelID: 2,
+			RoleID: 2,
 			Status: 1,
 		},
 		{
 			Email: "priscillahalim@holyhos.co.id",
 			Password: password,
-			LevelID: 3,
+			RoleID: 3,
 			Status: 1,
 		},
 	}
