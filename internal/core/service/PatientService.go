@@ -4,6 +4,7 @@ import (
 	"go-hospital-server/internal/core/entity/models"
 	"go-hospital-server/internal/core/repository"
 	"go-hospital-server/internal/utils/errors"
+	"go-hospital-server/internal/utils/errors/check"
 )
 
 type PatientService struct {
@@ -16,19 +17,19 @@ func NewPatientService (repo repository.PatientRepository) *PatientService {
 
 func (srv PatientService) GetAllPatient() (patient []models.Patient, err error) {
 	patient, err = srv.repo.GetAllPatient()
-	err = errors.CheckError(patient, err)
+	err = check.Record(patient, err)
 	return
 }
 
 func (srv PatientService) GetPatientByID(id uint) (patient models.Patient, err error) {
 	patient, err = srv.repo.GetPatientByID(id)
-	err = errors.CheckError(patient, err)
+	err = check.Record(patient, err)
 	return
 }
 
 func (srv PatientService) GetPatientByName(name string) (patient []models.Patient, err error) {
 	patient, err = srv.repo.GetPatientByName(name)
-	err = errors.CheckError(patient, err)
+	err = check.Record(patient, err)
 	return
 }
 
@@ -39,7 +40,7 @@ func (srv PatientService) CreatePatient(patient models.Patient) (err error) {
 	}
 
 	err = srv.repo.CreatePatient(patient)
-	err = errors.CheckError(nil, err)
+	err = check.Record(patient, err)
 	return
 }
 
@@ -51,12 +52,12 @@ func (srv PatientService) UpdatePatient(id uint, patient models.Patient) (err er
 
 	patient.ID = id
 	err = srv.repo.UpdatePatient(patient)
-	err = errors.CheckError(patient, err)
+	err = check.Record(patient, err)
 	return
 }
 
 func (srv PatientService) DeletePatient(id uint) (err error) {
 	err = srv.repo.DeletePatientByID(id)
-	err = errors.CheckError(nil, err)
+	err = check.Record(nil, err)
 	return
 }

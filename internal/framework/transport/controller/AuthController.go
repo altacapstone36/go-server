@@ -5,7 +5,7 @@ import (
 	"go-hospital-server/internal/core/entity/request"
 	"go-hospital-server/internal/core/entity/response"
 	"go-hospital-server/internal/core/service"
-	"go-hospital-server/internal/utils/errors"
+	"go-hospital-server/internal/utils/errors/check"
 	"go-hospital-server/internal/utils/jwt"
 	"net/http"
 
@@ -35,21 +35,19 @@ func NewAuthController(srv *service.AuthService) *AuthController {
 func (acon AuthController) Login(c echo.Context) error {
 	var login request.LoginRequest
 	c.Bind(&login)
-	res, err := acon.srv.Login(login)
-	if err != nil {
-		error := err.(*errors.RequestError)
-		return c.JSON(error.Code(), response.Error{
-			Message: "Failed to Log User In",
-			Error: err.Error(),
-		})
+
+	if r, ok := check.HTTP(nil, login.Validate(), "Validate"); !ok {
+		return c.JSON(r.Code, r.Result)
 	}
 
-	jwt, err := acon.srv.CreateToken(res.ID, res.Level)
-	if err != nil {
-		return c.JSON(http.StatusExpectationFailed, response.Error{
-			Message: "Failed to Create Authentication Token",
-			Error: err.Error(),
-		})
+	res, err := acon.srv.Login(login)
+	if r, ok := check.HTTP(res, err, "User Log In"); !ok {
+		return c.JSON(r.Code, r.Result)
+	}
+
+	jwt, err := acon.srv.CreateToken(res.ID, res.Role)
+	if r, ok := check.HTTP(res, err, "Create Authentication Token"); !ok {
+		return c.JSON(r.Code, r.Result)
 	}
 	
 	return c.JSON(http.StatusOK, response.MessageDataJWT{

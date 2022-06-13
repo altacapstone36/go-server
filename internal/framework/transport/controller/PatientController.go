@@ -3,9 +3,9 @@ package controller
 import (
 	"fmt"
 	"go-hospital-server/internal/core/entity/models"
-	"go-hospital-server/internal/core/entity/response"
+	"go-hospital-server/internal/core/entity/response" 
 	"go-hospital-server/internal/core/service"
-	"go-hospital-server/internal/utils/errors"
+	"go-hospital-server/internal/utils/errors/check"
 	"net/http"
 	"strconv"
 
@@ -42,12 +42,8 @@ func (acon PatientController) GetAllPatient(c echo.Context) error {
 		res, err = acon.srv.GetAllPatient()
 	}
 
-	if err != nil {
-		error := err.(*errors.RequestError)
-		return c.JSON(error.Code(), response.Error{
-			Message: "Failed to Fetch Patient Data",
-			Error: err.Error(),
-		})
+	if r, ok := check.HTTP(res, err, "Fetch Patient"); !ok {
+		return c.JSON(r.Code, r.Result)
 	}
 
 	return c.JSON(http.StatusOK, response.MessageData{
@@ -71,12 +67,8 @@ func (acon PatientController) GetPatientByID(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 
 	res, err := acon.srv.GetPatientByID(uint(id))
-	if err != nil {
-		error := err.(*errors.RequestError)
-		return c.JSON(error.Code(), response.Error{
-			Message: "Failed to Fetch Patient Data",
-			Error: err.Error(),
-		})
+	if r, ok := check.HTTP(res, err, "Fetch Patient"); !ok {
+		return c.JSON(r.Code, r.Result)
 	}
 
 	return c.JSON(http.StatusOK, response.MessageData{
@@ -100,17 +92,17 @@ func (acon PatientController) CreatePatient(c echo.Context) error {
 	var patient models.Patient
 
 	c.Bind(&patient)
-
-	err := acon.srv.CreatePatient(patient)
-	if err != nil {
-		error := err.(*errors.RequestError)
-		return c.JSON(error.Code(), response.Error{
-			Message: "Failed to Fetch Patient Data",
-			Error: err.Error(),
-		})
+	
+	if r, ok := check.HTTP(nil, patient.Validate(), "Validate Patient"); !ok {
+		return c.JSON(r.Code, r.Result)
 	}
 
-	return c.JSON(http.StatusOK, response.MessageOnly{
+	err := acon.srv.CreatePatient(patient)
+	if r, ok := check.HTTP(nil, err, "Created Patient"); !ok {
+		return c.JSON(r.Code, r.Result)
+	}
+
+	return c.JSON(http.StatusCreated, response.MessageOnly{
 		Message: "Patient Created",
 	})
 }
@@ -133,13 +125,13 @@ func (acon PatientController) UpdatePatient(c echo.Context) error {
 
 	c.Bind(&patient)
 
+	if r, ok := check.HTTP(nil, patient.Validate(), "Validate Patient"); !ok {
+		return c.JSON(r.Code, r.Result)
+	}
+
 	err = acon.srv.UpdatePatient(uint(id), patient)
-	if err != nil {
-		error := err.(*errors.RequestError)
-		return c.JSON(error.Code(), response.Error{
-			Message: "Failed to Update Patient Data",
-			Error: err.Error(),
-		})
+	if r, ok := check.HTTP(nil, err, "Update Patient"); !ok {
+		return c.JSON(r.Code, r.Result)
 	}
 
 	return c.JSON(http.StatusOK, response.MessageOnly{
@@ -162,12 +154,8 @@ func (acon PatientController) DeletePatient(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 
 	err = acon.srv.DeletePatient(uint(id))
-	if err != nil {
-		error := err.(*errors.RequestError)
-		return c.JSON(error.Code(), response.Error{
-			Message: "Failed to Delete Patient Data",
-			Error: err.Error(),
-		})
+	if r, ok := check.HTTP(nil, err, "Update Patient"); !ok {
+		return c.JSON(r.Code, r.Result)
 	}
 
 	return c.JSON(http.StatusOK, response.MessageOnly{

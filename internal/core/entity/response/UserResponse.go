@@ -7,7 +7,7 @@ type (
 		FullName string `json:"full_name"`
 		Password string `json:"-"`
 		Gender string `json:"gender"`
-		Level string `json:"roles"`
+		Role string `json:"roles"`
 		Facility string `json:"facility"`
 		Status int `json:"status"`
 	}

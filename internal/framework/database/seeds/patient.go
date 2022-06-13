@@ -10,19 +10,19 @@ import (
 func patientSeeder() Seed {
 	seeds := []models.Patient{
 		{
-			ResidentRegistration: 8729301745162748,
+			ResidentRegistration: "8729301745162748",
 			FullName: "Faizur Ramadhan",
 			Address: "Sumenep",
 			Gender: "Male",
-			BirthDate: time.Date(2000, time.April, 20, 0, 0, 0, 0, &time.Location{}),
+			BirthDate: time.Date(2001, time.January, 4, 0, 0, 0, 0, time.UTC),
 			BloodType: "A",
 		},
 		{
-			ResidentRegistration: 8761435451636421,
+			ResidentRegistration: "8761435451636421",
 			FullName: "Ach. Novil",
 			Address: "Sumenep",
 			Gender: "Male",
-			BirthDate: time.Date(2000, time.March, 10, 0, 0, 0, 0, &time.Location{}),
+			BirthDate: time.Date(2001, time.April, 6, 0, 0, 0, 0, time.UTC),
 			BloodType: "A",
 		},
 	}
