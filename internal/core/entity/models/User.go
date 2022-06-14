@@ -1,6 +1,12 @@
 package models
 
-import "time"
+import (
+	"fmt"
+	"go-hospital-server/internal/utils/errors"
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type User struct {
 	ID uint `json:"id" gorm:"primary_key"`
@@ -15,6 +21,14 @@ type User struct {
 	DeletedAt *time.Time `sql:"index"`
 }
 
-func (*User) TableName() string {
-	return "users"
+func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
+
+	if err = tx.Model(&u).Where("email = ?", u.Email).Error;
+	err == nil {
+		msg := fmt.Sprintf("duplicate email for %s found, please use another email", u.Email)
+		err = errors.New(203, msg)
+		return
+	}
+
+	return
 }

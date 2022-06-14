@@ -5,6 +5,7 @@ import (
 	"go-hospital-server/internal/utils"
 	"go-hospital-server/internal/utils/errors"
 	"go-hospital-server/internal/utils/logger"
+	"reflect"
 
 	"gorm.io/gorm"
 )
@@ -16,6 +17,10 @@ func Record(res interface{}, err error) error {
 	}
 
 	if err != nil {
+		if reflect.TypeOf(err).String() == "*errors.RequestError" {
+			return err
+		}
+
 		logger.WriteLog(err)
 		return errors.New(500, "internal server error")
 	}

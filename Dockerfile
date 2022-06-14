@@ -10,6 +10,5 @@ RUN go build -o /go/bin/app main.go
 FROM gcr.io/distroless/base
 COPY --from=build-env /go/bin/app /
 COPY --from=build-env /go/src/app/config/config.example.yaml /config/config.yaml
-COPY --from=build-env /go/src/app/secret /
 EXPOSE 8080
 CMD ["/app"]
