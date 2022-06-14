@@ -1,8 +1,6 @@
 package config
 
 import (
-	"log"
-
 	"github.com/integralist/go-findroot/find"
 	"github.com/spf13/viper"
 )
@@ -19,12 +17,14 @@ var (
 )
 
 func LoadConfig() {
+	var path string
 	root, err := find.Repo()
+	path = root.Path
 	if err != nil {
-		log.Fatalf("fatal error = %v", err.Error())
+		path = "."
 	}
 
-	viper.AddConfigPath(root.Path + "/config")
+	viper.AddConfigPath(path + "/config")
 	viper.SetConfigName("config")
 	
 	err = viper.ReadInConfig()

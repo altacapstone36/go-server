@@ -1,3 +1,8 @@
+NAME   := syarif74/go-hospital-server
+TAG    := $$(git log -1 --pretty=%h)
+IMG    := ${NAME}:${TAG}
+LATEST := ${NAME}:latest
+
 run:
 	@clear
 	@go run main.go
@@ -21,8 +26,8 @@ build:
 	@go build -o bin/go-hospital-server main.go
 
 build_docker:
-	@clear
-	@docker image build .
+	@docker build -t ${IMG} .
+	@docker tag ${IMG} ${LATEST}
 
 docs:
 	@clear
