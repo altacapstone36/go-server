@@ -12,6 +12,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
+	_ "go-hospital-server/docs"
 )
 
 // @title           Holy Hospital Sever API

@@ -25,6 +25,7 @@ func NewPatientController(srv *service.PatientService) *PatientController {
 // @Summary GetAllPatient
 // @Description Fetch All Patient Data
 // @Tags Patient
+// @Security ApiKey
 // @Accept json
 // @Produce json
 // @Success 200 {object} response.MessageData{Data=[]models.Patient} success
@@ -56,6 +57,7 @@ func (acon PatientController) GetAllPatient(c echo.Context) error {
 // @Summary GetPatientByID
 // @Description Fetch Patient Data By ID
 // @Tags Patient
+// @Security ApiKey
 // @Accept json
 // @Produce json
 // @Param id  path  string  true "patient id"
@@ -81,6 +83,7 @@ func (acon PatientController) GetPatientByID(c echo.Context) error {
 // @Summary CreatePatient
 // @Description Fetch All Patient Data
 // @Tags Patient
+// @Security ApiKey
 // @Accept json
 // @Produce json
 // @Param body  body  models.Patient{}  true "patient details"
@@ -111,6 +114,7 @@ func (acon PatientController) CreatePatient(c echo.Context) error {
 // @Summary UpdatePatient
 // @Description Fetch All Patient Data
 // @Tags Patient
+// @Security ApiKey
 // @Accept json
 // @Produce json
 // @Param id  path  int  true "patient id"
@@ -118,7 +122,7 @@ func (acon PatientController) CreatePatient(c echo.Context) error {
 // @Success 200 {object} response.MessageOnly{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
-// @Router /patient/:id [put]
+// @Router /patient/:id/update [put]
 func (acon PatientController) UpdatePatient(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	var patient models.Patient
@@ -143,6 +147,7 @@ func (acon PatientController) UpdatePatient(c echo.Context) error {
 // @Summary DeletePatient
 // @Description Fetch All Patient Data
 // @Tags Patient
+// @Security ApiKey
 // @Accept json
 // @Produce json
 // @Param id  path  int  true "patient id"

@@ -21,14 +21,14 @@ func NewAuthController(srv *service.AuthService) *AuthController {
 	return &AuthController{srv}
 }
 
-// CreateResource godoc
+// godoc
 // @Summary Login
 // @Description Login and get Authorization Token
 // @Tags Authorization
 // @Accept json
 // @Produce json
 // @Param body  body  request.LoginRequest{}  true "send request email, password"
-// @Success 200 {object} response.UserDetails{} success
+// @Success 200 {object} response.User{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /login [post]
@@ -57,10 +57,11 @@ func (acon AuthController) Login(c echo.Context) error {
 	})
 }
 
-// CreateResource godoc
+// godoc
 // @Summary Refresh Token
 // @Description Route Path for Get New Access Token
 // @Tags Authorization
+// @Security ApiKey
 // @Accept json
 // @Produce json
 // @Param token  query  string  true "pass access token here"
@@ -92,17 +93,17 @@ func (acon AuthController) RefreshToken(c echo.Context) error {
 	})
 }
 
-// CreateResource godoc
+// godoc
 // @Summary Refresh Token
 // @Description Route Path for Get New Access Token
 // @Tags Authorization
+// @Security ApiKey
 // @Accept json
 // @Produce json
-// @Param body  body  models.Token{}  true "send request access_token, refresh_token"
 // @Success 200 {object} models.Token{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
-// @Router /login [post]
+// @Router /logout [post]
 func (acon AuthController) Logout(c echo.Context) error {
 	token, err := jwt.GetToken(c)
 
