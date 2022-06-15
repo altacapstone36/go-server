@@ -18,9 +18,13 @@ type MedicalStaff struct {
 }
 
 func (ms *MedicalStaff) BeforeCreate(tx *gorm.DB) (err error) {
+	var name string
 
-	if err = tx.Model(&ms).Where("full_name = ?", ms.FullName).Error;
-	err == nil {
+	tx.Model(&ms).Select("full_name").
+		Where("full_name = ?", ms.FullName).
+		Scan(&name);
+
+	if name != "" {
 		msg := fmt.Sprintf("duplicate name for %s found, please use another name", ms.FullName)
 		err = errors.New(203, msg)
 		return

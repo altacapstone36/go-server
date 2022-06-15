@@ -22,11 +22,11 @@ func NewAuthRepository(sqldb *gorm.DB, mongodb *mongo.Database) *authRepository 
 
 func (repo authRepository) Login(email string) (users response.User, err error) {
 	err = repo.sqldb.Model(&m.MedicalStaff{}).
-		Select(`users.id, users.email, users.password, users.status, medical_staffs.full_name,
-						medical_staffs.gender, roles.name as role, medical_facility.name as facility`).
+		Select(`users.*, medical_staffs.full_name, medical_staffs.gender,
+						roles.name as role, medical_facilities.name as facility`).
 		Joins("left join users on users.id = medical_staffs.user_id").
 		Joins("left join roles on users.role_id = roles.id").
-		Joins("left join medical_facility on medical_facility.id = medical_staffs.medical_facility_id").
+		Joins("left join medical_facilities on medical_facilities.id = medical_staffs.medical_facility_id").
 		Where("email = ?", email).Scan(&users).Error
 	return
 }

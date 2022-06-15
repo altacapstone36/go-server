@@ -3,6 +3,7 @@ package response
 type (
 	User struct {
 		ID uint `json:"id"`
+		Code string `json:"code"`
 		Email string `json:"email"`
 		FullName string `json:"full_name"`
 		Password string `json:"-"`
