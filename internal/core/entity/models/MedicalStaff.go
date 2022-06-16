@@ -15,6 +15,7 @@ type MedicalStaff struct {
 	User User `json:"user"`
 	MedicalFacilityID uint `json:"facility_id"`
 	MedicalFacility MedicalFacility `json:"facility"`
+	Schedule []Schedule `gorm:"constraint:OnDelete:CASCADE,OnUpdate:CASCADE"`
 }
 
 func (ms *MedicalStaff) BeforeCreate(tx *gorm.DB) (err error) {

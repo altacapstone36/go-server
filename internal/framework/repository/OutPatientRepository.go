@@ -17,7 +17,7 @@ func NewOutPatientRepository(sqldb *gorm.DB) *outPatientRepository {
 	return &outPatientRepository{sqldb: sqldb}
 }
 
-func (repo outPatientRepository) NewMedicalRecord(ms models.MedicalSession) (err error) {
+func (repo outPatientRepository) NewMedicalRecord(ms models.MedicRecord) (err error) {
 	err = repo.sqldb.Create(&ms).Error
 	return
 }
@@ -42,11 +42,11 @@ func (repo outPatientRepository) ListAvailable(id int,
 		Select(`medic_records.*, medical_sessions.queue, medical_sessions.date_check,
 						patients.full_name, patients.code, sessions.time_start,
 						medical_staffs.full_name as doctor`).
-		Joins("join patients on patients.id = medic_records.patient_id").
-		Joins("join medical_sessions on medical_sessions.medic_record_id = medic_records.id").
-		Joins("join sessions on medical_sessions.session_id = sessions.id").
-		Joins("join medical_staffs on medical_staffs.id = medic_records.medical_staff_id").
-		Where("medic_records.medical_staff_id = ?", id).
+		Joins("left join patients on patients.id = medic_records.patient_id").
+		Joins("left join medical_sessions on medical_sessions.medic_record_id = medic_records.id").
+		Joins("left join sessions on medical_sessions.session_id = sessions.id").
+		Joins("left join medical_staffs on medical_staffs.id = medical_sessions.medical_staff_id").
+		Where("medical_sessions.medical_staff_id = ?", id).
 		Where(strings.Join(whereAdd, " AND ")).
 		Scan(&res).Error
 

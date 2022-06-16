@@ -1,12 +1,30 @@
 package models
 
+import "gorm.io/gorm"
+
 type	MedicalSession struct {
-	MedicRecordID uint `gorm:"primaryKey;autoIncrement:false"`
-	MedicRecord MedicRecord
+	MedicRecordID uint
 	MedicalFacilityID uint
 	MedicalFacility MedicalFacility
+	MedicalStaffID uint
+	MedicalStaff MedicalStaff
 	SessionID uint
 	Session Session
 	DateCheck string
 	Queue int
+}
+
+func (ms *MedicalSession) BeforeCreate(tx *gorm.DB) (err error) {
+	var count int64
+
+	tx.Model(&ms).
+		Where("medical_staff_id = ?", ms.MedicalStaffID).
+		Where("medical_facility_id = ?", ms.MedicalFacilityID).
+		Where("date_check = ?", ms.DateCheck).
+		Where("session_id = ?", ms.SessionID).
+		Count(&count)
+
+	ms.Queue = int(count)+1
+
+	return
 }

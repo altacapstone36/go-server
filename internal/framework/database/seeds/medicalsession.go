@@ -9,11 +9,11 @@ import (
 func medicalSessionSeeder() Seed {
 	seeds := []models.MedicalSession{
 		{
-			MedicRecordID:     1,
+			MedicRecordID: 1,
+			MedicalStaffID: 1,
 			MedicalFacilityID: 1,
 			SessionID:         1,
 			DateCheck:         "2022-07-17",
-			Queue:             1,
 		},
 	}
 	model := &models.MedicalSession{}

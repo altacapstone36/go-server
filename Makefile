@@ -26,6 +26,7 @@ build:
 	@go build -o bin/go-hospital-server main.go
 
 build_docker:
+	@clear
 	@docker build -t ${IMG} .
 	@docker tag ${IMG} ${LATEST}
 

@@ -28,11 +28,11 @@ func NewSeeders(db *gorm.DB) {
 func seedAll() []Seed {
 	return []Seed{
 		levelSeeder(),
+		sessionSeeder(),
 		medicalFacilitySeeder(),
 		userSeeder(),
 		medicalStaffSeeder(),
 		patientSeeder(),
-		sessionSeeder(),
 		scheduleSeeder(),
 		medicRecordSeeder(),
 		medicalSessionSeeder(),

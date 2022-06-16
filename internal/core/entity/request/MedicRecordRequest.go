@@ -41,15 +41,15 @@ func (s AdminMedicRecord) Validate() (err error) {
 func (s DoctorMedicRequest) Validate() (err error) {
 	err = validation.ValidateStruct(&s,
 		validation.Field(&s.Diagnose, validation.Required, is.Alpha),
-		validation.Field(&s.Prescription, validation.Required, is.Alpha),
-		validation.Field(&s.ID, validation.Required, is.Alpha),
+		validation.Field(&s.Prescription, validation.Required),
+		validation.Field(&s.ID, validation.Required),
 	)
 	return
 }
 
 func (s NurseMedicRequest) Validate() (err error) {
 	err = validation.ValidateStruct(&s,
-		validation.Field(&s.ID, validation.Required, is.Alpha),
+		validation.Field(&s.ID, validation.Required),
 		validation.Field(&s.BloodTension, validation.Required, is.Digit),
 		validation.Field(&s.Height, validation.Required, is.Digit),
 		validation.Field(&s.Weight, validation.Required, is.Digit),

@@ -1,11 +1,8 @@
 package models
 
 type Schedule struct {
-	MedicalStaffID uint `gorm:"primarykey;autoIncrement:false"`
-	MedicalStaff MedicalStaff
+	MedicalStaffID uint
 	MedicalFacilityID uint
-	MedicalFacility MedicalFacility
 	SessionID uint
-	Session Session
 	Date string
 }

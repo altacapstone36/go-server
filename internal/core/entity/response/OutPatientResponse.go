@@ -2,6 +2,7 @@ package response
 
 type OutPatientResponse struct {
 	ID uint `json:"id"`
+	SerialNumber string `json:"serial_number"`
 	FullName string `json:"full_name"`
 	Code string `json:"code"`
 	Complaint string `json:"complaint"`

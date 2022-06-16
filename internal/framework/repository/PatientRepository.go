@@ -15,7 +15,7 @@ func NewPatientRepository(sqldb *gorm.DB) *patientRepository {
 }
 
 func (repo patientRepository) GetPatientByID(id uint) (patient models.Patient, err error) {
-	err = repo.sqldb.First(&patient, id).Error
+	err = repo.sqldb.Preload("MedicRecord").First(&patient, id).Error
 
 	return
 }

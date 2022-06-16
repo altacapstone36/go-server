@@ -11,6 +11,6 @@ func NewOutPatientRoutes(e *echo.Group, acon *controller.OutPatientController, m
 	patient := e.Group("/outpatient", middleware...)
 	patient.GET("", acon.GetAllOutPatient)
 	patient.POST("", acon.NewMedicRecord, mw.AdminPermission)
-	patient.POST("/doctor", acon.NewMedicRecord, mw.DoctorPermission)
-	patient.POST("/nurse", acon.NewMedicRecord, mw.NursePermission)
+	patient.POST("/doctor", acon.DoctorProcess, mw.DoctorPermission)
+	patient.POST("/nurse", acon.NurseProcess, mw.NursePermission)
 }

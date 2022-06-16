@@ -17,16 +17,16 @@ func NewOutPatientService(repo repository.OutPatientRepository) *OutPatientServi
 }
 
 func (srv OutPatientService) NewMedicRecord(req request.AdminMedicRecord) (err error) {
-	var ms models.MedicalSession
+	var mr models.MedicRecord
 
-	ms.MedicRecord.PatientID = req.PatientID
-	ms.MedicRecord.Complaint = req.Complaint
-	ms.MedicRecord.MedicalStaffID = req.MedicalStaffID
-	ms.SessionID = req.SessionID
-	ms.DateCheck = req.DateCheck
-	ms.MedicalFacilityID = req.MedicalFacilityID
+	mr.PatientID = req.PatientID
+	mr.Complaint = req.Complaint
+	mr.MedicalSession.DateCheck = req.DateCheck
+	mr.MedicalSession.MedicalStaffID = req.MedicalStaffID
+	mr.MedicalSession.SessionID = req.SessionID
+	mr.MedicalSession.MedicalFacilityID = req.MedicalFacilityID
 
-	err  = srv.repo.NewMedicalRecord(ms)
+	err  = srv.repo.NewMedicalRecord(mr)
 
 	err = check.Record(nil, err)
 	return

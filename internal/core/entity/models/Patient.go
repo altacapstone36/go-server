@@ -19,7 +19,7 @@ type Patient struct {
 	BirthDate string `json:"birthdate"`
 	BloodType string `json:"blood_type"`
 
-	MedicRecord *[]MedicRecord `json:"medic_record" gorm:"one2many"`
+	MedicRecord *[]MedicRecord `json:"medic_record"`
 }
 
 func (p *Patient) BeforeCreate(tx *gorm.DB) (err error) {
