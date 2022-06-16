@@ -106,6 +106,212 @@ const docTemplate = `{
                 }
             }
         },
+        "/outpatient": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKey": []
+                    }
+                ],
+                "description": "Fetch All Patient with New Medic Record Data",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OutPatient"
+                ],
+                "summary": "GetAllPatient",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.MessageData"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "Data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/response.OutPatientResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "417": {
+                        "description": "Expectation Failed",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKey": []
+                    }
+                ],
+                "description": "Add New Medic Record for Patient",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OutPatient"
+                ],
+                "summary": "New Medic Record",
+                "parameters": [
+                    {
+                        "description": "new medic record",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.AdminMedicRecord"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.MessageOnly"
+                        }
+                    },
+                    "417": {
+                        "description": "Expectation Failed",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/outpatient/doctor": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKey": []
+                    }
+                ],
+                "description": "Process Medic Record by Doctor",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OutPatient"
+                ],
+                "summary": "Process Doctor",
+                "parameters": [
+                    {
+                        "description": "process medic record by doctor",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.DoctorMedicRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.MessageOnly"
+                        }
+                    },
+                    "417": {
+                        "description": "Expectation Failed",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/outpatient/nurse": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKey": []
+                    }
+                ],
+                "description": "Process Medic Record by Doctor",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "OutPatient"
+                ],
+                "summary": "Process Nurse",
+                "parameters": [
+                    {
+                        "description": "process medic record by nurse",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.NurseMedicRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.MessageOnly"
+                        }
+                    },
+                    "417": {
+                        "description": "Expectation Failed",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/patient": {
             "get": {
                 "security": [
@@ -546,6 +752,9 @@ const docTemplate = `{
         "models.Role": {
             "type": "object",
             "properties": {
+                "code": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -568,6 +777,9 @@ const docTemplate = `{
         "models.User": {
             "type": "object",
             "properties": {
+                "code": {
+                    "type": "string"
+                },
                 "createdAt": {
                     "type": "string"
                 },
@@ -597,6 +809,43 @@ const docTemplate = `{
                 }
             }
         },
+        "request.AdminMedicRecord": {
+            "type": "object",
+            "properties": {
+                "complaint": {
+                    "type": "string"
+                },
+                "date_check": {
+                    "type": "string"
+                },
+                "medical_facility_id": {
+                    "type": "integer"
+                },
+                "medical_staff_id": {
+                    "type": "integer"
+                },
+                "patient_id": {
+                    "type": "integer"
+                },
+                "session_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "request.DoctorMedicRequest": {
+            "type": "object",
+            "properties": {
+                "diagnose": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "prescription": {
+                    "type": "string"
+                }
+            }
+        },
         "request.LoginRequest": {
             "type": "object",
             "properties": {
@@ -605,6 +854,26 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string"
+                }
+            }
+        },
+        "request.NurseMedicRequest": {
+            "type": "object",
+            "properties": {
+                "blood_tesion": {
+                    "type": "integer"
+                },
+                "body_temp": {
+                    "type": "integer"
+                },
+                "height": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "weight": {
+                    "type": "integer"
                 }
             }
         },
@@ -634,9 +903,41 @@ const docTemplate = `{
                 }
             }
         },
+        "response.OutPatientResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "complaint": {
+                    "type": "string"
+                },
+                "date_check": {
+                    "type": "string"
+                },
+                "doctor": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "queue": {
+                    "type": "integer"
+                },
+                "session": {
+                    "type": "string"
+                }
+            }
+        },
         "response.User": {
             "type": "object",
             "properties": {
+                "code": {
+                    "type": "string"
+                },
                 "email": {
                     "type": "string"
                 },

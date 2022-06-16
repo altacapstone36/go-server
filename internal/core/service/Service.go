@@ -13,5 +13,6 @@ func NewService(r *repository.Repository) *Service {
 	return &Service{
 		Auth: NewAuthService(r.Auth),
 		Patient: NewPatientService(r.Patient),
+		OutPatient: NewOutPatientService(r.OutPatient),
 	}
 }

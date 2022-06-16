@@ -1,9 +1,8 @@
 package models
 
 import (
-	"go-hospital-server/internal/utils/errors"
 	"fmt"
-	"time"
+	"go-hospital-server/internal/utils/errors"
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
@@ -17,7 +16,7 @@ type Patient struct {
 	FullName string `json:"full_name" sql:"unique"`
 	Address string `json:"address"`
 	Gender string `json:"gender"`
-	BirthDate time.Time `json:"birthdate"`
+	BirthDate string `json:"birthdate"`
 	BloodType string `json:"blood_type"`
 
 	MedicRecord *[]MedicRecord `json:"medic_record" gorm:"one2many"`
@@ -50,7 +49,7 @@ func (p Patient) Validate() (err error) {
 		validation.Field(&p.FullName, validation.Required),
 		validation.Field(&p.Address, validation.Required),
 		validation.Field(&p.Gender, validation.Required),
-		validation.Field(&p.BirthDate, validation.Required),
+		validation.Field(&p.BirthDate, validation.Required, validation.Date("2006-01-02")),
 	)
 	return
 }

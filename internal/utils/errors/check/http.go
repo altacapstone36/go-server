@@ -17,6 +17,7 @@ func HTTP(res interface{}, err error, msg string) (r HTTPCheck, ok bool) {
 	var errMsg any
 
 	if err != nil {
+		r.Code = 417
 		if reflect.TypeOf(err).String() == "RequestError" {
 			error = err.(*errors.RequestError)
 			r.Code = error.Code()

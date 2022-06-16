@@ -77,6 +77,8 @@ definitions:
     type: object
   models.Role:
     properties:
+      code:
+        type: string
       id:
         type: integer
       name:
@@ -91,6 +93,8 @@ definitions:
     type: object
   models.User:
     properties:
+      code:
+        type: string
       createdAt:
         type: string
       deletedAt:
@@ -110,12 +114,49 @@ definitions:
       updatedAt:
         type: string
     type: object
+  request.AdminMedicRecord:
+    properties:
+      complaint:
+        type: string
+      date_check:
+        type: string
+      medical_facility_id:
+        type: integer
+      medical_staff_id:
+        type: integer
+      patient_id:
+        type: integer
+      session_id:
+        type: integer
+    type: object
+  request.DoctorMedicRequest:
+    properties:
+      diagnose:
+        type: string
+      id:
+        type: integer
+      prescription:
+        type: string
+    type: object
   request.LoginRequest:
     properties:
       email:
         type: string
       password:
         type: string
+    type: object
+  request.NurseMedicRequest:
+    properties:
+      blood_tesion:
+        type: integer
+      body_temp:
+        type: integer
+      height:
+        type: integer
+      id:
+        type: integer
+      weight:
+        type: integer
     type: object
   response.Error:
     properties:
@@ -134,8 +175,29 @@ definitions:
       message:
         type: string
     type: object
+  response.OutPatientResponse:
+    properties:
+      code:
+        type: string
+      complaint:
+        type: string
+      date_check:
+        type: string
+      doctor:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: integer
+      queue:
+        type: integer
+      session:
+        type: string
+    type: object
   response.User:
     properties:
+      code:
+        type: string
       email:
         type: string
       facility:
@@ -216,6 +278,133 @@ paths:
       summary: Refresh Token
       tags:
       - Authorization
+  /outpatient:
+    get:
+      consumes:
+      - application/json
+      description: Fetch All Patient with New Medic Record Data
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.MessageData'
+            - properties:
+                Data:
+                  items:
+                    $ref: '#/definitions/response.OutPatientResponse'
+                  type: array
+              type: object
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: GetAllPatient
+      tags:
+      - OutPatient
+    post:
+      consumes:
+      - application/json
+      description: Add New Medic Record for Patient
+      parameters:
+      - description: new medic record
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.AdminMedicRecord'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MessageOnly'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: New Medic Record
+      tags:
+      - OutPatient
+  /outpatient/doctor:
+    post:
+      consumes:
+      - application/json
+      description: Process Medic Record by Doctor
+      parameters:
+      - description: process medic record by doctor
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.DoctorMedicRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MessageOnly'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: Process Doctor
+      tags:
+      - OutPatient
+  /outpatient/nurse:
+    post:
+      consumes:
+      - application/json
+      description: Process Medic Record by Doctor
+      parameters:
+      - description: process medic record by nurse
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.NurseMedicRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MessageOnly'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: Process Nurse
+      tags:
+      - OutPatient
   /patient:
     get:
       consumes:
