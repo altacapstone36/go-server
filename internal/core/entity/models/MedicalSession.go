@@ -5,11 +5,8 @@ import "gorm.io/gorm"
 type	MedicalSession struct {
 	MedicRecordID uint
 	MedicalFacilityID uint
-	MedicalFacility MedicalFacility
 	MedicalStaffID uint
-	MedicalStaff MedicalStaff
 	SessionID uint
-	Session Session
 	DateCheck string
 	Queue int
 }

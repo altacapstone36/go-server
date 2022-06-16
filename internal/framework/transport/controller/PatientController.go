@@ -34,7 +34,7 @@ func NewPatientController(srv *service.PatientService) *PatientController {
 // @Router /patient [get]
 func (acon PatientController) GetAllPatient(c echo.Context) error {
 	name := c.QueryParam("name")
-	var res []models.Patient
+	var res []response.Patient
 	var err error
 
 	if name != "" {

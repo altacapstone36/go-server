@@ -2,6 +2,7 @@ package service
 
 import (
 	"go-hospital-server/internal/core/entity/models"
+	"go-hospital-server/internal/core/entity/response"
 	"go-hospital-server/internal/core/repository"
 	"go-hospital-server/internal/utils/errors"
 	"go-hospital-server/internal/utils/errors/check"
@@ -15,19 +16,19 @@ func NewPatientService (repo repository.PatientRepository) *PatientService {
 	return &PatientService{repo: repo}
 }
 
-func (srv PatientService) GetAllPatient() (patient []models.Patient, err error) {
+func (srv PatientService) GetAllPatient() (patient []response.Patient, err error) {
 	patient, err = srv.repo.GetAllPatient()
 	err = check.Record(patient, err)
 	return
 }
 
-func (srv PatientService) GetPatientByID(id uint) (patient models.Patient, err error) {
+func (srv PatientService) GetPatientByID(id uint) (patient response.PatientDetails, err error) {
 	patient, err = srv.repo.GetPatientByID(id)
 	err = check.Record(patient, err)
 	return
 }
 
-func (srv PatientService) GetPatientByName(name string) (patient []models.Patient, err error) {
+func (srv PatientService) GetPatientByName(name string) (patient []response.Patient, err error) {
 	patient, err = srv.repo.GetPatientByName(name)
 	err = check.Record(patient, err)
 	return
