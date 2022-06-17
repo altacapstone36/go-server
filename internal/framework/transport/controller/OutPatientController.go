@@ -7,6 +7,7 @@ import (
 	"go-hospital-server/internal/utils/errors/check"
 	"go-hospital-server/internal/utils/jwt"
 
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/labstack/echo/v4"
 )
 
@@ -32,8 +33,27 @@ func NewOutPatientController(srv *service.OutPatientService) *OutPatientControll
 func (acon OutPatientController) GetAllOutPatient(c echo.Context) error {
 	id, _ := jwt.GetTokenData(c, "user_id")
 	role, _ := jwt.GetTokenData(c, "role")
+	var res []response.OutPatientResponse
 
-	res, err := acon.srv.ListPatient(id.(float64), role.(string))
+	date_start := c.QueryParam("date_start")
+	date_end := c.QueryParam("date_end")
+
+	err := validation.Validate(&date_start, validation.Date("2006-01-02"))
+	if r, ok := check.HTTP(nil, err, "Validate"); !ok {
+		return c.JSON(r.Code, r.Result)
+	}
+
+	err = validation.Validate(&date_end, validation.Date("2006-01-02"))
+	if r, ok := check.HTTP(nil, err, "Validate"); !ok {
+		return c.JSON(r.Code, r.Result)
+	}
+
+	if date_start != "" && date_end != "" {
+		res, err = acon.srv.FilterByDate(date_start, date_end)
+	} else {
+		res, err = acon.srv.ListPatient(id.(float64), role.(string))
+	}
+
 	if r, ok := check.HTTP(res, err, "Fetch OutPatient"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}

@@ -30,9 +30,9 @@ type NurseMedicRequest struct {
 
 func (s AdminMedicRecord) Validate() (err error) {
 	err = validation.ValidateStruct(&s,
-		validation.Field(&s.MedicalFacilityID, validation.Required, is.Digit),
-		validation.Field(&s.MedicalStaffID, validation.Required, is.Digit),
-		validation.Field(&s.SessionID, validation.Required, is.Digit),
+		validation.Field(&s.MedicalFacilityID, validation.NilOrNotEmpty),
+		validation.Field(&s.MedicalStaffID, validation.NilOrNotEmpty),
+		validation.Field(&s.SessionID, validation.NilOrNotEmpty),
 		validation.Field(&s.DateCheck, validation.Required, validation.Date("2006-01-02")),
 	)
 	return

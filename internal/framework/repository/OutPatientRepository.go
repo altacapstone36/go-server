@@ -4,7 +4,6 @@ import (
 	"go-hospital-server/internal/core/entity/models"
 	"go-hospital-server/internal/core/entity/response"
 	"strings"
-	"time"
 
 	"gorm.io/gorm"
 )
@@ -53,6 +52,18 @@ func (repo outPatientRepository) ListAvailable(id int,
 	return
 }
 
-func (repo outPatientRepository) FilterByDate(date_start, date_end time.Time) (res []response.OutPatientResponse, err error) {
+func (repo outPatientRepository) FilterByDate(date_start, date_end string) (res []response.OutPatientResponse, err error) {
+
+	err = repo.sqldb.Model(models.MedicRecord{}).
+		Select(`medic_records.*, medical_sessions.queue, medical_sessions.date_check,
+						patients.full_name, patients.code, sessions.time_start,
+						medical_staffs.full_name as doctor`).
+		Joins("left join patients on patients.id = medic_records.patient_id").
+		Joins("left join medical_sessions on medical_sessions.medic_record_id = medic_records.id").
+		Joins("left join sessions on medical_sessions.session_id = sessions.id").
+		Joins("left join medical_staffs on medical_staffs.id = medical_sessions.medical_staff_id").
+		Where("medical_sessions.date_check BETWEEN ? AND ?", date_start, date_end).
+		Scan(&res).Error
+
 	return
 }

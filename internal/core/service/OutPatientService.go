@@ -66,8 +66,8 @@ func (srv OutPatientService) ListPatient(id float64, role string) (res []respons
 	return
 }
 
-func (srv OutPatientService) FilterByDate() (res []response.OutPatientResponse, err error) {
-	// res, err  = srv.repo.ListAvailable()
+func (srv OutPatientService) FilterByDate(start, end string) (res []response.OutPatientResponse, err error) {
+	res, err  = srv.repo.FilterByDate(start, end)
 	err = check.Record(res, err)
 	return
 }

@@ -10,7 +10,7 @@ import (
 func NewOutPatientRoutes(e *echo.Group, acon *controller.OutPatientController, middleware ...echo.MiddlewareFunc) {
 	patient := e.Group("/outpatient", middleware...)
 	patient.GET("", acon.GetAllOutPatient)
-	patient.POST("", acon.NewMedicRecord, mw.AdminPermission)
+	patient.POST("", acon.NewMedicRecord)
 	patient.POST("/doctor", acon.DoctorProcess, mw.DoctorPermission)
 	patient.POST("/nurse", acon.NurseProcess, mw.NursePermission)
 }
