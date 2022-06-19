@@ -40,8 +40,8 @@ func (srv AuthService) Logout(token string) (err error) {
 	return
 }
 
-func (srv AuthService) CreateToken(id uint, level string) (t models.Token, err error) {
-	t, err = jwt.CreateToken(float64(id), level)
+func (srv AuthService) CreateToken(id uint, facility_id, level string) (t models.Token, err error) {
+	t, err = jwt.CreateToken(float64(id), facility_id, level)
 	err = srv.repo.SaveToken(t)
 	return
 }

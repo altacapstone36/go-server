@@ -3,7 +3,6 @@ package repository
 import (
 	"go-hospital-server/internal/core/entity/models"
 	"go-hospital-server/internal/core/entity/response"
-	"strings"
 
 	"gorm.io/gorm"
 )
@@ -26,27 +25,56 @@ func (repo outPatientRepository) Proceed(mr models.MedicRecord) (err error) {
 	return
 }
 
-func (repo outPatientRepository) ListAvailable(id int,
-	level string) (res []response.OutPatientResponse, err error) {
-
-	var whereAdd []string
-	if level == "doctor" {
-		whereAdd = []string{"medic_records.diagnose = ''", "medic_records.prescription = ''"}
-	} else if level == "nurse" {
-		whereAdd = []string{"medic_records.blood_tension = ''", "medic_records.body_templrature = ''",
-			"medic_records.height = ''", "medic_records.weight = ''"}
-	}
+func (repo outPatientRepository) ListForDoctor(id int) (res []response.OutPatientResponse, err error) {
 
 	err = repo.sqldb.Model(models.MedicRecord{}).
 		Select(`medic_records.*, medical_sessions.queue, medical_sessions.date_check,
 						patients.full_name, patients.code, sessions.time_start,
 						medical_staffs.full_name as doctor`).
-		Joins("left join patients on patients.id = medic_records.patient_id").
-		Joins("left join medical_sessions on medical_sessions.medic_record_id = medic_records.id").
-		Joins("left join sessions on medical_sessions.session_id = sessions.id").
-		Joins("left join medical_staffs on medical_staffs.id = medical_sessions.medical_staff_id").
+		Joins("join patients on patients.id = medic_records.patient_id").
+		Joins("join medical_sessions on medical_sessions.medic_record_id = medic_records.id").
+		Joins("join sessions on medical_sessions.session_id = sessions.id").
+		Joins("join medical_staffs on medical_staffs.id = medical_sessions.medical_staff_id").
 		Where("medical_sessions.medical_staff_id = ?", id).
-		Where(strings.Join(whereAdd, " AND ")).
+		Where("medic_records.status = 0").
+		Scan(&res).Error
+
+	return
+}
+
+func (repo outPatientRepository) ListForNurse(facility string) (res []response.OutPatientResponse, err error) {
+
+	err = repo.sqldb.Model(models.MedicRecord{}).
+		Select(`medic_records.*, medical_sessions.queue, medical_sessions.date_check,
+						patients.full_name, patients.code, sessions.time_start,
+						medical_staffs.full_name as doctor`).
+		Joins("join patients on patients.id = medic_records.patient_id").
+		Joins("join medical_sessions on medical_sessions.medic_record_id = medic_records.id").
+		Joins("join sessions on medical_sessions.session_id = sessions.id").
+		Joins("join medical_facilities on medical_sessions.medical_facility_id = medical_facilities.id").
+		Joins("join medical_staffs on medical_staffs.id = medical_sessions.medical_staff_id").
+		Where("medic_records.blood_tension = 0").
+		Where("medic_records.body_temperature = 0").
+		Where("medic_records.height = 0").
+		Where("medic_records.weight = 0").
+		Where("medic_records.status = 0").
+		Where("medical_facilities.name = ?", facility).
+		Scan(&res).Error
+
+	return
+}
+
+func (repo outPatientRepository) Report() (res []response.OutPatientReportResponse, err error) {
+
+	err = repo.sqldb.Model(models.MedicRecord{}).
+		Select(`medic_records.*, medical_sessions.queue, medical_sessions.date_check,
+						patients.full_name, patients.code, sessions.time_start,
+						medical_staffs.full_name as doctor`).
+		Joins("join patients on patients.id = medic_records.patient_id").
+		Joins("join medical_sessions on medical_sessions.medic_record_id = medic_records.id").
+		Joins("join sessions on medical_sessions.session_id = sessions.id").
+		Joins("join medical_staffs on medical_staffs.id = medical_sessions.medical_staff_id").
+		Where("medic_records.status = 1").
 		Scan(&res).Error
 
 	return

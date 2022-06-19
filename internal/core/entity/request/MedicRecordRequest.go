@@ -22,7 +22,7 @@ type DoctorMedicRequest struct {
 
 type NurseMedicRequest struct {
 	ID uint `json:"id"`
-	BloodTension int `json:"blood_tesion"`
+	BloodTension int `json:"blood_tension"`
 	Height int `json:"height"`
 	Weight int `json:"weight"`
 	BodyTemperature int `json:"body_temp"`
@@ -50,10 +50,10 @@ func (s DoctorMedicRequest) Validate() (err error) {
 func (s NurseMedicRequest) Validate() (err error) {
 	err = validation.ValidateStruct(&s,
 		validation.Field(&s.ID, validation.Required),
-		validation.Field(&s.BloodTension, validation.Required, is.Digit),
-		validation.Field(&s.Height, validation.Required, is.Digit),
-		validation.Field(&s.Weight, validation.Required, is.Digit),
-		validation.Field(&s.BloodTension, validation.Required, is.Digit),
+		validation.Field(&s.BodyTemperature, validation.Required),
+		validation.Field(&s.Height, validation.Required),
+		validation.Field(&s.Weight, validation.Required),
+		validation.Field(&s.BloodTension, validation.Required),
 	)
 	return
 }

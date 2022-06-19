@@ -12,7 +12,6 @@ type MedicalStaff struct {
 	FullName string `json:"full_name"`
 	Gender string `json:"gender"`
 	UserID uint `json:"user_id"`
-	User User `json:"user"`
 	MedicalFacilityID uint `json:"facility_id"`
 	MedicalFacility MedicalFacility `json:"facility"`
 	Schedule []Schedule `gorm:"constraint:OnDelete:CASCADE,OnUpdate:CASCADE"`

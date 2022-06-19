@@ -4,6 +4,8 @@ import (
 	"go-hospital-server/internal/core/entity/response"
 	"go-hospital-server/internal/utils/errors"
 	"reflect"
+
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
 type HTTPCheck struct {
@@ -50,5 +52,22 @@ func HTTP(res interface{}, err error, msg string) (r HTTPCheck, ok bool) {
 			Message: "Success to " + msg,
 	}
 
+	return
+}
+
+func ParamQuery(args ...interface{}) (r HTTPCheck, ok bool ) {
+	for _, v := range args {
+		err := validation.Validate(&v, validation.Date("2006-01-02"))
+		if err != nil {
+			r.Code = 417
+			r.Result =  response.Error{
+				Message: "Failed to Validate Parameter",
+				Error: err.Error(),
+			}
+
+			return
+		}
+	}
+	ok = true
 	return
 }

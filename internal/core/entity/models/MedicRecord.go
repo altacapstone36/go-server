@@ -9,17 +9,18 @@ import (
 )
 
 type MedicRecord struct {
-	ID uint `gorm:"primarykey:autoIncrement:false"`
+	ID uint ` json:"id" gorm:"primarykey:autoIncrement:false"`
 	SerialNumber string
-	BloodTension int
-	Height int
-	Weight int
-	BodyTemperature int
-	Complaint string
-	Diagnose string
-	Prescription string
-	PatientID uint
+	BloodTension int `json:"blood_tension"`
+	Height int `json:"height"`
+	Weight int `json:"weight"`
+	BodyTemperature int `json:"body_temp"`
+	Complaint string `json:"complaint"`
+	Diagnose string `json:"diagnose"`
+	Prescription string `json:"prescription"`
+	PatientID uint `json:"patient_id"`
 	Patient Patient
+	Status int
 	MedicalSession MedicalSession `gorm:"constraint:OnDelete:CASCADE,OnUpdate:CASCADE"`
 }
 
@@ -27,6 +28,7 @@ func (mr *MedicRecord) BeforeCreate(tx *gorm.DB) (err error) {
 	var residence string
 	var year int
 	var id int64
+	var c int64
 	ms := mr.MedicalSession
 	
 	fk := []string{"patients", "medical_staffs", "medical_facilities", "sessions"}
@@ -34,7 +36,6 @@ func (mr *MedicRecord) BeforeCreate(tx *gorm.DB) (err error) {
 	fk_msg := []string{"Patient", "Medical Staff", "Medical Facility", "Session"}
 
 	for i, v := range fk {
-		var c int64
 		tx.Table(v).Where("id = ?", fk_val[i]).Count(&c)
 		if c == 0 {
 			errMsg := fmt.Sprintf("No %s with ID %d", fk_msg[i], fk_val[i])
@@ -43,7 +44,21 @@ func (mr *MedicRecord) BeforeCreate(tx *gorm.DB) (err error) {
 		}
 	}
 
+	tx.Table(fk[1]).Where("id = ?", fk_val[1]).
+		Where("medical_facility_id = ?", fk_val[2]).Count(&c)
+	if c == 0 {
+		errMsg := fmt.Sprintf("This Medical Staff not in facility #%d", ms.MedicalFacilityID)
+		err = errors.New(417, errMsg)
+		return
+	}
 
+	tx.Model(&mr).Where("patient_id = ?", fk_val[0]).
+		Where("status = 0").Count(&c)
+	if c != 0 {
+		errMsg := fmt.Sprintf("Patient #%d have %d unfilled Medic Record", mr.PatientID, c)
+		err = errors.New(417, errMsg)
+		return
+	}
 
 	tx.Model(&mr).Count(&id)
 	tx.Model(&mr.Patient).Select("resident_registration").

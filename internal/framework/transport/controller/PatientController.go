@@ -28,7 +28,7 @@ func NewPatientController(srv *service.PatientService) *PatientController {
 // @Security ApiKey
 // @Accept json
 // @Produce json
-// @Success 200 {object} response.MessageData{Data=[]models.Patient} success
+// @Success 200 {object} response.MessageData{data=[]models.Patient} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /patient [get]
@@ -60,8 +60,8 @@ func (acon PatientController) GetAllPatient(c echo.Context) error {
 // @Security ApiKey
 // @Accept json
 // @Produce json
-// @Param id  path  string  true "patient id"
-// @Success 200 {object} response.MessageData{Data=models.Patient} success
+// @Param id  path  string  true "Patient ID"
+// @Success 200 {object} response.MessageData{data=models.Patient} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /patient/:id [get]
@@ -86,7 +86,7 @@ func (acon PatientController) GetPatientByID(c echo.Context) error {
 // @Security ApiKey
 // @Accept json
 // @Produce json
-// @Param body  body  models.Patient{}  true "patient details"
+// @Param body  body  models.Patient{}  true "Patient Details"
 // @Success 200 {object} response.MessageOnly{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
@@ -117,8 +117,8 @@ func (acon PatientController) CreatePatient(c echo.Context) error {
 // @Security ApiKey
 // @Accept json
 // @Produce json
-// @Param id  path  int  true "patient id"
-// @Param body  body  models.Patient{}  true "patient details"
+// @Param id  path  int  true "Patient ID"
+// @Param body  body  models.Patient{}  true "Patient Details"
 // @Success 200 {object} response.MessageOnly{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
@@ -150,7 +150,7 @@ func (acon PatientController) UpdatePatient(c echo.Context) error {
 // @Security ApiKey
 // @Accept json
 // @Produce json
-// @Param id  path  int  true "patient id"
+// @Param id  path  int  true "Patient ID"
 // @Success 200 {object} response.MessageOnly{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error

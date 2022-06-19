@@ -35,7 +35,7 @@ const docTemplate = `{
                 "summary": "Login",
                 "parameters": [
                     {
-                        "description": "send request email, password",
+                        "description": "Send Request Email and Password",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -124,6 +124,20 @@ const docTemplate = `{
                     "OutPatient"
                 ],
                 "summary": "GetAllPatient",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Date Filter Range Start (2022-02-23)",
+                        "name": "date_start",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Date Filter Range End (2006-02-25)",
+                        "name": "date_end",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -135,7 +149,7 @@ const docTemplate = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "Data": {
+                                        "data": {
                                             "type": "array",
                                             "items": {
                                                 "$ref": "#/definitions/response.OutPatientResponse"
@@ -179,7 +193,7 @@ const docTemplate = `{
                 "summary": "New Medic Record",
                 "parameters": [
                     {
-                        "description": "new medic record",
+                        "description": "New Medic Record",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -230,7 +244,7 @@ const docTemplate = `{
                 "summary": "Process Doctor",
                 "parameters": [
                     {
-                        "description": "process medic record by doctor",
+                        "description": "Process Medic Record by Doctor",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -281,7 +295,7 @@ const docTemplate = `{
                 "summary": "Process Nurse",
                 "parameters": [
                     {
-                        "description": "process medic record by nurse",
+                        "description": "Process Medic Record by Nurse",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -341,7 +355,7 @@ const docTemplate = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "Data": {
+                                        "data": {
                                             "type": "array",
                                             "items": {
                                                 "$ref": "#/definitions/models.Patient"
@@ -385,7 +399,7 @@ const docTemplate = `{
                 "summary": "CreatePatient",
                 "parameters": [
                     {
-                        "description": "patient details",
+                        "description": "Patient Details",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -437,7 +451,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "patient id",
+                        "description": "Patient ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -454,7 +468,7 @@ const docTemplate = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "Data": {
+                                        "data": {
                                             "$ref": "#/definitions/models.Patient"
                                         }
                                     }
@@ -498,7 +512,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "patient id",
+                        "description": "Patient ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -547,13 +561,13 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "patient id",
+                        "description": "Patient ID",
                         "name": "id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "patient details",
+                        "description": "Patient Details",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -605,7 +619,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "pass access token here",
+                        "description": "Pass access_token Here",
                         "name": "token",
                         "in": "query",
                         "required": true
@@ -639,7 +653,6 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "bloodTension": {
-                    "description": "SerialNumber uint",
                     "type": "integer"
                 },
                 "bodyTemperature": {
@@ -657,11 +670,8 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "medicalStaff": {
-                    "$ref": "#/definitions/models.MedicalStaff"
-                },
-                "medicalStaffID": {
-                    "type": "integer"
+                "medicalSession": {
+                    "$ref": "#/definitions/models.MedicalSession"
                 },
                 "patient": {
                     "$ref": "#/definitions/models.Patient"
@@ -672,44 +682,33 @@ const docTemplate = `{
                 "prescription": {
                     "type": "string"
                 },
+                "serialNumber": {
+                    "type": "string"
+                },
                 "weight": {
                     "type": "integer"
                 }
             }
         },
-        "models.MedicalFacility": {
+        "models.MedicalSession": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.MedicalStaff": {
-            "type": "object",
-            "properties": {
-                "facility": {
-                    "$ref": "#/definitions/models.MedicalFacility"
-                },
-                "facility_id": {
-                    "type": "integer"
-                },
-                "full_name": {
+                "dateCheck": {
                     "type": "string"
                 },
-                "gender": {
-                    "type": "string"
-                },
-                "id": {
+                "medicRecordID": {
                     "type": "integer"
                 },
-                "user": {
-                    "$ref": "#/definitions/models.User"
+                "medicalFacilityID": {
+                    "type": "integer"
                 },
-                "user_id": {
+                "medicalStaffID": {
+                    "type": "integer"
+                },
+                "queue": {
+                    "type": "integer"
+                },
+                "sessionID": {
                     "type": "integer"
                 }
             }
@@ -749,20 +748,6 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Role": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
         "models.Token": {
             "type": "object",
             "properties": {
@@ -770,41 +755,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "refresh_token": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.User": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "createdAt": {
-                    "type": "string"
-                },
-                "deletedAt": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "role_id": {
-                    "type": "integer"
-                },
-                "roles": {
-                    "$ref": "#/definitions/models.Role"
-                },
-                "status": {
-                    "type": "integer"
-                },
-                "updatedAt": {
                     "type": "string"
                 }
             }
@@ -926,6 +876,9 @@ const docTemplate = `{
                 },
                 "queue": {
                     "type": "integer"
+                },
+                "serial_number": {
+                    "type": "string"
                 },
                 "session": {
                     "type": "string"

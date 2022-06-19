@@ -27,7 +27,7 @@ func NewAuthController(srv *service.AuthService) *AuthController {
 // @Tags Authorization
 // @Accept json
 // @Produce json
-// @Param body  body  request.LoginRequest{}  true "send request email, password"
+// @Param body  body  request.LoginRequest{}  true "Send Request Email and Password"
 // @Success 200 {object} response.User{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
@@ -45,7 +45,7 @@ func (acon AuthController) Login(c echo.Context) error {
 		return c.JSON(r.Code, r.Result)
 	}
 
-	jwt, err := acon.srv.CreateToken(res.ID, res.Role)
+	jwt, err := acon.srv.CreateToken(res.ID, res.Facility, res.Role)
 	if r, ok := check.HTTP(res, err, "Create Authentication Token"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}
@@ -64,7 +64,7 @@ func (acon AuthController) Login(c echo.Context) error {
 // @Security ApiKey
 // @Accept json
 // @Produce json
-// @Param token  query  string  true "pass access token here"
+// @Param token  query  string  true "Pass access_token Here"
 // @Success 200 {object} models.Token{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error

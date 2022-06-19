@@ -9,15 +9,21 @@ import (
 func medicalStaffSeeder() Seed {
 	seeds := []models.MedicalStaff{
 		{
+			FullName: "Rimuru Tempest",
+			Gender: "Male",
+			UserID: 1,
+			MedicalFacilityID: 1,
+		},
+		{
 			FullName: "Alsyad Ahmad",
-			Gender: "Male",			
-			UserID: 1,			
+			Gender: "Male",
+			UserID: 2,
 			MedicalFacilityID: 1,
 		},
 		{
 			FullName: "Priscilla Halim",
-			Gender: "Female",			
-			UserID: 2,			
+			Gender: "Female",
+			UserID: 3,
 			MedicalFacilityID: 1,
 		},
 	}

@@ -4,10 +4,10 @@ import "gorm.io/gorm"
 
 type	MedicalSession struct {
 	MedicRecordID uint
-	MedicalFacilityID uint
-	MedicalStaffID uint
-	SessionID uint
-	DateCheck string
+	MedicalStaffID uint `json:"medical_staff_id"`
+	MedicalFacilityID uint `json:"medical_facility_id"`
+	SessionID uint `json:"session_id"`
+	DateCheck string `json:"date_check"`
 	Queue int
 }
 

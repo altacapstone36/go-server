@@ -16,6 +16,7 @@ type User struct {
 	Status int `json:"status"`
 	RoleID int `json:"role_id"`
 	Role Role `json:"roles"`
+	MedicalStaff MedicalStaff
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

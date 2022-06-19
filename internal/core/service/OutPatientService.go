@@ -5,6 +5,7 @@ import (
 	"go-hospital-server/internal/core/entity/request"
 	"go-hospital-server/internal/core/entity/response"
 	"go-hospital-server/internal/core/repository"
+	"go-hospital-server/internal/utils"
 	"go-hospital-server/internal/utils/errors/check"
 )
 
@@ -19,12 +20,9 @@ func NewOutPatientService(repo repository.OutPatientRepository) *OutPatientServi
 func (srv OutPatientService) NewMedicRecord(req request.AdminMedicRecord) (err error) {
 	var mr models.MedicRecord
 
-	mr.PatientID = req.PatientID
-	mr.Complaint = req.Complaint
-	mr.MedicalSession.DateCheck = req.DateCheck
-	mr.MedicalSession.MedicalStaffID = req.MedicalStaffID
-	mr.MedicalSession.SessionID = req.SessionID
-	mr.MedicalSession.MedicalFacilityID = req.MedicalFacilityID
+	mr, _ = utils.TypeConverter[models.MedicRecord](req)
+	mr.MedicalSession, _ = utils.TypeConverter[models.MedicalSession](req)
+	mr.Status = 0
 
 	err  = srv.repo.NewMedicalRecord(mr)
 
@@ -32,12 +30,13 @@ func (srv OutPatientService) NewMedicRecord(req request.AdminMedicRecord) (err e
 	return
 }
 
-func (srv OutPatientService) DoctorProcess(req request.DoctorMedicRequest) (err error) {
+func (srv OutPatientService) Process(req interface{}) (err error) {
 	var mr models.MedicRecord
 
-	mr.ID = req.ID
-	mr.Diagnose = req.Diagnose
-	mr.Prescription = req.Prescription
+	mr, _ = utils.TypeConverter[models.MedicRecord](req)
+	if mr.Diagnose != "" && mr.Prescription != "" {
+		mr.Status = 1
+	}
 
 	err  = srv.repo.Proceed(mr)
 
@@ -45,29 +44,24 @@ func (srv OutPatientService) DoctorProcess(req request.DoctorMedicRequest) (err 
 	return
 }
 
-func (srv OutPatientService) NurseProcess(req request.NurseMedicRequest) (err error) {
-	var mr models.MedicRecord
-
-	mr.ID = req.ID
-	mr.BloodTension = req.BloodTension
-	mr.BodyTemperature = req.BodyTemperature
-	mr.Weight = req.Weight
-	mr.Height = req.Height
-
-	err  = srv.repo.Proceed(mr)
-
-	err = check.Record(nil, err)
-	return
-}
-
-func (srv OutPatientService) ListPatient(id float64, role string) (res []response.OutPatientResponse, err error) {
-	res, err  = srv.repo.ListAvailable(int(id), role)
+func (srv OutPatientService) ListPatient(id float64, facility, role string) (res []response.OutPatientResponse, err error) {
+	if role == "doctor" {
+		res, err  = srv.repo.ListForDoctor(int(id))
+	} else if role == "nurse" {
+		res, err  = srv.repo.ListForNurse(facility)
+	}
 	err = check.Record(res, err)
 	return
 }
 
 func (srv OutPatientService) FilterByDate(start, end string) (res []response.OutPatientResponse, err error) {
 	res, err  = srv.repo.FilterByDate(start, end)
+	err = check.Record(res, err)
+	return
+}
+
+func (srv OutPatientService) Report() (res []response.OutPatientReportResponse, err error) {
+	res, err  = srv.repo.Report()
 	err = check.Record(res, err)
 	return
 }

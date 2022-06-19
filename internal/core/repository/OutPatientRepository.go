@@ -7,7 +7,9 @@ import (
 
 type OutPatientRepository interface {
 	NewMedicalRecord(models.MedicRecord) (error)
+	Report() ([]response.OutPatientReportResponse, error)
 	Proceed(models.MedicRecord) (error)
-	ListAvailable(int, string) ([]response.OutPatientResponse, error)
+	ListForDoctor(int) ([]response.OutPatientResponse, error)
+	ListForNurse(string) ([]response.OutPatientResponse, error)
 	FilterByDate(string, string) ([]response.OutPatientResponse, error)
 }
