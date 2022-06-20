@@ -15,9 +15,22 @@ type OutPatientResponse struct {
 type OutPatientReportResponse struct {
 	ID uint `json:"id"`
 	SerialNumber string `json:"serial_number"`
-	FullName string `json:"full_name"`
 	Code string `json:"code"`
+	ResidentRegistration string `json:"resident_registration"`
+	FullName string `json:"full_name" sql:"unique"`
+	BloodType string `json:"blood_type"`
+	BloodTension int `json:"blood_tension"`
+	Height int `json:"height"`
+	Weight int `json:"weight"`
+	BodyTemperature int `json:"body_temp"`
 	Complaint string `json:"complaint"`
+	Diagnose string `json:"diagnose"`
+	Prescription string `json:"prescription"`
 	Doctor string `json:"doctor"`
-	MedicRecord MedicRecord `json:"medic_record"`
+	Facility string `json:"facility"`
+	DateCheck string `json:"date_check"`
+}
+
+type OutPatientReportLogResponse struct {
+	SerialNumber string `json:"serial_number"`
 }

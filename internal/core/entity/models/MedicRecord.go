@@ -47,10 +47,19 @@ func (mr *MedicRecord) BeforeCreate(tx *gorm.DB) (err error) {
 	tx.Table(fk[1]).Where("id = ?", fk_val[1]).
 		Where("medical_facility_id = ?", fk_val[2]).Count(&c)
 	if c == 0 {
-		errMsg := fmt.Sprintf("This Medical Staff not in facility #%d", ms.MedicalFacilityID)
+		errMsg := fmt.Sprintf("Medical Staff #%d not in facility #%d", fk_val[1], fk_val[2])
 		err = errors.New(417, errMsg)
 		return
 	}
+	
+	tx.Model(&mr).Where("id = ?", mr.ID).
+		Where("status = 1").Count(&c)
+	if c != 0 {
+		errMsg := fmt.Sprintf("Medic Record #%d already filled", mr.ID)
+		err = errors.New(417, errMsg)
+		return
+	}
+
 
 	tx.Model(&mr).Where("patient_id = ?", fk_val[0]).
 		Where("status = 0").Count(&c)

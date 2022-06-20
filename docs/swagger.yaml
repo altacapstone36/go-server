@@ -1,70 +1,5 @@
 basePath: /api
 definitions:
-  models.MedicRecord:
-    properties:
-      bloodTension:
-        type: integer
-      bodyTemperature:
-        type: integer
-      complaint:
-        type: string
-      diagnose:
-        type: string
-      height:
-        type: integer
-      id:
-        type: integer
-      medicalSession:
-        $ref: '#/definitions/models.MedicalSession'
-      patient:
-        $ref: '#/definitions/models.Patient'
-      patientID:
-        type: integer
-      prescription:
-        type: string
-      serialNumber:
-        type: string
-      weight:
-        type: integer
-    type: object
-  models.MedicalSession:
-    properties:
-      dateCheck:
-        type: string
-      medicRecordID:
-        type: integer
-      medicalFacilityID:
-        type: integer
-      medicalStaffID:
-        type: integer
-      queue:
-        type: integer
-      sessionID:
-        type: integer
-    type: object
-  models.Patient:
-    properties:
-      address:
-        type: string
-      birthdate:
-        type: string
-      blood_type:
-        type: string
-      code:
-        type: string
-      full_name:
-        type: string
-      gender:
-        type: string
-      id:
-        type: integer
-      medic_record:
-        items:
-          $ref: '#/definitions/models.MedicRecord'
-        type: array
-      resident_registration:
-        type: string
-    type: object
   models.Token:
     properties:
       access_token:
@@ -75,52 +10,110 @@ definitions:
   request.AdminMedicRecord:
     properties:
       complaint:
+        example: sakit perut
         type: string
       date_check:
+        example: "2022-06-24"
         type: string
       medical_facility_id:
+        example: 1
         type: integer
       medical_staff_id:
+        example: 1
         type: integer
       patient_id:
+        example: 1
         type: integer
       session_id:
+        example: 1
         type: integer
     type: object
   request.DoctorMedicRequest:
     properties:
       diagnose:
+        example: maag
         type: string
       id:
+        example: 1
         type: integer
       prescription:
+        example: entrostop
         type: string
     type: object
   request.LoginRequest:
     properties:
       email:
+        example: alsyadahmad@holyhos.co.id
         type: string
       password:
+        example: password
         type: string
     type: object
-  request.NurseMedicRequest:
+  request.Patient:
     properties:
-      blood_tesion:
-        type: integer
-      body_temp:
-        type: integer
-      height:
-        type: integer
-      id:
-        type: integer
-      weight:
-        type: integer
+      address:
+        example: Sumenep
+        type: string
+      birthdate:
+        example: "2001-04-14"
+        type: string
+      blood_type:
+        example: A
+        type: string
+      code:
+        example: RM0001
+        type: string
+      full_name:
+        example: Faizur Ramadhan
+        type: string
+      gender:
+        example: Male
+        type: string
+      resident_registration:
+        example: "8729301745162748"
+        type: string
     type: object
   response.Error:
     properties:
       error: {}
       message:
         type: string
+    type: object
+  response.MedicRecord:
+    properties:
+      blood_tension:
+        example: 124
+        type: integer
+      body_temp:
+        example: 34
+        type: integer
+      complaint:
+        example: Sakit Perut
+        type: string
+      date_check:
+        example: "2022-06-17"
+        type: string
+      diagnose:
+        example: Maag
+        type: string
+      doctor:
+        example: Alsyad Ahmad
+        type: string
+      facility:
+        example: General
+        type: string
+      height:
+        example: 55
+        type: integer
+      prescription:
+        example: Entrostop
+        type: string
+      serial_number:
+        example: RM/748/2022/0001
+        type: string
+      weight:
+        example: 150
+        type: integer
     type: object
   response.MessageData:
     properties:
@@ -154,26 +147,86 @@ definitions:
       session:
         type: string
     type: object
+  response.Patient:
+    properties:
+      birthdate:
+        example: "2001-04-14"
+        type: string
+      code:
+        example: RM0001
+        type: string
+      full_name:
+        example: Faizur Ramadhan
+        type: string
+      gender:
+        example: Male
+        type: string
+      id:
+        example: 1
+        type: integer
+      resident_registration:
+        example: "8729301745162748"
+        type: string
+    type: object
+  response.PatientDetails:
+    properties:
+      address:
+        example: Sumenep
+        type: string
+      birthdate:
+        example: "2001-04-14"
+        type: string
+      blood_type:
+        example: A
+        type: string
+      code:
+        example: RM0001
+        type: string
+      full_name:
+        example: Faizur Ramadhan
+        type: string
+      gender:
+        example: Male
+        type: string
+      id:
+        example: 1
+        type: integer
+      medic_record:
+        items:
+          $ref: '#/definitions/response.MedicRecord'
+        type: array
+      resident_registration:
+        example: "8729301745162748"
+        type: string
+    type: object
   response.User:
     properties:
       code:
+        example: DR00001
         type: string
       email:
+        example: alsyadahmad@holyhos.co.id
         type: string
       facility:
+        example: General
         type: string
       full_name:
+        example: Alsyad Ahmad
         type: string
       gender:
+        example: Male
         type: string
       id:
+        example: 1
         type: integer
       roles:
+        example: Doctor
         type: string
       status:
+        example: 1
         type: integer
     type: object
-host: localhost:8080
+host: ec2-3-91-177-221.compute-1.amazonaws.com
 info:
   contact: {}
   description: server API for Holy Hospital Application.
@@ -310,7 +363,7 @@ paths:
       summary: New Medic Record
       tags:
       - OutPatient
-  /outpatient/doctor:
+  /outpatient/process:
     post:
       consumes:
       - application/json
@@ -342,38 +395,6 @@ paths:
       summary: Process Doctor
       tags:
       - OutPatient
-  /outpatient/nurse:
-    post:
-      consumes:
-      - application/json
-      description: Process Medic Record by Doctor
-      parameters:
-      - description: Process Medic Record by Nurse
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/request.NurseMedicRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.MessageOnly'
-        "417":
-          description: Expectation Failed
-          schema:
-            $ref: '#/definitions/response.Error'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
-      security:
-      - ApiKey: []
-      summary: Process Nurse
-      tags:
-      - OutPatient
   /patient:
     get:
       consumes:
@@ -390,7 +411,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/models.Patient'
+                    $ref: '#/definitions/response.Patient'
                   type: array
               type: object
         "417":
@@ -416,7 +437,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/models.Patient'
+          $ref: '#/definitions/request.Patient'
       produces:
       - application/json
       responses:
@@ -458,7 +479,7 @@ paths:
             - $ref: '#/definitions/response.MessageData'
             - properties:
                 data:
-                  $ref: '#/definitions/models.Patient'
+                  $ref: '#/definitions/response.PatientDetails'
               type: object
         "417":
           description: Expectation Failed
@@ -520,7 +541,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/models.Patient'
+          $ref: '#/definitions/request.Patient'
       produces:
       - application/json
       responses:

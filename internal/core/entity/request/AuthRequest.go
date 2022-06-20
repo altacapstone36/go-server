@@ -6,8 +6,8 @@ import (
 )
 
 type LoginRequest struct {
-	Email string `json:"email"`
-	Password string `json:"password"`
+	Email string `json:"email" example:"alsyadahmad@holyhos.co.id"`
+	Password string `json:"password" example:"password"`
 }
 
 func (lr LoginRequest) Validate() error {

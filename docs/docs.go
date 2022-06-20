@@ -224,7 +224,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/outpatient/doctor": {
+        "/outpatient/process": {
             "post": {
                 "security": [
                     {
@@ -250,57 +250,6 @@ const docTemplate = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/request.DoctorMedicRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.MessageOnly"
-                        }
-                    },
-                    "417": {
-                        "description": "Expectation Failed",
-                        "schema": {
-                            "$ref": "#/definitions/response.Error"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.Error"
-                        }
-                    }
-                }
-            }
-        },
-        "/outpatient/nurse": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKey": []
-                    }
-                ],
-                "description": "Process Medic Record by Doctor",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "OutPatient"
-                ],
-                "summary": "Process Nurse",
-                "parameters": [
-                    {
-                        "description": "Process Medic Record by Nurse",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.NurseMedicRequest"
                         }
                     }
                 ],
@@ -358,7 +307,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/models.Patient"
+                                                "$ref": "#/definitions/response.Patient"
                                             }
                                         }
                                     }
@@ -404,7 +353,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Patient"
+                            "$ref": "#/definitions/request.Patient"
                         }
                     }
                 ],
@@ -469,7 +418,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/models.Patient"
+                                            "$ref": "#/definitions/response.PatientDetails"
                                         }
                                     }
                                 }
@@ -572,7 +521,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Patient"
+                            "$ref": "#/definitions/request.Patient"
                         }
                     }
                 ],
@@ -649,105 +598,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "models.MedicRecord": {
-            "type": "object",
-            "properties": {
-                "bloodTension": {
-                    "type": "integer"
-                },
-                "bodyTemperature": {
-                    "type": "integer"
-                },
-                "complaint": {
-                    "type": "string"
-                },
-                "diagnose": {
-                    "type": "string"
-                },
-                "height": {
-                    "type": "integer"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "medicalSession": {
-                    "$ref": "#/definitions/models.MedicalSession"
-                },
-                "patient": {
-                    "$ref": "#/definitions/models.Patient"
-                },
-                "patientID": {
-                    "type": "integer"
-                },
-                "prescription": {
-                    "type": "string"
-                },
-                "serialNumber": {
-                    "type": "string"
-                },
-                "weight": {
-                    "type": "integer"
-                }
-            }
-        },
-        "models.MedicalSession": {
-            "type": "object",
-            "properties": {
-                "dateCheck": {
-                    "type": "string"
-                },
-                "medicRecordID": {
-                    "type": "integer"
-                },
-                "medicalFacilityID": {
-                    "type": "integer"
-                },
-                "medicalStaffID": {
-                    "type": "integer"
-                },
-                "queue": {
-                    "type": "integer"
-                },
-                "sessionID": {
-                    "type": "integer"
-                }
-            }
-        },
-        "models.Patient": {
-            "type": "object",
-            "properties": {
-                "address": {
-                    "type": "string"
-                },
-                "birthdate": {
-                    "type": "string"
-                },
-                "blood_type": {
-                    "type": "string"
-                },
-                "code": {
-                    "type": "string"
-                },
-                "full_name": {
-                    "type": "string"
-                },
-                "gender": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "medic_record": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.MedicRecord"
-                    }
-                },
-                "resident_registration": {
-                    "type": "string"
-                }
-            }
-        },
         "models.Token": {
             "type": "object",
             "properties": {
@@ -763,22 +613,28 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "complaint": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "sakit perut"
                 },
                 "date_check": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "2022-06-24"
                 },
                 "medical_facility_id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "medical_staff_id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "patient_id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "session_id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 }
             }
         },
@@ -786,13 +642,16 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "diagnose": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "maag"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "prescription": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "entrostop"
                 }
             }
         },
@@ -800,30 +659,45 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "alsyadahmad@holyhos.co.id"
                 },
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "password"
                 }
             }
         },
-        "request.NurseMedicRequest": {
+        "request.Patient": {
             "type": "object",
             "properties": {
-                "blood_tesion": {
-                    "type": "integer"
+                "address": {
+                    "type": "string",
+                    "example": "Sumenep"
                 },
-                "body_temp": {
-                    "type": "integer"
+                "birthdate": {
+                    "type": "string",
+                    "example": "2001-04-14"
                 },
-                "height": {
-                    "type": "integer"
+                "blood_type": {
+                    "type": "string",
+                    "example": "A"
                 },
-                "id": {
-                    "type": "integer"
+                "code": {
+                    "type": "string",
+                    "example": "RM0001"
                 },
-                "weight": {
-                    "type": "integer"
+                "full_name": {
+                    "type": "string",
+                    "example": "Faizur Ramadhan"
+                },
+                "gender": {
+                    "type": "string",
+                    "example": "Male"
+                },
+                "resident_registration": {
+                    "type": "string",
+                    "example": "8729301745162748"
                 }
             }
         },
@@ -833,6 +707,55 @@ const docTemplate = `{
                 "error": {},
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "response.MedicRecord": {
+            "type": "object",
+            "properties": {
+                "blood_tension": {
+                    "type": "integer",
+                    "example": 124
+                },
+                "body_temp": {
+                    "type": "integer",
+                    "example": 34
+                },
+                "complaint": {
+                    "type": "string",
+                    "example": "Sakit Perut"
+                },
+                "date_check": {
+                    "type": "string",
+                    "example": "2022-06-17"
+                },
+                "diagnose": {
+                    "type": "string",
+                    "example": "Maag"
+                },
+                "doctor": {
+                    "type": "string",
+                    "example": "Alsyad Ahmad"
+                },
+                "facility": {
+                    "type": "string",
+                    "example": "General"
+                },
+                "height": {
+                    "type": "integer",
+                    "example": 55
+                },
+                "prescription": {
+                    "type": "string",
+                    "example": "Entrostop"
+                },
+                "serial_number": {
+                    "type": "string",
+                    "example": "RM/748/2022/0001"
+                },
+                "weight": {
+                    "type": "integer",
+                    "example": 150
                 }
             }
         },
@@ -885,32 +808,112 @@ const docTemplate = `{
                 }
             }
         },
+        "response.Patient": {
+            "type": "object",
+            "properties": {
+                "birthdate": {
+                    "type": "string",
+                    "example": "2001-04-14"
+                },
+                "code": {
+                    "type": "string",
+                    "example": "RM0001"
+                },
+                "full_name": {
+                    "type": "string",
+                    "example": "Faizur Ramadhan"
+                },
+                "gender": {
+                    "type": "string",
+                    "example": "Male"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "resident_registration": {
+                    "type": "string",
+                    "example": "8729301745162748"
+                }
+            }
+        },
+        "response.PatientDetails": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string",
+                    "example": "Sumenep"
+                },
+                "birthdate": {
+                    "type": "string",
+                    "example": "2001-04-14"
+                },
+                "blood_type": {
+                    "type": "string",
+                    "example": "A"
+                },
+                "code": {
+                    "type": "string",
+                    "example": "RM0001"
+                },
+                "full_name": {
+                    "type": "string",
+                    "example": "Faizur Ramadhan"
+                },
+                "gender": {
+                    "type": "string",
+                    "example": "Male"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "medic_record": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.MedicRecord"
+                    }
+                },
+                "resident_registration": {
+                    "type": "string",
+                    "example": "8729301745162748"
+                }
+            }
+        },
         "response.User": {
             "type": "object",
             "properties": {
                 "code": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "DR00001"
                 },
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "alsyadahmad@holyhos.co.id"
                 },
                 "facility": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "General"
                 },
                 "full_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Alsyad Ahmad"
                 },
                 "gender": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Male"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "roles": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Doctor"
                 },
                 "status": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 }
             }
         }
@@ -927,7 +930,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8080",
+	Host:             "ec2-3-91-177-221.compute-1.amazonaws.com",
 	BasePath:         "/api",
 	Schemes:          []string{"http"},
 	Title:            "Holy Hospital Sever API",
