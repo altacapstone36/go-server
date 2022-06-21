@@ -15,18 +15,21 @@ type AdminMedicRecord  struct {
 }
 
 type DoctorMedicRequest struct {
-	ID uint `json:"id" example:"1"`
 	Diagnose string `json:"diagnose" example:"maag"`
 	Prescription string `json:"prescription" example:"entrostop"`
 }
 
 type NurseMedicRequest struct {
-	ID uint `json:"id"`
 	BloodTension int `json:"blood_tension" example:"122"`
 	Height int `json:"height" example:"55"`
 	Weight int `json:"weight" example:"165"`
 	BodyTemperature int `json:"body_temp" example:"31"`
 }
+
+type AssignNurseRequest struct {
+	NurseID uint `json:"nurse_id" example:"1"`
+}
+
 
 func (s AdminMedicRecord) Validate() (err error) {
 	err = validation.ValidateStruct(&s,
@@ -42,14 +45,12 @@ func (s DoctorMedicRequest) Validate() (err error) {
 	err = validation.ValidateStruct(&s,
 		validation.Field(&s.Diagnose, validation.Required, is.Alpha),
 		validation.Field(&s.Prescription, validation.Required),
-		validation.Field(&s.ID, validation.Required),
 	)
 	return
 }
 
 func (s NurseMedicRequest) Validate() (err error) {
 	err = validation.ValidateStruct(&s,
-		validation.Field(&s.ID, validation.Required),
 		validation.Field(&s.BodyTemperature, validation.Required),
 		validation.Field(&s.Height, validation.Required),
 		validation.Field(&s.Weight, validation.Required),
@@ -57,3 +58,11 @@ func (s NurseMedicRequest) Validate() (err error) {
 	)
 	return
 }
+
+func (s AssignNurseRequest) Validate() (err error) {
+	err = validation.ValidateStruct(&s,
+		validation.Field(&s.NurseID, validation.NilOrNotEmpty),
+	)
+	return
+}
+

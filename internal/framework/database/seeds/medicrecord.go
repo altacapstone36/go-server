@@ -11,9 +11,12 @@ func medicRecordSeeder() Seed {
 		{
 			Complaint:       "Sakit Telinga",
 			PatientID:       1,
+			MedicCheck: models.MedicCheck{
+				UserID: 3,
+			},
 			MedicalSession: models.MedicalSession{
-				MedicalStaffID: 1,
 				MedicalFacilityID: 1,
+				UserID: 2,
 				SessionID:         1,
 				DateCheck:         "2022-07-17",
 			},

@@ -11,12 +11,16 @@ import (
 type User struct {
 	ID uint `json:"id" gorm:"primary_key"`
 	Code string `json:"code" gorm:"primary_key"`
+	FullName string `json:"full_name"`
+	Gender string `json:"gender"`
 	Email string `json:"email"`
 	Password string `json:"password"`
 	Status int `json:"status"`
 	RoleID int `json:"role_id"`
 	Role Role `json:"roles"`
-	MedicalStaff MedicalStaff
+	MedicalFacilityID *uint `json:"facility_id"`
+	MedicalFacility MedicalFacility `json:"facility"`
+	Schedule []Schedule `gorm:"constraint:OnDelete:CASCADE,OnUpdate:CASCADE"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -25,10 +29,21 @@ type User struct {
 
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 	var email string
+	var name string
 
 	tx.Model(&u).Select("email").
 		Where("email = ?", u.Email).
 		Scan(&email);
+	
+	tx.Model(&u).Select("full_name").
+		Where("full_name = ?", u.FullName).
+		Scan(&name);
+	
+	if name != "" {
+		msg := fmt.Sprintf("duplicate name for %s found, please use another name", u.FullName)
+		err = errors.New(203, msg)
+		return
+	}
 
 	if email != "" {
 		msg := fmt.Sprintf("duplicate email for %s found, please use another email", u.Email)

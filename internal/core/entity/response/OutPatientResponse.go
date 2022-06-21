@@ -16,13 +16,8 @@ type OutPatientReportResponse struct {
 	ID uint `json:"id"`
 	SerialNumber string `json:"serial_number"`
 	Code string `json:"code"`
-	ResidentRegistration string `json:"resident_registration"`
-	FullName string `json:"full_name" sql:"unique"`
-	BloodType string `json:"blood_type"`
-	BloodTension int `json:"blood_tension"`
-	Height int `json:"height"`
-	Weight int `json:"weight"`
-	BodyTemperature int `json:"body_temp"`
+	ResidentRegistration string `json:"resident_registration" example:"8729301745162748"`
+	FullName string `json:"full_name"`
 	Complaint string `json:"complaint"`
 	Diagnose string `json:"diagnose"`
 	Prescription string `json:"prescription"`

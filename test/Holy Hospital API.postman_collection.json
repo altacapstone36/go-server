@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "74bd4bf0-1ae2-46b9-a75f-c64d97e32db7",
+		"_postman_id": "e20d9546-86d7-4f9d-a5d2-fe0734943a89",
 		"name": "Holy Hospital API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "20122658"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -16,7 +15,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"alsyadahmad@holyhos.co.id\",\n    \"password\": \"password\"\n}",
+							"raw": "{\n    \"email\": \"priscillahalim@holyhos.co.id\",\n    \"password\": \"password\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -173,14 +172,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/patient/4",
+							"raw": "{{base_url}}/api/patient/1",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"patient",
-								"4"
+								"1"
 							]
 						}
 					},
@@ -242,7 +241,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"patient_id\": 1,\n    \"medical_staff_id\": 1,\n    \"medical_facility_id\": 3,\n    \"complaint\": \"Sakit Gigi\",\n    \"session_id\": 1,\n    \"date_check\": \"2022-06-17\"\n}",
+							"raw": "{\n    \"patient_id\": 2,\n    \"medical_staff_id\": 1,\n    \"medical_facility_id\": 1,\n    \"complaint\": \"Sakit Kepala\",\n    \"session_id\": 1,\n    \"date_check\": \"2022-06-17\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -269,7 +268,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"patient_id\": 1,\n    \"diagnose\": \"Migrain\",\n    \"prescription\": \"Mixagrip Migrain\"\n}",
+							"raw": "{\n    \"id\": 1,\n    \"diagnose\": \"Migrain\",\n    \"prescription\": \"Mixagrip Migrain\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -277,14 +276,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/outpatient/doctor",
+							"raw": "{{base_url}}/api/outpatient/process",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"outpatient",
-								"doctor"
+								"process"
 							]
 						}
 					},
@@ -297,7 +296,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"patient_id\": 1,\n    \"blood_tension\": 120,\n    \"height\": 160,\n    \"weight\": 65,\n    \"body_temp\": 35\n}",
+							"raw": "{\n    \"id\": 1,\n    \"blood_tension\": 120,\n    \"height\": 160,\n    \"weight\": 65,\n    \"body_temp\": 35\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -305,14 +304,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/outpatient/nurse",
+							"raw": "{{base_url}}/api/outpatient/process",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"outpatient",
-								"nurse"
+								"process"
 							]
 						}
 					},
@@ -331,6 +330,91 @@
 							"path": [
 								"api",
 								"outpatient"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListByID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/outpatient/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"outpatient",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ReportLog",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/outpatient/log",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"outpatient",
+								"log"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Report",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/outpatient/report",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"outpatient",
+								"report"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListByDate",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/outpatient?date_start=2022-06-16&date_end=2022-06-18",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"outpatient"
+							],
+							"query": [
+								{
+									"key": "date_start",
+									"value": "2022-06-16"
+								},
+								{
+									"key": "date_end",
+									"value": "2022-06-18"
+								}
 							]
 						}
 					},

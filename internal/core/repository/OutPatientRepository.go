@@ -7,9 +7,13 @@ import (
 
 type OutPatientRepository interface {
 	NewMedicalRecord(models.MedicRecord) (error)
+	ProceedDoctor(models.MedicRecord) (error)
+	AssignNurse(models.MedicCheck) (error)
+	ProceedNurse(models.MedicCheck) (error)
+	DoctorFindAll(int) ([]response.OutPatientResponse, error)
+	NurseFindAll(int) ([]response.OutPatientResponse, error)
+	FindByID(int) ([]response.OutPatientResponse, error)
+	FindByDate(string, string) ([]response.OutPatientResponse, error)
 	Report() ([]response.OutPatientReportResponse, error)
-	Proceed(models.MedicRecord) (error)
-	ListForDoctor(int) ([]response.OutPatientResponse, error)
-	ListForNurse(string) ([]response.OutPatientResponse, error)
-	FilterByDate(string, string) ([]response.OutPatientResponse, error)
+	ReportLog(int, string) ([]response.OutPatientReportLogResponse, error)
 }

@@ -54,7 +54,7 @@ func AdminPermission(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 
-		if role != "administrator" {
+		if role != "administrator" && role != "admin" {
 			return c.JSON(http.StatusUnauthorized, response.MessageOnly{
 				Message: "access for this route only for administrator",
 			})
@@ -102,3 +102,24 @@ func NursePermission(next echo.HandlerFunc) echo.HandlerFunc {
 		return next(c)
 	}
 }
+
+func DoctorNursePermission(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		role, err := ujwt.GetTokenData(c, "role")
+
+		if err != nil {
+			return c.JSON(http.StatusUnauthorized, response.MessageOnly{
+				Message: err.Error(),
+			})
+		}
+
+
+		if role != "doctor" && role != "nurse" {
+			return c.JSON(http.StatusUnauthorized, response.MessageOnly{
+				Message: "access for this route only for doctor and nurse",
+			})
+		}
+		return next(c)
+	}
+}
+

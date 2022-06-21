@@ -31,11 +31,9 @@ func seedAll() []Seed {
 		sessionSeeder(),
 		medicalFacilitySeeder(),
 		userSeeder(),
-		medicalStaffSeeder(),
 		patientSeeder(),
 		scheduleSeeder(),
 		medicRecordSeeder(),
-		// medicalSessionSeeder(),
 	}
 }
 
