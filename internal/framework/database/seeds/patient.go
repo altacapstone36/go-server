@@ -2,7 +2,6 @@ package seeds
 
 import (
 	"go-hospital-server/internal/core/entity/models"
-	"time"
 
 	"gorm.io/gorm"
 )
@@ -10,19 +9,19 @@ import (
 func patientSeeder() Seed {
 	seeds := []models.Patient{
 		{
-			ResidentRegistration: 8729301745162748,
+			ResidentRegistration: "8729301745162748",
 			FullName: "Faizur Ramadhan",
 			Address: "Sumenep",
 			Gender: "Male",
-			BirthDate: time.Date(2000, time.April, 20, 0, 0, 0, 0, &time.Location{}),
+			BirthDate: "2001-02-14",
 			BloodType: "A",
 		},
 		{
-			ResidentRegistration: 8761435451636421,
+			ResidentRegistration: "8761435451636421",
 			FullName: "Ach. Novil",
 			Address: "Sumenep",
 			Gender: "Male",
-			BirthDate: time.Date(2000, time.March, 10, 0, 0, 0, 0, &time.Location{}),
+			BirthDate: "2001-04-21",
 			BloodType: "A",
 		},
 	}

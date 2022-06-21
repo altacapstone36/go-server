@@ -5,7 +5,7 @@ import (
 	"go-hospital-server/internal/core/entity/request"
 	"go-hospital-server/internal/core/entity/response"
 	"go-hospital-server/internal/core/service"
-	"go-hospital-server/internal/utils/errors"
+	"go-hospital-server/internal/utils/errors/check"
 	"go-hospital-server/internal/utils/jwt"
 	"net/http"
 
@@ -21,35 +21,33 @@ func NewAuthController(srv *service.AuthService) *AuthController {
 	return &AuthController{srv}
 }
 
-// CreateResource godoc
+// godoc
 // @Summary Login
 // @Description Login and get Authorization Token
 // @Tags Authorization
 // @Accept json
 // @Produce json
-// @Param body  body  request.LoginRequest{}  true "send request email, password"
-// @Success 200 {object} response.UserDetails{} success
+// @Param body  body  request.LoginRequest{}  true "Send Request Email and Password"
+// @Success 200 {object} response.User{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /login [post]
 func (acon AuthController) Login(c echo.Context) error {
 	var login request.LoginRequest
 	c.Bind(&login)
-	res, err := acon.srv.Login(login)
-	if err != nil {
-		error := err.(*errors.RequestError)
-		return c.JSON(error.Code(), response.Error{
-			Message: "Failed to Log User In",
-			Error: err.Error(),
-		})
+
+	if r, ok := check.HTTP(nil, login.Validate(), "Validate"); !ok {
+		return c.JSON(r.Code, r.Result)
 	}
 
-	jwt, err := acon.srv.CreateToken(res.ID, res.Level)
-	if err != nil {
-		return c.JSON(http.StatusExpectationFailed, response.Error{
-			Message: "Failed to Create Authentication Token",
-			Error: err.Error(),
-		})
+	res, err := acon.srv.Login(login)
+	if r, ok := check.HTTP(res, err, "User Log In"); !ok {
+		return c.JSON(r.Code, r.Result)
+	}
+
+	jwt, err := acon.srv.CreateToken(res.ID, res.Facility, res.Role)
+	if r, ok := check.HTTP(res, err, "Create Authentication Token"); !ok {
+		return c.JSON(r.Code, r.Result)
 	}
 	
 	return c.JSON(http.StatusOK, response.MessageDataJWT{
@@ -59,13 +57,14 @@ func (acon AuthController) Login(c echo.Context) error {
 	})
 }
 
-// CreateResource godoc
+// godoc
 // @Summary Refresh Token
 // @Description Route Path for Get New Access Token
 // @Tags Authorization
+// @Security ApiKey
 // @Accept json
 // @Produce json
-// @Param token  query  string  true "pass access token here"
+// @Param token  query  string  true "Pass access_token Here"
 // @Success 200 {object} models.Token{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
@@ -94,17 +93,17 @@ func (acon AuthController) RefreshToken(c echo.Context) error {
 	})
 }
 
-// CreateResource godoc
+// godoc
 // @Summary Refresh Token
 // @Description Route Path for Get New Access Token
 // @Tags Authorization
+// @Security ApiKey
 // @Accept json
 // @Produce json
-// @Param body  body  models.Token{}  true "send request access_token, refresh_token"
 // @Success 200 {object} models.Token{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
-// @Router /login [post]
+// @Router /logout [post]
 func (acon AuthController) Logout(c echo.Context) error {
 	token, err := jwt.GetToken(c)
 

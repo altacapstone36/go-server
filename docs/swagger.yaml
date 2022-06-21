@@ -1,0 +1,741 @@
+basePath: /api
+definitions:
+  models.Token:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  request.AdminMedicRecord:
+    properties:
+      complaint:
+        example: sakit perut
+        type: string
+      date_check:
+        example: "2022-06-24"
+        type: string
+      medical_facility_id:
+        example: 1
+        type: integer
+      medical_staff_id:
+        example: 1
+        type: integer
+      patient_id:
+        example: 1
+        type: integer
+      session_id:
+        example: 1
+        type: integer
+    type: object
+  request.AssignNurseRequest:
+    properties:
+      nurse_id:
+        example: 1
+        type: integer
+    type: object
+  request.DoctorMedicRequest:
+    properties:
+      diagnose:
+        example: maag
+        type: string
+      prescription:
+        example: entrostop
+        type: string
+    type: object
+  request.LoginRequest:
+    properties:
+      email:
+        example: alsyadahmad@holyhos.co.id
+        type: string
+      password:
+        example: password
+        type: string
+    type: object
+  request.Patient:
+    properties:
+      address:
+        example: Sumenep
+        type: string
+      birthdate:
+        example: "2001-04-14"
+        type: string
+      blood_type:
+        example: A
+        type: string
+      code:
+        example: RM0001
+        type: string
+      full_name:
+        example: Faizur Ramadhan
+        type: string
+      gender:
+        example: Male
+        type: string
+      resident_registration:
+        example: "8729301745162748"
+        type: string
+    type: object
+  response.Error:
+    properties:
+      error: {}
+      message:
+        type: string
+    type: object
+  response.MedicRecord:
+    properties:
+      blood_tension:
+        example: 124
+        type: integer
+      body_temp:
+        example: 34
+        type: integer
+      complaint:
+        example: Sakit Perut
+        type: string
+      date_check:
+        example: "2022-06-17"
+        type: string
+      diagnose:
+        example: Maag
+        type: string
+      doctor:
+        example: Alsyad Ahmad
+        type: string
+      facility:
+        example: General
+        type: string
+      height:
+        example: 55
+        type: integer
+      prescription:
+        example: Entrostop
+        type: string
+      serial_number:
+        example: RM/748/2022/0001
+        type: string
+      weight:
+        example: 150
+        type: integer
+    type: object
+  response.MessageData:
+    properties:
+      data: {}
+      message:
+        type: string
+    type: object
+  response.MessageOnly:
+    properties:
+      message:
+        type: string
+    type: object
+  response.OutPatientReportLogResponse:
+    properties:
+      serial_number:
+        type: string
+    type: object
+  response.OutPatientResponse:
+    properties:
+      code:
+        type: string
+      complaint:
+        type: string
+      date_check:
+        type: string
+      doctor:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: integer
+      queue:
+        type: integer
+      serial_number:
+        type: string
+      session:
+        type: string
+    type: object
+  response.Patient:
+    properties:
+      birthdate:
+        example: "2001-04-14"
+        type: string
+      code:
+        example: RM0001
+        type: string
+      full_name:
+        example: Faizur Ramadhan
+        type: string
+      gender:
+        example: Male
+        type: string
+      id:
+        example: 1
+        type: integer
+      resident_registration:
+        example: "8729301745162748"
+        type: string
+    type: object
+  response.PatientDetails:
+    properties:
+      address:
+        example: Sumenep
+        type: string
+      birthdate:
+        example: "2001-04-14"
+        type: string
+      blood_type:
+        example: A
+        type: string
+      code:
+        example: RM0001
+        type: string
+      full_name:
+        example: Faizur Ramadhan
+        type: string
+      gender:
+        example: Male
+        type: string
+      id:
+        example: 1
+        type: integer
+      medic_record:
+        items:
+          $ref: '#/definitions/response.MedicRecord'
+        type: array
+      resident_registration:
+        example: "8729301745162748"
+        type: string
+    type: object
+  response.User:
+    properties:
+      code:
+        example: DR00001
+        type: string
+      email:
+        example: alsyadahmad@holyhos.co.id
+        type: string
+      facility:
+        example: General
+        type: string
+      full_name:
+        example: Alsyad Ahmad
+        type: string
+      gender:
+        example: Male
+        type: string
+      id:
+        example: 1
+        type: integer
+      roles:
+        example: Doctor
+        type: string
+      status:
+        example: 1
+        type: integer
+    type: object
+host: ec2-3-91-177-221.compute-1.amazonaws.com
+info:
+  contact: {}
+  description: server API for Holy Hospital Application.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Holy Hospital Sever API
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login and get Authorization Token
+      parameters:
+      - description: Send Request Email and Password
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.User'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Login
+      tags:
+      - Authorization
+  /logout:
+    post:
+      consumes:
+      - application/json
+      description: Route Path for Get New Access Token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Token'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: Refresh Token
+      tags:
+      - Authorization
+  /outpatient:
+    get:
+      consumes:
+      - application/json
+      description: Fetch All Patient with New Medic Record Data
+      parameters:
+      - description: Date Filter Range Start (2022-02-23)
+        in: query
+        name: date_start
+        type: string
+      - description: Date Filter Range End (2006-02-25)
+        in: query
+        name: date_end
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.MessageData'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/response.OutPatientResponse'
+                  type: array
+              type: object
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: GetAllPatient
+      tags:
+      - OutPatient
+    post:
+      consumes:
+      - application/json
+      description: Add New Medic Record for Patient
+      parameters:
+      - description: New Medic Record
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.AdminMedicRecord'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MessageOnly'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: New Medic Record
+      tags:
+      - OutPatient
+  /outpatient/:id:
+    get:
+      consumes:
+      - application/json
+      description: Process Medic Record
+      parameters:
+      - description: Patient ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.MessageData'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/response.OutPatientResponse'
+                  type: array
+              type: object
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: Process Doctor
+      tags:
+      - OutPatient
+  /outpatient/:id/assign_nurse:
+    post:
+      consumes:
+      - application/json
+      description: Process Medic Record
+      parameters:
+      - description: Assign Nurse to Medical Check
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.AssignNurseRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MessageOnly'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: Process Doctor
+      tags:
+      - OutPatient
+  /outpatient/:id/process:
+    post:
+      consumes:
+      - application/json
+      description: Process Medic Record
+      parameters:
+      - description: Process Medic Record by Doctor
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.DoctorMedicRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MessageOnly'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: Process Doctor
+      tags:
+      - OutPatient
+  /outpatient/log:
+    post:
+      consumes:
+      - application/json
+      description: Show Report of Submitted data by Medical Staff
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.MessageData'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.OutPatientReportLogResponse'
+              type: object
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: Report Log
+      tags:
+      - OutPatient
+  /outpatient/report:
+    post:
+      consumes:
+      - application/json
+      description: Show Report of Submitted data by All Medical Staff
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.MessageData'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.OutPatientReportLogResponse'
+              type: object
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: Report Log
+      tags:
+      - OutPatient
+  /patient:
+    get:
+      consumes:
+      - application/json
+      description: Fetch All Patient Data
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.MessageData'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/response.Patient'
+                  type: array
+              type: object
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: GetAllPatient
+      tags:
+      - Patient
+    post:
+      consumes:
+      - application/json
+      description: Fetch All Patient Data
+      parameters:
+      - description: Patient Details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.Patient'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MessageOnly'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: CreatePatient
+      tags:
+      - Patient
+  /patient/:id:
+    get:
+      consumes:
+      - application/json
+      description: Fetch Patient Data By ID
+      parameters:
+      - description: Patient ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.MessageData'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.PatientDetails'
+              type: object
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: GetPatientByID
+      tags:
+      - Patient
+  /patient/:id/delete:
+    delete:
+      consumes:
+      - application/json
+      description: Fetch All Patient Data
+      parameters:
+      - description: Patient ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MessageOnly'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: DeletePatient
+      tags:
+      - Patient
+  /patient/:id/update:
+    put:
+      consumes:
+      - application/json
+      description: Fetch All Patient Data
+      parameters:
+      - description: Patient ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Patient Details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.Patient'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MessageOnly'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: UpdatePatient
+      tags:
+      - Patient
+  /refresh_token:
+    post:
+      consumes:
+      - application/json
+      description: Route Path for Get New Access Token
+      parameters:
+      - description: Pass access_token Here
+        in: query
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Token'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: Refresh Token
+      tags:
+      - Authorization
+schemes:
+- http
+securityDefinitions:
+  ApiKey:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -12,6 +12,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
+	_ "go-hospital-server/docs"
 )
 
 // @title           Holy Hospital Sever API
@@ -25,7 +26,7 @@ import (
 // @license.name  Apache 2.0
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host      localhost:8080
+// @host      ec2-3-91-177-221.compute-1.amazonaws.com
 // @BasePath  /api
 // @schemes http
 func main() {

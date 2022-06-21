@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "74bd4bf0-1ae2-46b9-a75f-c64d97e32db7",
+		"_postman_id": "e20d9546-86d7-4f9d-a5d2-fe0734943a89",
 		"name": "Holy Hospital API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "20122658"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -16,7 +15,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"alsyadahmad@holyhos.co.id\",\n    \"password\": \"password\"\n}",
+							"raw": "{\n    \"email\": \"priscillahalim@holyhos.co.id\",\n    \"password\": \"password\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -24,11 +23,10 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/api/login",
+							"raw": "{{base_url}}/api/login",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"login"
@@ -53,11 +51,10 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api/refresh_token?token={{access_token}}",
+							"raw": "{{base_url}}/api/refresh_token?token={{access_token}}",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"refresh_token"
@@ -78,11 +75,10 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api/logout",
+							"raw": "{{base_url}}/api/logout",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"logout"
@@ -103,7 +99,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"resident_registration\": 61244812940124173,\n    \"full_name\": \"Syarif Ubaidillah\",\n    \"address\": \"Batuan, Sumenep\",\n    \"gender\": \"Male\",\n    \"birthdate\": \"2001-02-07T00:00:00Z\",\n    \"blood_type\": \"O\"\n}",
+							"raw": "{\n    \"resident_registration\": \"1244812940124173\",\n    \"full_name\": \"Syarif Ubaidillah\",\n    \"address\": \"Batuan, Sumenep\",\n    \"gender\": \"Male\",\n    \"birthdate\": \"2001-02-22\",\n    \"blood_type\": \"O\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -111,11 +107,10 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/api/patient",
+							"raw": "{{base_url}}/api/patient",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"patient"
@@ -139,11 +134,10 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/api/patient/4/update",
+							"raw": "{{base_url}}/api/patient/4/update",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"patient",
@@ -160,11 +154,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api/patient",
+							"raw": "{{base_url}}/api/patient",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"patient"
@@ -179,15 +172,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api/patient/4",
+							"raw": "{{base_url}}/api/patient/1",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"patient",
-								"4"
+								"1"
 							]
 						}
 					},
@@ -199,11 +191,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api/patient?name=Ach",
+							"raw": "{{base_url}}/api/patient?name=Ach",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"patient"
@@ -224,16 +215,206 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api/patient/3/delete",
+							"raw": "{{base_url}}/api/patient/3/delete",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"patient",
 								"3",
 								"delete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "OutPatient",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"patient_id\": 2,\n    \"medical_staff_id\": 1,\n    \"medical_facility_id\": 1,\n    \"complaint\": \"Sakit Kepala\",\n    \"session_id\": 1,\n    \"date_check\": \"2022-06-17\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/outpatient",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"outpatient"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Process Doctor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"diagnose\": \"Migrain\",\n    \"prescription\": \"Mixagrip Migrain\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/outpatient/process",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"outpatient",
+								"process"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Process Nurse",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"blood_tension\": 120,\n    \"height\": 160,\n    \"weight\": 65,\n    \"body_temp\": 35\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/outpatient/process",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"outpatient",
+								"process"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/outpatient",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"outpatient"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListByID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/outpatient/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"outpatient",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ReportLog",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/outpatient/log",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"outpatient",
+								"log"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Report",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/outpatient/report",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"outpatient",
+								"report"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListByDate",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/outpatient?date_start=2022-06-16&date_end=2022-06-18",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"outpatient"
+							],
+							"query": [
+								{
+									"key": "date_start",
+									"value": "2022-06-16"
+								},
+								{
+									"key": "date_end",
+									"value": "2022-06-18"
+								}
 							]
 						}
 					},

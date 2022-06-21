@@ -7,6 +7,7 @@ import (
 	"go-hospital-server/internal/core/repository"
 	"go-hospital-server/internal/utils"
 	"go-hospital-server/internal/utils/errors"
+	"go-hospital-server/internal/utils/errors/check"
 	"go-hospital-server/internal/utils/jwt"
 )
 
@@ -22,7 +23,7 @@ func (srv AuthService) Login(login request.LoginRequest) (res response.User, err
 	var checkPassword bool
 	res, err  = srv.repo.Login(login.Email)
 
-	err = errors.CheckError(res, err)
+	err = check.Record(res, err)
 
 	if err == nil {
 		checkPassword = utils.ComparePassword(login.Password, res.Password)
@@ -39,8 +40,8 @@ func (srv AuthService) Logout(token string) (err error) {
 	return
 }
 
-func (srv AuthService) CreateToken(id uint, level string) (t models.Token, err error) {
-	t, err = jwt.CreateToken(float64(id), level)
+func (srv AuthService) CreateToken(id uint, facility_id, level string) (t models.Token, err error) {
+	t, err = jwt.CreateToken(float64(id), facility_id, level)
 	err = srv.repo.SaveToken(t)
 	return
 }

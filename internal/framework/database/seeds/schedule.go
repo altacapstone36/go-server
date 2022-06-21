@@ -6,22 +6,22 @@ import (
 	"gorm.io/gorm"
 )
 
-func medicalStaffSeeder() Seed {
-	seeds := []models.MedicalStaff{
+func scheduleSeeder() Seed {
+	seeds := []models.Schedule{
 		{
-			FullName: "Alsyad Ahmad",
-			Gender: "Male",			
-			UserID: 1,			
+			UserID:    2,
 			MedicalFacilityID: 1,
+			SessionID:         1,
+			Date:              "2022-06-17",
 		},
 		{
-			FullName: "Priscilla Halim",
-			Gender: "Female",			
-			UserID: 2,			
+			UserID:    2,
 			MedicalFacilityID: 1,
+			SessionID:         1,
+			Date:              "2022-06-18",
 		},
 	}
-	model := &models.MedicalStaff{}
+	model := &models.Schedule{}
 
 	return Seed{
 		models: model,

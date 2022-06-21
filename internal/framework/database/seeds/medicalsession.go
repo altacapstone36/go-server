@@ -6,13 +6,17 @@ import (
 	"gorm.io/gorm"
 )
 
-func levelSeeder() Seed {
-	seeds := []models.Role{
-		{Name: "Admin", Code: "ADM"},
-		{Name: "Doctor", Code: "DCR"},
-		{Name: "Nurse", Code: "NRS"},
+func medicalSessionSeeder() Seed {
+	seeds := []models.MedicalSession{
+		{
+			MedicRecordID: 1,
+			UserID: 1,
+			MedicalFacilityID: 1,
+			SessionID:         1,
+			DateCheck:         "2022-07-17",
+		},
 	}
-	model := &models.Role{}
+	model := &models.MedicalSession{}
 
 	return Seed{
 		models: model,
