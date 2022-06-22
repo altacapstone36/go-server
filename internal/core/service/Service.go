@@ -8,6 +8,7 @@ type Service struct {
 	Patient *PatientService
 	OutPatient *OutPatientService
 	User *UserService
+	Facility *FacilityService
 }
 
 func NewService(r *repository.Repository) *Service {
@@ -16,5 +17,6 @@ func NewService(r *repository.Repository) *Service {
 		Patient: NewPatientService(r.Patient),
 		OutPatient: NewOutPatientService(r.OutPatient),
 		User: NewUserService(r.User),
+		Facility: NewFacilityService(r.Facility),
 	}
 }

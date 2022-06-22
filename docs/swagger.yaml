@@ -1,5 +1,12 @@
 basePath: /api
 definitions:
+  models.MedicalFacility:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
   models.Token:
     properties:
       access_token:
@@ -41,6 +48,11 @@ definitions:
         type: string
       prescription:
         example: entrostop
+        type: string
+    type: object
+  request.Facility:
+    properties:
+      name:
         type: string
     type: object
   request.Login:
@@ -117,6 +129,17 @@ definitions:
       error: {}
       message:
         type: string
+    type: object
+  response.FacilityDetails:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      staff:
+        items:
+          $ref: '#/definitions/response.Staff'
+        type: array
     type: object
   response.MedicRecord:
     properties:
@@ -231,6 +254,15 @@ definitions:
         example: "8729301745162748"
         type: string
     type: object
+  response.Staff:
+    properties:
+      code:
+        type: string
+      full_name:
+        type: string
+      role:
+        type: string
+    type: object
   response.User:
     properties:
       code:
@@ -268,6 +300,173 @@ info:
   title: Holy Hospital Sever API
   version: "1.0"
 paths:
+  /facility:
+    get:
+      consumes:
+      - application/json
+      description: Fetch All Facility Data
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.MessageData'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.MedicalFacility'
+                  type: array
+              type: object
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: GetAllFacility
+      tags:
+      - Facility
+    post:
+      consumes:
+      - application/json
+      description: Create New Facility Data
+      parameters:
+      - description: user data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.Facility'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.MessageOnly'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: CreateFacility
+      tags:
+      - Facility
+  /facility/:id:
+    get:
+      consumes:
+      - application/json
+      description: Fetch Facility Data By ID
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.MessageData'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.FacilityDetails'
+              type: object
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: GetFacilityByID
+      tags:
+      - Facility
+  /facility/:id/delete:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Facility Data By ID
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MessageOnly'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: UpdateFacility
+      tags:
+      - Facility
+  /facility/:id/update:
+    put:
+      consumes:
+      - application/json
+      description: Update Facility Data By ID
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: user data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.Facility'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MessageOnly'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: UpdateFacility
+      tags:
+      - Facility
   /login:
     post:
       consumes:
@@ -378,8 +577,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
             $ref: '#/definitions/response.MessageOnly'
         "417":
@@ -607,8 +806,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
             $ref: '#/definitions/response.MessageOnly'
         "417":

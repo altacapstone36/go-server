@@ -70,7 +70,7 @@ func (acon OutPatientController) GetAllOutPatient(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param body body request.AdminMedicRecord{} true "New Medic Record"
-// @Success 200 {object} response.MessageOnly{} success
+// @Success 201 {object} response.MessageOnly{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /outpatient [post]

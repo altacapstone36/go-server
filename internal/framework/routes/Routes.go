@@ -11,4 +11,5 @@ func NewRoutes (e *echo.Group, ctrl *controller.Controller, middleware ...echo.M
 	NewPatientRoutes(e, ctrl.Patient, middleware...)
 	NewOutPatientRoutes(e, ctrl.OutPatient, middleware...)
 	NewUserRoutes(e, ctrl.User, middleware...)
+	NewFacilityRoutes(e, ctrl.Facility, middleware...)
 }

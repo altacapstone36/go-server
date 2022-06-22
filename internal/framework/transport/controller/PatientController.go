@@ -86,7 +86,7 @@ func (acon PatientController) GetPatientByID(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param body  body  request.Patient{}  true "Patient Details"
-// @Success 200 {object} response.MessageOnly{} success
+// @Success 201 {object} response.MessageOnly{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /patient [post]

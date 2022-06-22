@@ -5,5 +5,6 @@ type Repository struct {
 	Patient PatientRepository
 	OutPatient OutPatientRepository
 	User UserRepository
+	Facility FacilityRepository
 }
 

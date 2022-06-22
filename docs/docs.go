@@ -20,6 +20,278 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/facility": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKey": []
+                    }
+                ],
+                "description": "Fetch All Facility Data",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Facility"
+                ],
+                "summary": "GetAllFacility",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.MessageData"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/models.MedicalFacility"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "417": {
+                        "description": "Expectation Failed",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKey": []
+                    }
+                ],
+                "description": "Create New Facility Data",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Facility"
+                ],
+                "summary": "CreateFacility",
+                "parameters": [
+                    {
+                        "description": "user data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.Facility"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/response.MessageOnly"
+                        }
+                    },
+                    "417": {
+                        "description": "Expectation Failed",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/facility/:id": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKey": []
+                    }
+                ],
+                "description": "Fetch Facility Data By ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Facility"
+                ],
+                "summary": "GetFacilityByID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "user id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.MessageData"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/response.FacilityDetails"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "417": {
+                        "description": "Expectation Failed",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/facility/:id/delete": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKey": []
+                    }
+                ],
+                "description": "Delete Facility Data By ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Facility"
+                ],
+                "summary": "UpdateFacility",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "user id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.MessageOnly"
+                        }
+                    },
+                    "417": {
+                        "description": "Expectation Failed",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/facility/:id/update": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKey": []
+                    }
+                ],
+                "description": "Update Facility Data By ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Facility"
+                ],
+                "summary": "UpdateFacility",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "user id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "user data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.Facility"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.MessageOnly"
+                        }
+                    },
+                    "417": {
+                        "description": "Expectation Failed",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/login": {
             "post": {
                 "description": "Login and get Authorization Token",
@@ -203,8 +475,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/response.MessageOnly"
                         }
@@ -584,8 +856,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/response.MessageOnly"
                         }
@@ -1096,6 +1368,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.MedicalFacility": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Token": {
             "type": "object",
             "properties": {
@@ -1155,6 +1438,14 @@ const docTemplate = `{
                 "prescription": {
                     "type": "string",
                     "example": "entrostop"
+                }
+            }
+        },
+        "request.Facility": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
                 }
             }
         },
@@ -1260,6 +1551,23 @@ const docTemplate = `{
                 "error": {},
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "response.FacilityDetails": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "staff": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.Staff"
+                    }
                 }
             }
         },
@@ -1422,6 +1730,20 @@ const docTemplate = `{
                 "resident_registration": {
                     "type": "string",
                     "example": "8729301745162748"
+                }
+            }
+        },
+        "response.Staff": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
                 }
             }
         },
