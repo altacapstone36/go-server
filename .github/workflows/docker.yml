@@ -24,11 +24,9 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
-        name: Set Configuration
-        run: "echo -e \"${{ secrets.CONFIG }}\" > ./config/config.yml "
-      -
         name: Build and push
         uses: docker/build-push-action@v3
+        run: "echo -e \"${{ secrets.CONFIG }}\" > ./config/config.yml "
         with:
           push: true
           tags: syarif74/go-hospital-server:latest
