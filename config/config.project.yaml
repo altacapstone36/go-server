@@ -1,0 +1,11 @@
+server: 
+ SECRET: "6568135b96cd0a3d6adcae0a475f0da473e8e2bee0d800b2ba5010186b37d950" 
+ PORT: "8080" 
+mysql: 
+ DATABASE: "hospital" 
+ USERNAME: "root" 
+ PASSWORD: "animelovers" 
+ HOST: "database-1.cwipwspwgkym.us-east-1.rds.amazonaws.com" 
+mongo: 
+ STRING: "mongodb://mongo:enX6qBHuf85i1OAZe6Hx@containers-us-west-68.railway.app:7025" 
+ DATABASE: "hospital"
