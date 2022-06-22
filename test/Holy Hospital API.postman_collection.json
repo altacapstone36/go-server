@@ -191,13 +191,131 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/patient/4/delete",
+							"raw": "{{base_url}}/api/user/4/delete",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
-								"patient",
+								"user",
+								"4",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Facility",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"syarif@holyhos.co.id\",\n    \"facility_id\": 2,\n    \"full_name\": \"Syarif Ubaidillah\",\n    \"gender\": \"Male\",\n    \"role_id\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/facility",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"facility"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"syarif@holyhos.co.id\",\n    \"facility_id\": 3,\n    \"full_name\": \"Syarif Ubaidillah\",\n    \"gender\": \"Male\",\n    \"role_id\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/facility/5/update",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"facility",
+								"5",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/facility",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"facility"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListByID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/facility/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"facility",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/facility/4/delete",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"facility",
 								"4",
 								"delete"
 							]
