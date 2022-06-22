@@ -26,7 +26,7 @@ func NewFacilityController(srv *service.FacilityService) *FacilityController {
 // @Security ApiKey
 // @Accept json
 // @Produce json
-// @Success 200 {object} response.MessageData{data=[]models.MedicalFacility} success
+// @Success 200 {object} response.MessageData{data=[]response.Facility} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /facility [get]

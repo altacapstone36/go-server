@@ -52,7 +52,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/models.MedicalFacility"
+                                                "$ref": "#/definitions/response.Facility"
                                             }
                                         }
                                     }
@@ -1368,17 +1368,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "models.MedicalFacility": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
         "models.Token": {
             "type": "object",
             "properties": {
@@ -1550,6 +1539,17 @@ const docTemplate = `{
             "properties": {
                 "error": {},
                 "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.Facility": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
                     "type": "string"
                 }
             }

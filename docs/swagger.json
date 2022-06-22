@@ -48,7 +48,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/models.MedicalFacility"
+                                                "$ref": "#/definitions/response.Facility"
                                             }
                                         }
                                     }
@@ -1364,17 +1364,6 @@
         }
     },
     "definitions": {
-        "models.MedicalFacility": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
         "models.Token": {
             "type": "object",
             "properties": {
@@ -1546,6 +1535,17 @@
             "properties": {
                 "error": {},
                 "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.Facility": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
                     "type": "string"
                 }
             }

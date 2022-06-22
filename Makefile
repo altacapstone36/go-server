@@ -29,7 +29,6 @@ build_docker:
 	@clear
 	@docker build -t ${IMG} .
 	@docker tag ${IMG} ${LATEST}
-	@docker rmi $(docker images -f "dangling=true" -q)
 
 docs:
 	@clear

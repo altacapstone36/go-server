@@ -1,12 +1,5 @@
 basePath: /api
 definitions:
-  models.MedicalFacility:
-    properties:
-      id:
-        type: integer
-      name:
-        type: string
-    type: object
   models.Token:
     properties:
       access_token:
@@ -128,6 +121,13 @@ definitions:
     properties:
       error: {}
       message:
+        type: string
+    type: object
+  response.Facility:
+    properties:
+      id:
+        type: integer
+      name:
         type: string
     type: object
   response.FacilityDetails:
@@ -316,7 +316,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/models.MedicalFacility'
+                    $ref: '#/definitions/response.Facility'
                   type: array
               type: object
         "417":
