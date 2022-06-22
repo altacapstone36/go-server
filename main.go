@@ -10,9 +10,10 @@ import (
 	"go-hospital-server/internal/utils/config"
 	"go-hospital-server/internal/utils/logger"
 
+	_ "go-hospital-server/docs"
+
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
-	_ "go-hospital-server/docs"
 )
 
 // @title           Holy Hospital Sever API

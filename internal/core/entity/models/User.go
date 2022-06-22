@@ -10,12 +10,12 @@ import (
 
 type User struct {
 	ID uint `json:"id" gorm:"primary_key"`
-	Code string `json:"code" gorm:"primary_key"`
+	Code string `json:"code"`
 	FullName string `json:"full_name"`
 	Gender string `json:"gender"`
 	Email string `json:"email"`
 	Password string `json:"password"`
-	Status int `json:"status"`
+	Status int `json:"status" sql:"default:1"`
 	RoleID int `json:"role_id"`
 	Role Role `json:"roles"`
 	MedicalFacilityID *uint `json:"facility_id"`
@@ -30,6 +30,7 @@ type User struct {
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 	var email string
 	var name string
+	var c int64
 
 	tx.Model(&u).Select("email").
 		Where("email = ?", u.Email).
@@ -38,6 +39,13 @@ func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 	tx.Model(&u).Select("full_name").
 		Where("full_name = ?", u.FullName).
 		Scan(&name);
+		
+	tx.Table("medical_facilities").Where("id = ?", u.MedicalFacilityID).Count(&c)
+		if c == 0 {
+			errMsg := fmt.Sprintf("No Medical Facility with ID %d", *u.MedicalFacilityID)
+			err = errors.New(417, errMsg)
+			return
+		}
 	
 	if name != "" {
 		msg := fmt.Sprintf("duplicate name for %s found, please use another name", u.FullName)

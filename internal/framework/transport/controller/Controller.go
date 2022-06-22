@@ -6,6 +6,7 @@ type Controller struct {
 	Auth *AuthController
 	Patient *PatientController
 	OutPatient *OutPatientController
+	User *UserController
 }
 
 func NewController(srv *service.Service) *Controller {
@@ -13,5 +14,6 @@ func NewController(srv *service.Service) *Controller {
 		Auth: NewAuthController(srv.Auth),
 		Patient: NewPatientController(srv.Patient),
 		OutPatient: NewOutPatientController(srv.OutPatient),
+		User: NewUserController(srv.User),
 	}
 }

@@ -29,14 +29,14 @@ func NewOutPatientController(srv *service.OutPatientService) *OutPatientControll
 // @Produce json
 // @Param date_start query string false "Date Filter Range Start (2022-02-23)"
 // @Param date_end query string false "Date Filter Range End (2006-02-25)"
-// @Success 200 {object} response.MessageData{data=[]response.OutPatientResponse} success
+// @Success 200 {object} response.MessageData{data=[]response.OutPatient} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /outpatient [get]
 func (acon OutPatientController) GetAllOutPatient(c echo.Context) error {
 	role, _ := jwt.GetTokenData(c, "role")
 	id, _ := jwt.GetTokenData(c, "user_id")
-	var res []response.OutPatientResponse
+	var res []response.OutPatient
 	var err error
 
 	date_start := c.QueryParam("date_start")
@@ -87,7 +87,7 @@ func (acon OutPatientController) NewMedicRecord(c echo.Context) error {
 		return c.JSON(r.Code, r.Result)
 	}
 
-	return c.JSON(200, response.MessageOnly{
+	return c.JSON(201, response.MessageOnly{
 		Message: "Medic Record Created",
 	})
 }
@@ -99,7 +99,8 @@ func (acon OutPatientController) NewMedicRecord(c echo.Context) error {
 // @Security ApiKey
 // @Accept json
 // @Produce json
-// @Param body body request.DoctorMedicRequest{} true "Process Medic Record by Doctor"
+// @Param body_doctor body request.DoctorMedicRecord{} false "Process Medic Record by Doctor"
+// @Param body_nurse body request.NurseMedicRecord{} false "Process Medic Record by Nurse"
 // @Success 200 {object} response.MessageOnly{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
@@ -113,13 +114,13 @@ func (acon OutPatientController) Process(c echo.Context) error {
 	c.Bind(&req)
 
 	if role.(string) == "doctor" {
-		r, _ := utils.TypeConverter[request.DoctorMedicRequest](req)
+		r, _ := utils.TypeConverter[request.DoctorMedicRecord](req)
 		err = r.Validate()
 		process = func(id int, t any) error {
 			return acon.srv.ProcessDoctor(id, t)
 		}
 	} else if role.(string) == "nurse" {
-		r, _ := utils.TypeConverter[request.NurseMedicRequest](req)
+		r, _ := utils.TypeConverter[request.NurseMedicRecord](req)
 		err = r.Validate()
 		process = func(id int, t any) error {
 			return acon.srv.ProcessNurse(id, t)
@@ -147,14 +148,14 @@ func (acon OutPatientController) Process(c echo.Context) error {
 // @Security ApiKey
 // @Accept json
 // @Produce json
-// @Param body body request.AssignNurseRequest{} true "Assign Nurse to Medical Check"
+// @Param body body request.AssignNurse{} true "Assign Nurse to Medical Check"
 // @Success 200 {object} response.MessageOnly{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /outpatient/:id/assign_nurse [post]
 func (acon OutPatientController) AssignNurse(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	var req request.AssignNurseRequest
+	var req request.AssignNurse
 	c.Bind(&req)
 
 	if r, ok := check.HTTP(nil, req.Validate(), "Validate"); !ok {
@@ -179,7 +180,7 @@ func (acon OutPatientController) AssignNurse(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param id path int true "Patient ID"
-// @Success 200 {object} response.MessageData{data=[]response.OutPatientResponse} success
+// @Success 200 {object} response.MessageData{data=[]response.OutPatient} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /outpatient/:id [get]
@@ -203,7 +204,7 @@ func (acon OutPatientController) FindByID(c echo.Context) error {
 // @Security ApiKey
 // @Accept json
 // @Produce json
-// @Success 200 {object} response.MessageData{data=response.OutPatientReportLogResponse} success
+// @Success 200 {object} response.MessageData{data=response.OutPatientReportLog} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /outpatient/log [post]
@@ -229,7 +230,7 @@ func (acon OutPatientController) ReportLog(c echo.Context) error {
 // @Security ApiKey
 // @Accept json
 // @Produce json
-// @Success 200 {object} response.MessageData{data=response.OutPatientReportLogResponse} success
+// @Success 200 {object} response.MessageData{data=response.OutPatientReportLog} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /outpatient/report [post]

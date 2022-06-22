@@ -1,6 +1,6 @@
 package response
 
-type OutPatientResponse struct {
+type OutPatient struct {
 	ID uint `json:"id"`
 	SerialNumber string `json:"serial_number"`
 	FullName string `json:"full_name"`
@@ -12,7 +12,7 @@ type OutPatientResponse struct {
 	Queue int `json:"queue"`
 }
 
-type OutPatientReportResponse struct {
+type OutPatientReport struct {
 	ID uint `json:"id"`
 	SerialNumber string `json:"serial_number"`
 	Code string `json:"code"`
@@ -26,6 +26,6 @@ type OutPatientReportResponse struct {
 	DateCheck string `json:"date_check"`
 }
 
-type OutPatientReportLogResponse struct {
+type OutPatientReportLog struct {
 	SerialNumber string `json:"serial_number"`
 }

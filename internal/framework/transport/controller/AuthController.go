@@ -27,13 +27,13 @@ func NewAuthController(srv *service.AuthService) *AuthController {
 // @Tags Authorization
 // @Accept json
 // @Produce json
-// @Param body  body  request.LoginRequest{}  true "Send Request Email and Password"
+// @Param body  body  request.Login{}  true "Send Request Email and Password"
 // @Success 200 {object} response.User{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /login [post]
 func (acon AuthController) Login(c echo.Context) error {
-	var login request.LoginRequest
+	var login request.Login
 	c.Bind(&login)
 
 	if r, ok := check.HTTP(nil, login.Validate(), "Validate"); !ok {

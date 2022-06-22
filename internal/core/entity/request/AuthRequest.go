@@ -5,12 +5,12 @@ import (
 	"github.com/go-ozzo/ozzo-validation/v4/is"
 )
 
-type LoginRequest struct {
+type Login struct {
 	Email string `json:"email" example:"alsyadahmad@holyhos.co.id"`
 	Password string `json:"password" example:"password"`
 }
 
-func (lr LoginRequest) Validate() error {
+func (lr Login) Validate() error {
 	return validation.ValidateStruct(&lr,
 		validation.Field(&lr.Email, validation.Required, is.EmailFormat),
 		validation.Field(&lr.Password, validation.Required, validation.RuneLength(8, 0)),
