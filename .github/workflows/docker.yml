@@ -25,7 +25,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Set Configuration
-        run: "echo -e \"${{ secrets.CONFIG }}\" > config/config.yml "
+        run: "echo -e \"${{ secrets.CONFIG }}\" > ./config/config.yml "
       -
         name: Build and push
         uses: docker/build-push-action@v3
