@@ -14,6 +14,10 @@ var (
 	MONGODB_DATABASE string
 	SERVER_PORT string
 	SERVER_SECRET []byte
+	SMTP_SERVER string
+	SMTP_PORT string
+	EMAIL string
+	PASSWORD string
 )
 
 func LoadConfig() {
@@ -40,4 +44,8 @@ func LoadConfig() {
 	DB_HOST = viper.GetString("mysql.HOST")
 	SERVER_PORT = viper.GetString("server.PORT")
 	SERVER_SECRET= []byte(viper.GetString("server.SECRET"))
+	SMTP_SERVER = viper.GetString("smtp.SERVER")
+	SMTP_PORT = viper.GetString("smtp.PORT")
+	EMAIL = viper.GetString("smtp.EMAIL")
+	PASSWORD = viper.GetString("smtp.PASSWORD")
 }

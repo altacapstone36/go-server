@@ -21,16 +21,22 @@ func (repo outPatientRepository) NewMedicalRecord(ms models.MedicRecord) (err er
 }
 
 func (repo outPatientRepository) ProceedDoctor(mr models.MedicRecord) (err error) {
-	err = repo.sqldb.Updates(&mr).Error
+	up := repo.sqldb.Updates(&mr)
+	if up.RowsAffected == 0 {
+		err = gorm.ErrRecordNotFound
+	}
 	return
 }
 
 func (repo outPatientRepository) ProceedNurse(mr models.MedicCheck) (err error) {
-	err = repo.sqldb.Updates(&mr).Error
+	up := repo.sqldb.Updates(&mr)
+	if up.RowsAffected == 0 {
+		err = gorm.ErrRecordNotFound
+	}
 	return
 }
 
-func (repo outPatientRepository) DoctorFindAll(id int) (res []response.OutPatientResponse, err error) {
+func (repo outPatientRepository) DoctorFindAll(id int) (res []response.OutPatient, err error) {
 
 	err = repo.sqldb.Model(models.MedicRecord{}).
 		Select(`medic_records.*, medical_sessions.queue, medical_sessions.date_check,
@@ -47,7 +53,7 @@ func (repo outPatientRepository) DoctorFindAll(id int) (res []response.OutPatien
 	return
 }
 
-func (repo outPatientRepository) NurseFindAll(id int) (res []response.OutPatientResponse, err error) {
+func (repo outPatientRepository) NurseFindAll(id int) (res []response.OutPatient, err error) {
 
 	err = repo.sqldb.Model(models.MedicCheck{}).
 		Select(`medic_checks.*, medical_sessions.queue, medical_sessions.date_check,
@@ -65,7 +71,7 @@ func (repo outPatientRepository) NurseFindAll(id int) (res []response.OutPatient
 	return
 }
 
-func (repo outPatientRepository) Report() (res []response.OutPatientReportResponse, err error) {
+func (repo outPatientRepository) Report() (res []response.OutPatientReport, err error) {
 
 	err = repo.sqldb.Model(models.MedicRecord{}).
 		Select(`patients.resident_registration, medic_records.*, medical_sessions.date_check,
@@ -82,7 +88,7 @@ func (repo outPatientRepository) Report() (res []response.OutPatientReportRespon
 	return
 }
 
-func (repo outPatientRepository) ReportLog(id int, role string) (res []response.OutPatientReportLogResponse, err error) {
+func (repo outPatientRepository) ReportLog(id int, role string) (res []response.OutPatientReportLog, err error) {
 	var where, join string
 	if role == "doctor" {
 		join = "join medical_sessions on medical_sessions.medic_record_id = medic_records.id"
@@ -101,7 +107,7 @@ func (repo outPatientRepository) ReportLog(id int, role string) (res []response.
 	return
 }
 
-func (repo outPatientRepository) FindByDate(date_start, date_end string) (res []response.OutPatientResponse, err error) {
+func (repo outPatientRepository) FindByDate(date_start, date_end string) (res []response.OutPatient, err error) {
 
 	err = repo.sqldb.Model(models.MedicRecord{}).
 		Select(`medic_records.*, medical_sessions.queue, medical_sessions.date_check,
@@ -117,7 +123,7 @@ func (repo outPatientRepository) FindByDate(date_start, date_end string) (res []
 	return
 }
 
-func (repo outPatientRepository) FindByID(id int) (res []response.OutPatientResponse, err error) {
+func (repo outPatientRepository) FindByID(id int) (res []response.OutPatient, err error) {
 
 	err = repo.sqldb.Model(models.MedicRecord{}).
 		Select(`medic_records.*, patients.full_name, patients.code`).

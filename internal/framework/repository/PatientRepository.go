@@ -23,9 +23,9 @@ func (repo patientRepository) GetPatientByID(id uint) (patient response.PatientD
 
 	err = repo.sqldb.Model(models.MedicRecord{}).
 		Select(`medic_records.*, medical_facilities.name as facility, medical_sessions.date_check,
-						medical_staffs.full_name as doctor`).
+						users.full_name as doctor`).
 		Joins("join medical_sessions on medical_sessions.medic_record_id = medic_records.id").
-		Joins("join medical_staffs on medical_staffs.id = medical_sessions.medical_staff_id").
+		Joins("join users on users.id = medical_sessions.user_id").
 		Joins("join medical_facilities on medical_facilities.id = medical_sessions.medical_facility_id").
 		Where("medic_records.patient_id = ?", id).
 		Scan(&patient.MedicRecord).
@@ -59,7 +59,10 @@ func (repo patientRepository) CreatePatient(patient models.Patient) (err error) 
 }
 
 func (repo patientRepository) UpdatePatient(patient models.Patient) (err error) {
-	err = repo.sqldb.Updates(&patient).Error
+	up := repo.sqldb.Updates(&patient)
+	if up.RowsAffected == 0 {
+		err = gorm.ErrRecordNotFound
+	}
 
 	return
 }

@@ -2,9 +2,10 @@ package service
 
 import (
 	"go-hospital-server/internal/core/entity/models"
+	"go-hospital-server/internal/core/entity/request"
 	"go-hospital-server/internal/core/entity/response"
 	"go-hospital-server/internal/core/repository"
-	"go-hospital-server/internal/utils/errors"
+	"go-hospital-server/internal/utils"
 	"go-hospital-server/internal/utils/errors/check"
 )
 
@@ -34,25 +35,17 @@ func (srv PatientService) GetPatientByName(name string) (patient []response.Pati
 	return
 }
 
-func (srv PatientService) CreatePatient(patient models.Patient) (err error) {
-	if (models.Patient{}) == patient {
-		err = errors.New(404, "error no data for create provided")
-		return
-	}
-
-	err = srv.repo.CreatePatient(patient)
+func (srv PatientService) CreatePatient(patient request.Patient) (err error) {
+	p, _ := utils.TypeConverter[models.Patient](patient)
+	err = srv.repo.CreatePatient(p)
 	err = check.Record(patient, err)
 	return
 }
 
-func (srv PatientService) UpdatePatient(id uint, patient models.Patient) (err error) {
-	if (models.Patient{}) == patient {
-		err = errors.New(404, "error no data for update provided")
-		return
-	}
-
-	patient.ID = id
-	err = srv.repo.UpdatePatient(patient)
+func (srv PatientService) UpdatePatient(id uint, patient request.Patient) (err error) {
+	p, _ := utils.TypeConverter[models.Patient](patient)
+	p.ID = id
+	err = srv.repo.UpdatePatient(p)
 	err = check.Record(patient, err)
 	return
 }

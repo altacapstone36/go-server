@@ -56,7 +56,7 @@ func (srv OutPatientService) ProcessNurse(id int, req interface{}) (err error) {
 	return
 }
 
-func (srv OutPatientService) ListPatient(id float64, role string) (res []response.OutPatientResponse, err error) {
+func (srv OutPatientService) ListPatient(id float64, role string) (res []response.OutPatient, err error) {
 	if role == "doctor" {
 		res, err  = srv.repo.DoctorFindAll(int(id))
 	} else if role == "nurse" {
@@ -66,33 +66,34 @@ func (srv OutPatientService) ListPatient(id float64, role string) (res []respons
 	return
 }
 
-func (srv OutPatientService) FindByDate(id float64, start, end string) (res []response.OutPatientResponse, err error) {
+func (srv OutPatientService) FindByDate(id float64, start, end string) (res []response.OutPatient, err error) {
 	res, err  = srv.repo.FindByDate(start, end)
 	err = check.Record(res, err)
 	return
 }
 
-func (srv OutPatientService) FindByID(id int) (res []response.OutPatientResponse, err error) {
+func (srv OutPatientService) FindByID(id int) (res []response.OutPatient, err error) {
 	res, err  = srv.repo.FindByID(id)
 	err = check.Record(res, err)
 	return
 }
 
-func (srv OutPatientService) Report() (res []response.OutPatientReportResponse, err error) {
+func (srv OutPatientService) Report() (res []response.OutPatientReport, err error) {
 	res, err  = srv.repo.Report()
 	err = check.Record(res, err)
 	return
 }
 
-func (srv OutPatientService) ReportLog(id float64, role string) (res []response.OutPatientReportLogResponse, err error) {
+func (srv OutPatientService) ReportLog(id float64, role string) (res []response.OutPatientReportLog, err error) {
 	res, err  = srv.repo.ReportLog(int(id), role)
 	err = check.Record(res, err)
 	return
 }
 
-func (srv OutPatientService) AssignNurse(id int, mc request.AssignNurseRequest) (err error) {
+func (srv OutPatientService) AssignNurse(id int, mc request.AssignNurse) (err error) {
 	mcheck, _ := utils.TypeConverter[models.MedicCheck](mc)
 	mcheck.ID = uint(id)
 	err = srv.repo.AssignNurse(mcheck)
+	err = check.Record(nil, err)
 	return
 }

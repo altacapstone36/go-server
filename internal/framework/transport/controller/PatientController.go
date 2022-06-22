@@ -2,11 +2,10 @@ package controller
 
 import (
 	"fmt"
-	"go-hospital-server/internal/core/entity/models"
-	"go-hospital-server/internal/core/entity/response" 
+	"go-hospital-server/internal/core/entity/request"
+	"go-hospital-server/internal/core/entity/response"
 	"go-hospital-server/internal/core/service"
 	"go-hospital-server/internal/utils/errors/check"
-	"net/http"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
@@ -47,7 +46,7 @@ func (acon PatientController) GetAllPatient(c echo.Context) error {
 		return c.JSON(r.Code, r.Result)
 	}
 
-	return c.JSON(http.StatusOK, response.MessageData{
+	return c.JSON(200, response.MessageData{
 		Message: "Patient Fetched",
 		Data: res,
 	})
@@ -73,7 +72,7 @@ func (acon PatientController) GetPatientByID(c echo.Context) error {
 		return c.JSON(r.Code, r.Result)
 	}
 
-	return c.JSON(http.StatusOK, response.MessageData{
+	return c.JSON(200, response.MessageData{
 		Message: "Patient Fetched",
 		Data: res,
 	})
@@ -87,12 +86,12 @@ func (acon PatientController) GetPatientByID(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param body  body  request.Patient{}  true "Patient Details"
-// @Success 200 {object} response.MessageOnly{} success
+// @Success 201 {object} response.MessageOnly{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /patient [post]
 func (acon PatientController) CreatePatient(c echo.Context) error {
-	var patient models.Patient
+	var patient request.Patient
 
 	c.Bind(&patient)
 	
@@ -105,7 +104,7 @@ func (acon PatientController) CreatePatient(c echo.Context) error {
 		return c.JSON(r.Code, r.Result)
 	}
 
-	return c.JSON(http.StatusCreated, response.MessageOnly{
+	return c.JSON(201, response.MessageOnly{
 		Message: "Patient Created",
 	})
 }
@@ -125,7 +124,7 @@ func (acon PatientController) CreatePatient(c echo.Context) error {
 // @Router /patient/:id/update [put]
 func (acon PatientController) UpdatePatient(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
-	var patient models.Patient
+	var patient request.Patient
 
 	c.Bind(&patient)
 
@@ -138,7 +137,7 @@ func (acon PatientController) UpdatePatient(c echo.Context) error {
 		return c.JSON(r.Code, r.Result)
 	}
 
-	return c.JSON(http.StatusOK, response.MessageOnly{
+	return c.JSON(200, response.MessageOnly{
 		Message: fmt.Sprintf("Patient #%d Updated", id),
 	})
 }
@@ -163,7 +162,7 @@ func (acon PatientController) DeletePatient(c echo.Context) error {
 		return c.JSON(r.Code, r.Result)
 	}
 
-	return c.JSON(http.StatusOK, response.MessageOnly{
+	return c.JSON(200, response.MessageOnly{
 		Message: fmt.Sprintf("Patient #%d Deleted", id),
 	})
 }
