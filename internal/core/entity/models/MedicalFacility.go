@@ -18,8 +18,8 @@ func (mf *MedicalFacility) BeforeCreate(tx *gorm.DB) (err error) {
 	tx.Model(&mf).Select("name").
 		Where("name = ?", mf.Name).
 		Count(&c);
-	if c == 0 {
-		errMsg := fmt.Sprintf("Medical Facility with name %s", *&mf.Name)
+	if c != 0 {
+		errMsg := fmt.Sprintf("Duplicate facility with name %s", *&mf.Name)
 		err = errors.New(417, errMsg)
 		return
 	}

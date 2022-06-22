@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"go-hospital-server/internal/utils/errors"
 
-	validation "github.com/go-ozzo/ozzo-validation/v4"
-	"github.com/go-ozzo/ozzo-validation/v4/is"
 	"gorm.io/gorm"
 )
 
@@ -40,16 +38,5 @@ func (p *Patient) BeforeCreate(tx *gorm.DB) (err error) {
 	tx.Model(&p).Count(&id)
 	p.Code = fmt.Sprintf("RM%05d", id+1)
 
-	return
-}
-
-func (p Patient) Validate() (err error) {
-	err = validation.ValidateStruct(&p,
-		validation.Field(&p.ResidentRegistration, validation.Required, validation.RuneLength(16, 16), is.Digit),
-		validation.Field(&p.FullName, validation.Required),
-		validation.Field(&p.Address, validation.Required),
-		validation.Field(&p.Gender, validation.Required),
-		validation.Field(&p.BirthDate, validation.Required, validation.Date("2006-01-02")),
-	)
 	return
 }

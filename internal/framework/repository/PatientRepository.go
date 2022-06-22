@@ -59,7 +59,10 @@ func (repo patientRepository) CreatePatient(patient models.Patient) (err error) 
 }
 
 func (repo patientRepository) UpdatePatient(patient models.Patient) (err error) {
-	err = repo.sqldb.Updates(&patient).Error
+	up := repo.sqldb.Updates(&patient)
+	if up.RowsAffected == 0 {
+		err = gorm.ErrRecordNotFound
+	}
 
 	return
 }

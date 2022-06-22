@@ -40,11 +40,17 @@ func (repo *facilityRepository) Create(mf models.MedicalFacility) (err error) {
 }
 
 func (u *facilityRepository) Update(us models.MedicalFacility) (err error) {
-	err = u.sqldb.Updates(&us).Error
+	up := u.sqldb.Updates(&us)
+	if up.RowsAffected == 0 {
+		err = gorm.ErrRecordNotFound
+	}
 	return
 }
 
 func (u *facilityRepository) Delete(id int) (err error) {
-	err = u.sqldb.Delete(models.MedicalFacility{}, id).Error
+	del := u.sqldb.Delete(models.MedicalFacility{}, id)
+	if del.RowsAffected == 0 {
+		err = gorm.ErrRecordNotFound
+	}
 	return
 }

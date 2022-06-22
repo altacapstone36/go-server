@@ -21,12 +21,18 @@ func (repo outPatientRepository) NewMedicalRecord(ms models.MedicRecord) (err er
 }
 
 func (repo outPatientRepository) ProceedDoctor(mr models.MedicRecord) (err error) {
-	err = repo.sqldb.Updates(&mr).Error
+	up := repo.sqldb.Updates(&mr)
+	if up.RowsAffected == 0 {
+		err = gorm.ErrRecordNotFound
+	}
 	return
 }
 
 func (repo outPatientRepository) ProceedNurse(mr models.MedicCheck) (err error) {
-	err = repo.sqldb.Updates(&mr).Error
+	up := repo.sqldb.Updates(&mr)
+	if up.RowsAffected == 0 {
+		err = gorm.ErrRecordNotFound
+	}
 	return
 }
 

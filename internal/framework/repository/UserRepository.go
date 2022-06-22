@@ -16,8 +16,8 @@ func NewUserRepository(sqldb *gorm.DB) *userRepository{
 	return &userRepository{sqldb: sqldb}
 }
 
-func (u *userRepository) FindAll() (res []response.User, err error) {
-	err = u.sqldb.Model(&models.User{}).
+func (repo *userRepository) FindAll() (res []response.User, err error) {
+	err = repo.sqldb.Model(&models.User{}).
 		Select(`users.*, roles.name as role, medical_facilities.name as facility`).
 		Joins("left join roles on users.role_id = roles.id").
 		Joins("left join medical_facilities on medical_facilities.id = users.medical_facility_id").
@@ -25,8 +25,8 @@ func (u *userRepository) FindAll() (res []response.User, err error) {
 	return
 }
 
-func (u *userRepository) FindByID(id int) (res response.User, err error) {
-	err = u.sqldb.Model(&models.User{}).
+func (repo *userRepository) FindByID(id int) (res response.User, err error) {
+	err = repo.sqldb.Model(&models.User{}).
 		Select(`users.*, roles.name as role, medical_facilities.name as facility`).
 		Joins("left join roles on users.role_id = roles.id").
 		Joins("left join medical_facilities on medical_facilities.id = users.medical_facility_id").
@@ -35,17 +35,23 @@ func (u *userRepository) FindByID(id int) (res response.User, err error) {
 	return
 }
 
-func (u *userRepository) Create(us models.User) (err error) {
-	err = u.sqldb.Create(&us).Error
+func (repo *userRepository) Create(us models.User) (err error) {
+	err = repo.sqldb.Create(&us).Error
 	return
 }
 
-func (u *userRepository) Update(us models.User) (err error) {
-	err = u.sqldb.Updates(&us).Error
+func (repo *userRepository) Update(us models.User) (err error) {
+	up := repo.sqldb.Updates(&us)
+	if up.RowsAffected == 0 {
+		err = gorm.ErrRecordNotFound
+	}
 	return
 }
 
-func (u *userRepository) Delete(id int) (err error) {
-	err = u.sqldb.Delete(models.User{}, id).Error
+func (repo *userRepository) Delete(id int) (err error) {
+	del := repo.sqldb.Delete(models.Patient{}, id)
+	if del.RowsAffected == 0 {
+		err = gorm.ErrRecordNotFound
+	}
 	return
 }
