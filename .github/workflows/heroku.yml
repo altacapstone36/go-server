@@ -1,11 +1,9 @@
-name: Code Integration
+name: Heroku Deployment
 
 on:
-  pull_request:
   push:
     branches:
       - master
-      - dev
 
 jobs:
   push:
