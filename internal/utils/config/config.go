@@ -1,6 +1,8 @@
 package config
 
 import (
+	"os"
+
 	"github.com/integralist/go-findroot/find"
 	"github.com/spf13/viper"
 )
@@ -36,16 +38,23 @@ func LoadConfig() {
 		panic(err)
 	}
 
+	SERVER_PORT = checkEnv(os.Getenv("PORT"), viper.GetString("server.PORT"))
 	MONGODB_STRING = viper.GetString("mongo.STRING")
 	MONGODB_DATABASE = viper.GetString("mongo.DATABASE")
 	DB_DATABASE = viper.GetString("mysql.DATABASE")
 	DB_USERNAME = viper.GetString("mysql.USERNAME")
 	DB_PASSWORD = viper.GetString("mysql.PASSWORD")
 	DB_HOST = viper.GetString("mysql.HOST")
-	SERVER_PORT = viper.GetString("server.PORT")
 	SERVER_SECRET= []byte(viper.GetString("server.SECRET"))
 	SMTP_SERVER = viper.GetString("smtp.SERVER")
 	SMTP_PORT = viper.GetString("smtp.PORT")
 	EMAIL = viper.GetString("smtp.EMAIL")
 	PASSWORD = viper.GetString("smtp.PASSWORD")
+}
+
+func checkEnv(env, viperStr string) string {
+	if env != "" {
+		return env
+	}
+	return viperStr
 }
