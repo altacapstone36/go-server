@@ -55,10 +55,10 @@ func (repo outPatientRepository) DoctorFindAll(id int) (res []response.OutPatien
 
 func (repo outPatientRepository) NurseFindAll(id int) (res []response.OutPatient, err error) {
 
-	err = repo.sqldb.Model(models.MedicCheck{}).
-		Select(`medic_checks.*, medical_sessions.queue, medical_sessions.date_check,
+	err = repo.sqldb.Debug().Model(models.MedicCheck{}).
+		Select(`medic_records.*, medical_sessions.queue, medical_sessions.date_check,
 						patients.full_name, patients.code, sessions.time_start,
-						users.full_name as doctor, medic_records.serial_number`).
+						users.full_name as doctor`).
 		Joins("join medic_records on medic_records.id = medic_checks.medic_record_id").
 		Joins("join patients on patients.id = medic_records.patient_id").
 		Joins("join medical_sessions on medical_sessions.medic_record_id = medic_records.id").
@@ -123,7 +123,7 @@ func (repo outPatientRepository) FindByDate(date_start, date_end string) (res []
 	return
 }
 
-func (repo outPatientRepository) FindByID(id int) (res []response.OutPatient, err error) {
+func (repo outPatientRepository) FindByID(id int) (res []response.OutPatientSimple, err error) {
 
 	err = repo.sqldb.Model(models.MedicRecord{}).
 		Select(`medic_records.*, patients.full_name, patients.code`).

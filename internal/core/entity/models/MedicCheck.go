@@ -20,6 +20,14 @@ type MedicCheck struct {
 
 func (mr *MedicCheck) BeforeCreate(tx *gorm.DB) (err error) {
 	var c int64
+	
+	tx.Debug().Table("users").Where("id = ?", mr.UserID).
+		Where("role_id = 3").Count(&c)
+	if c == 0 {
+		errMsg := fmt.Sprintf("No Nurse with ID #%d available", mr.UserID)
+		err = errors.New(417, errMsg)
+		return
+	}
 
 	tx.Model(&mr).Where("id = ?", mr.ID).
 		Where("status = 0").Count(&c)

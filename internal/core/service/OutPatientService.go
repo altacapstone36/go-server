@@ -72,7 +72,7 @@ func (srv OutPatientService) FindByDate(id float64, start, end string) (res []re
 	return
 }
 
-func (srv OutPatientService) FindByID(id int) (res []response.OutPatient, err error) {
+func (srv OutPatientService) FindByID(id int) (res []response.OutPatientSimple, err error) {
 	res, err  = srv.repo.FindByID(id)
 	err = check.Record(res, err)
 	return
