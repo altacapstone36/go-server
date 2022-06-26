@@ -46,6 +46,7 @@ definitions:
   request.Facility:
     properties:
       name:
+        example: General
         type: string
     type: object
   request.Login:
@@ -126,15 +127,19 @@ definitions:
   response.Facility:
     properties:
       id:
+        example: 1
         type: integer
       name:
+        example: General
         type: string
     type: object
   response.FacilityDetails:
     properties:
       id:
+        example: 1
         type: integer
       name:
+        example: General
         type: string
       staff:
         items:
@@ -179,27 +184,37 @@ definitions:
   response.OutPatient:
     properties:
       code:
+        example: RM0001
         type: string
       complaint:
+        example: sakit perut
         type: string
       date_check:
+        example: "2022-06-22"
         type: string
       doctor:
+        example: Alsyad Ahmad
         type: string
       full_name:
+        example: Faizur Ramadhan
         type: string
       id:
+        example: 1
         type: integer
       queue:
+        example: 1
         type: integer
       serial_number:
+        example: RM/748/2022/001
         type: string
       session:
+        example: "08:00"
         type: string
     type: object
   response.OutPatientReportLog:
     properties:
       serial_number:
+        example: RM/748/2022/001
         type: string
     type: object
   response.Patient:
@@ -257,10 +272,13 @@ definitions:
   response.Staff:
     properties:
       code:
+        example: DR00001
         type: string
       full_name:
+        example: Alsyad Ahmad
         type: string
       role:
+        example: Doctor
         type: string
     type: object
   response.User:
@@ -290,7 +308,7 @@ definitions:
         example: 1
         type: integer
     type: object
-host: ec2-3-91-177-221.compute-1.amazonaws.com
+host: go-hospital-server.herokuapp.com
 info:
   contact: {}
   description: server API for Holy Hospital Application.
@@ -508,7 +526,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Token'
+            $ref: '#/definitions/response.MessageOnly'
         "417":
           description: Expectation Failed
           schema:
@@ -647,8 +665,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
             $ref: '#/definitions/response.MessageOnly'
         "417":
@@ -1004,8 +1022,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
             $ref: '#/definitions/response.MessageOnly'
         "417":
@@ -1127,6 +1145,7 @@ paths:
       - User
 schemes:
 - http
+- https
 securityDefinitions:
   ApiKey:
     in: header

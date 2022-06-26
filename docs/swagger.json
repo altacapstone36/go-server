@@ -1,6 +1,7 @@
 {
     "schemes": [
-        "http"
+        "http",
+        "https"
     ],
     "swagger": "2.0",
     "info": {
@@ -13,7 +14,7 @@
         },
         "version": "1.0"
     },
-    "host": "ec2-3-91-177-221.compute-1.amazonaws.com",
+    "host": "go-hospital-server.herokuapp.com",
     "basePath": "/api",
     "paths": {
         "/facility": {
@@ -356,7 +357,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Token"
+                            "$ref": "#/definitions/response.MessageOnly"
                         }
                     },
                     "417": {
@@ -586,8 +587,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/response.MessageOnly"
                         }
@@ -1173,8 +1174,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/response.MessageOnly"
                         }
@@ -1430,7 +1431,8 @@
             "type": "object",
             "properties": {
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "General"
                 }
             }
         },
@@ -1543,10 +1545,12 @@
             "type": "object",
             "properties": {
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "General"
                 }
             }
         },
@@ -1554,10 +1558,12 @@
             "type": "object",
             "properties": {
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "General"
                 },
                 "staff": {
                     "type": "array",
@@ -1621,31 +1627,40 @@
             "type": "object",
             "properties": {
                 "code": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "RM0001"
                 },
                 "complaint": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "sakit perut"
                 },
                 "date_check": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "2022-06-22"
                 },
                 "doctor": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Alsyad Ahmad"
                 },
                 "full_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Faizur Ramadhan"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "queue": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "serial_number": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "RM/748/2022/001"
                 },
                 "session": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "08:00"
                 }
             }
         },
@@ -1653,7 +1668,8 @@
             "type": "object",
             "properties": {
                 "serial_number": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "RM/748/2022/001"
                 }
             }
         },
@@ -1733,13 +1749,16 @@
             "type": "object",
             "properties": {
                 "code": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "DR00001"
                 },
                 "full_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Alsyad Ahmad"
                 },
                 "role": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Doctor"
                 }
             }
         },

@@ -360,7 +360,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Token"
+                            "$ref": "#/definitions/response.MessageOnly"
                         }
                     },
                     "417": {
@@ -590,8 +590,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/response.MessageOnly"
                         }
@@ -1177,8 +1177,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/response.MessageOnly"
                         }
@@ -1434,7 +1434,8 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "General"
                 }
             }
         },
@@ -1547,10 +1548,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "General"
                 }
             }
         },
@@ -1558,10 +1561,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "General"
                 },
                 "staff": {
                     "type": "array",
@@ -1625,31 +1630,40 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "code": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "RM0001"
                 },
                 "complaint": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "sakit perut"
                 },
                 "date_check": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "2022-06-22"
                 },
                 "doctor": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Alsyad Ahmad"
                 },
                 "full_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Faizur Ramadhan"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "queue": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "serial_number": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "RM/748/2022/001"
                 },
                 "session": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "08:00"
                 }
             }
         },
@@ -1657,7 +1671,8 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "serial_number": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "RM/748/2022/001"
                 }
             }
         },
@@ -1737,13 +1752,16 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "code": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "DR00001"
                 },
                 "full_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Alsyad Ahmad"
                 },
                 "role": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Doctor"
                 }
             }
         },
@@ -1797,9 +1815,9 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "ec2-3-91-177-221.compute-1.amazonaws.com",
+	Host:             "go-hospital-server.herokuapp.com",
 	BasePath:         "/api",
-	Schemes:          []string{"http"},
+	Schemes:          []string{"http", "https"},
 	Title:            "Holy Hospital Sever API",
 	Description:      "server API for Holy Hospital Application.",
 	InfoInstanceName: "swagger",

@@ -100,7 +100,7 @@ func (acon AuthController) RefreshToken(c echo.Context) error {
 // @Security ApiKey
 // @Accept json
 // @Produce json
-// @Success 200 {object} models.Token{} success
+// @Success 200 {object} response.MessageOnly{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /logout [post]

@@ -44,7 +44,7 @@ func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 		tx.Table("medical_facilities").Where("id = ?", u.MedicalFacilityID).Count(&c)
 		if c == 0 {
 			errMsg := fmt.Sprintf("No Medical Facility with ID %d", u.MedicalFacilityID)
-			err = errors.New(417, errMsg)
+			err = errors.New(203, errMsg)
 			return
 		}
 	}

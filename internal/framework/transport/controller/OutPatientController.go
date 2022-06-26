@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"go-hospital-server/internal/core/entity/request"
 	"go-hospital-server/internal/core/entity/response"
 	"go-hospital-server/internal/core/service"
@@ -113,6 +114,8 @@ func (acon OutPatientController) Process(c echo.Context) error {
 	var process func(int, any) error
 	c.Bind(&req)
 
+	fmt.Println(role.(string))
+
 	if role.(string) == "doctor" {
 		r, _ := utils.TypeConverter[request.DoctorMedicRecord](req)
 		err = r.Validate()
@@ -149,7 +152,7 @@ func (acon OutPatientController) Process(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param body body request.AssignNurse{} true "Assign Nurse to Medical Check"
-// @Success 200 {object} response.MessageOnly{} success
+// @Success 201 {object} response.MessageOnly{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /outpatient/:id/assign_nurse [post]
@@ -163,12 +166,12 @@ func (acon OutPatientController) AssignNurse(c echo.Context) error {
 	}
 
 	err := acon.srv.AssignNurse(id, req)
-	if r, ok := check.HTTP(nil, err, "Submit Medic Record"); !ok {
+	if r, ok := check.HTTP(nil, err, "Assign Nurse"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}
 
-	return c.JSON(200, response.MessageOnly{
-		Message: "Medic Record Submitted",
+	return c.JSON(201, response.MessageOnly{
+		Message: fmt.Sprintf("Nurse #%d assigned to Medic Record #%d", req.NurseID, id),
 	})
 }
 
@@ -188,12 +191,12 @@ func (acon OutPatientController) FindByID(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 
 	res, err := acon.srv.FindByID(id)
-	if r, ok := check.HTTP(nil, err, "Submit Medic Record"); !ok {
+	if r, ok := check.HTTP(nil, err, "Fetch Medic Record"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}
 
 	return c.JSON(200, response.MessageData{
-		Message: "Medic Record Submitted",
+		Message: "Medic Record Fetched",
 		Data: res,
 	})
 }
