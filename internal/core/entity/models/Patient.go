@@ -2,7 +2,6 @@ package models
 
 import (
 	"fmt"
-	"go-hospital-server/internal/utils/errors"
 
 	"gorm.io/gorm"
 )
@@ -21,18 +20,6 @@ type Patient struct {
 }
 
 func (p *Patient) BeforeCreate(tx *gorm.DB) (err error) {
-	var name string
-
-	tx.Model(&p).Select("full_name").
-		Where("full_name = ?", p.FullName).
-		Scan(&name);
-
-	if name != "" {
-		msg := fmt.Sprintf("duplicate name for %s found, please use another name", p.FullName)
-		err = errors.New(203, msg)
-		return
-	}
-	
 	var id int64
 
 	tx.Model(&p).Count(&id)

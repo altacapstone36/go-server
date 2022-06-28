@@ -43,11 +43,7 @@ func (acon OutPatientController) GetAllOutPatient(c echo.Context) error {
 	date_start := c.QueryParam("date_start")
 	date_end := c.QueryParam("date_end")
 
-	if r, ok := check.ParamQuery(date_start, date_end); !ok {
-		return c.JSON(r.Code, r.Result)
-	}
-
-	if date_start != "" && date_end != "" {
+	if date_start != "" {
 		res, err = acon.srv.FindByDate(id.(float64), date_start, date_end)
 	} else {
 		res, err = acon.srv.ListPatient(id.(float64), role.(string))
@@ -113,8 +109,6 @@ func (acon OutPatientController) Process(c echo.Context) error {
 	var err error
 	var process func(int, any) error
 	c.Bind(&req)
-
-	fmt.Println(role.(string))
 
 	if role.(string) == "doctor" {
 		r, _ := utils.TypeConverter[request.DoctorMedicRecord](req)
@@ -210,7 +204,7 @@ func (acon OutPatientController) FindByID(c echo.Context) error {
 // @Success 200 {object} response.MessageData{data=response.OutPatientReportLog} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
-// @Router /outpatient/log [post]
+// @Router /outpatient/log [get]
 func (acon OutPatientController) ReportLog(c echo.Context) error {
 	id, _ := jwt.GetTokenData(c, "user_id")
 	role, _ := jwt.GetTokenData(c, "role")
@@ -236,7 +230,7 @@ func (acon OutPatientController) ReportLog(c echo.Context) error {
 // @Success 200 {object} response.MessageData{data=response.OutPatientReportLog} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
-// @Router /outpatient/report [post]
+// @Router /outpatient/report [get]
 func (acon OutPatientController) Report(c echo.Context) error {
 
 	res, err := acon.srv.Report()

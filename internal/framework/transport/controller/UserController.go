@@ -146,11 +146,11 @@ func (acon UserController) Delete(c echo.Context) error {
 
 	err := acon.srv.Delete(id)
 
-	if r, ok := check.HTTP(nil, err, "Update User"); !ok {
+	if r, ok := check.HTTP(nil, err, "Delete User"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}
 
 	return c.JSON(200, response.MessageOnly{
-		Message: fmt.Sprintf("User #%d Updated", id),
+		Message: fmt.Sprintf("User #%d Deleted", id),
 	})
 }

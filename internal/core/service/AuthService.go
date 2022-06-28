@@ -7,7 +7,6 @@ import (
 	"go-hospital-server/internal/core/repository"
 	"go-hospital-server/internal/utils"
 	"go-hospital-server/internal/utils/errors"
-	"go-hospital-server/internal/utils/errors/check"
 	"go-hospital-server/internal/utils/jwt"
 )
 
@@ -22,8 +21,6 @@ func NewAuthService(repo repository.AuthRepository) *AuthService {
 func (srv AuthService) Login(login request.Login) (res response.User, err error) {
 	var checkPassword bool
 	res, err  = srv.repo.Login(login.Email)
-
-	err = check.Record(res, err)
 
 	if err == nil {
 		checkPassword = utils.ComparePassword(login.Password, res.Password)

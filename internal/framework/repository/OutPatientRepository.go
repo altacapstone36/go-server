@@ -3,6 +3,7 @@ package repository
 import (
 	"go-hospital-server/internal/core/entity/models"
 	"go-hospital-server/internal/core/entity/response"
+	"go-hospital-server/internal/utils/errors/check"
 
 	"gorm.io/gorm"
 )
@@ -21,24 +22,20 @@ func (repo outPatientRepository) NewMedicalRecord(ms models.MedicRecord) (err er
 }
 
 func (repo outPatientRepository) ProceedDoctor(mr models.MedicRecord) (err error) {
-	up := repo.sqldb.Updates(&mr)
-	if up.RowsAffected == 0 {
-		err = gorm.ErrRecordNotFound
-	}
+	db := repo.sqldb.Updates(&mr)
+	err = check.DBRecord(db, check.UPDATE)
 	return
 }
 
 func (repo outPatientRepository) ProceedNurse(mr models.MedicCheck) (err error) {
-	up := repo.sqldb.Updates(&mr)
-	if up.RowsAffected == 0 {
-		err = gorm.ErrRecordNotFound
-	}
+	db := repo.sqldb.Updates(&mr)
+	err = check.DBRecord(db, check.UPDATE)
 	return
 }
 
 func (repo outPatientRepository) DoctorFindAll(id int) (res []response.OutPatient, err error) {
 
-	err = repo.sqldb.Model(models.MedicRecord{}).
+	db := repo.sqldb.Model(models.MedicRecord{}).
 		Select(`medic_records.*, medical_sessions.queue, medical_sessions.date_check,
 						patients.full_name, patients.code, sessions.time_start,
 						users.full_name as doctor`).
@@ -48,14 +45,15 @@ func (repo outPatientRepository) DoctorFindAll(id int) (res []response.OutPatien
 		Joins("join users on users.id = medical_sessions.user_id").
 		Where("medical_sessions.user_id = ?", id).
 		Where("medic_records.status = 0").
-		Scan(&res).Error
+		Scan(&res)
 
+	err = check.DBRecord(db, check.FIND)
 	return
 }
 
 func (repo outPatientRepository) NurseFindAll(id int) (res []response.OutPatient, err error) {
 
-	err = repo.sqldb.Debug().Model(models.MedicCheck{}).
+	db := repo.sqldb.Debug().Model(models.MedicCheck{}).
 		Select(`medic_records.*, medical_sessions.queue, medical_sessions.date_check,
 						patients.full_name, patients.code, sessions.time_start,
 						users.full_name as doctor`).
@@ -66,14 +64,15 @@ func (repo outPatientRepository) NurseFindAll(id int) (res []response.OutPatient
 		Joins("join users on users.id = medic_checks.user_id").
 		Where("medic_checks.user_id = ?", id).
 		Where("medic_checks.status = 0").
-		Scan(&res).Error
+		Scan(&res)
 
+	err = check.DBRecord(db, check.FIND)
 	return
 }
 
 func (repo outPatientRepository) Report() (res []response.OutPatientReport, err error) {
 
-	err = repo.sqldb.Model(models.MedicRecord{}).
+	db := repo.sqldb.Model(models.MedicRecord{}).
 		Select(`patients.resident_registration, medic_records.*, medical_sessions.date_check,
 						patients.full_name, patients.code, sessions.time_start,
 						users.full_name as doctor, medical_facilities.name as facility`).
@@ -83,8 +82,9 @@ func (repo outPatientRepository) Report() (res []response.OutPatientReport, err 
 		Joins("join medical_facilities on medical_facilities.id = medical_sessions.medical_facility_id").
 		Joins("join users on users.id = medical_sessions.user_id").
 		Where("medic_records.status = 1").
-		Scan(&res).Error
+		Scan(&res)
 
+	err = check.DBRecord(db, check.FIND)
 	return
 }
 
@@ -98,28 +98,30 @@ func (repo outPatientRepository) ReportLog(id int, role string) (res []response.
 		join = "join medic_checks on medic_checks.medic_record_id = medic_records.id"
 	}
 
-	err = repo.sqldb.Model(models.MedicRecord{}).
+	db := repo.sqldb.Model(models.MedicRecord{}).
 		Select("serial_number").
 		Joins(join).
 		Where(where, id).
-		Scan(&res).Error
+		Scan(&res)
 
+	err = check.DBRecord(db, check.FIND)
 	return
 }
 
 func (repo outPatientRepository) FindByDate(date_start, date_end string) (res []response.OutPatient, err error) {
 
-	err = repo.sqldb.Model(models.MedicRecord{}).
+	db := repo.sqldb.Model(models.MedicRecord{}).
 		Select(`medic_records.*, medical_sessions.queue, medical_sessions.date_check,
 						patients.full_name, patients.code, sessions.time_start,
-						medical_staffs.full_name as doctor`).
+						users.full_name as doctor`).
 		Joins("left join patients on patients.id = medic_records.patient_id").
 		Joins("left join medical_sessions on medical_sessions.medic_record_id = medic_records.id").
 		Joins("left join sessions on medical_sessions.session_id = sessions.id").
-		Joins("left join medical_staffs on medical_staffs.id = medical_sessions.medical_staff_id").
+		Joins("left join users on users.id = medical_sessions.user_id").
 		Where("medical_sessions.date_check BETWEEN ? AND ?", date_start, date_end).
-		Scan(&res).Error
+		Scan(&res)
 
+	err = check.DBRecord(db, check.FIND)
 	return
 }
 

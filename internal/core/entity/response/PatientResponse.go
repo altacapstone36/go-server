@@ -19,10 +19,11 @@ type PatientDetails struct {
 	Gender string `json:"gender" example:"Male"`
 	BirthDate string `json:"birthdate" example:"2001-04-14"`
 	BloodType string `json:"blood_type" example:"A"`
-	MedicRecord []MedicRecord `json:"medic_record"`
+	MedicRecord []MedicRecord `json:"medic_record" gorm:"one2many"`
 }
 
 type MedicRecord struct {
+	PatientDetailsID int `json:"-"`
 	SerialNumber string `json:"serial_number" example:"RM/748/2022/0001"`
 	Complaint string `json:"complaint" example:"Sakit Perut"`
 	Diagnose string `json:"diagnose" example:"Maag"`

@@ -15,4 +15,5 @@ type Staff struct {
 	Code string `json:"code" example:"DR00001"`
 	FullName string `json:"full_name" example:"Alsyad Ahmad"`
 	Role string `json:"role" example:"Doctor"`
+	FacilityDetailsID int `json:"-"`
 }
