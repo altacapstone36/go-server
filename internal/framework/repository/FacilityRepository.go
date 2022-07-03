@@ -7,12 +7,11 @@ import (
 	"gorm.io/gorm"
 )
 
-
 type facilityRepository struct {
 	sqldb *gorm.DB
 }
 
-func NewFacilityRepository(sqldb *gorm.DB) *facilityRepository{
+func NewFacilityRepository(sqldb *gorm.DB) *facilityRepository {
 	return &facilityRepository{sqldb: sqldb}
 }
 
