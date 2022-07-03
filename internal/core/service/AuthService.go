@@ -21,7 +21,7 @@ func NewAuthService(repo repository.AuthRepository) *AuthService {
 
 func (srv AuthService) Login(login request.Login) (res response.User, err error) {
 	var checkPassword bool
-	res, err  = srv.repo.Login(login.Email)
+	res, err = srv.repo.Login(login.Email)
 
 	err = check.Record(res, err)
 
@@ -32,6 +32,38 @@ func (srv AuthService) Login(login request.Login) (res response.User, err error)
 		}
 	}
 
+	return
+}
+
+func (srv AuthService) Register(req request.RegisterRequest) (err error) {
+	r, _ := utils.TypeConverter[models.User](req)
+	err = srv.repo.Register(r)
+	err = check.Record(nil, err)
+	return
+}
+
+func (srv AuthService) FindEmail(find request.FindEmail) (err error) {
+	err = srv.repo.FindEmail(find.Email)
+
+	if err != nil {
+		errors.New(404, "record not found")
+	}
+
+	return
+}
+
+func (srv AuthService) ChangePassword(change request.ChangePassword) (res response.User, err error) {
+	var checkPassword bool
+	res, err = srv.repo.ChangePassword(change.Password)
+
+	err = check.Record(res, err)
+
+	if err == nil {
+		checkPassword = utils.ComparePassword(change.Password, res.Password)
+		if !checkPassword {
+			err = errors.New(425, "Try another password")
+		}
+	}
 	return
 }
 

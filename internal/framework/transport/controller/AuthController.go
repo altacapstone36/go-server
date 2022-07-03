@@ -12,7 +12,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-
 type AuthController struct {
 	srv *service.AuthService
 }
@@ -49,11 +48,40 @@ func (acon AuthController) Login(c echo.Context) error {
 	if r, ok := check.HTTP(res, err, "Create Authentication Token"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}
-	
+
 	return c.JSON(http.StatusOK, response.MessageDataJWT{
 		Message: "User Logged In",
-		Data: res,
-		JWT: jwt,
+		Data:    res,
+		JWT:     jwt,
+	})
+}
+
+func (acon AuthController) Register(c echo.Context) error {
+	var req request.RegisterRequest
+	c.Bind(&req)
+
+	if r, ok := check.HTTP(nil, req.Validate(), "Validate"); !ok {
+		return c.JSON(r.Code, r.Result)
+	}
+
+	return c.JSON(201, response.MessageOnly{
+		Message: "Register success",
+	})
+}
+
+func (acon AuthController) FindEmail(c echo.Context) error {
+	var find request.FindEmail
+
+	return c.JSON(http.StatusOK, response.MessageData{
+		Message: "Email found",
+		Data:    find,
+	})
+}
+
+func (acon AuthController) ChangePassword(c echo.Context) error {
+
+	return c.JSON(201, response.MessageOnly{
+		Message: "Password changed",
 	})
 }
 
@@ -83,13 +111,13 @@ func (acon AuthController) RefreshToken(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusExpectationFailed, response.Error{
 			Message: "Failed to Generate New Token",
-			Error: err.Error(),
+			Error:   err.Error(),
 		})
 	}
 
 	return c.JSON(http.StatusOK, response.MessageData{
 		Message: "New Token Generated",
-		Data: t,
+		Data:    t,
 	})
 }
 
@@ -111,11 +139,11 @@ func (acon AuthController) Logout(c echo.Context) error {
 		err = acon.srv.Logout(token)
 
 	}
-	
+
 	if err != nil {
 		return c.JSON(http.StatusExpectationFailed, echo.Map{
 			"message": "Failed to Revoke Token",
-			"error": err.Error(),
+			"error":   err.Error(),
 		})
 	}
 

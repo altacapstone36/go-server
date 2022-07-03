@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"go-hospital-server/internal/core/entity/models"
 	m "go-hospital-server/internal/core/entity/models"
 	"go-hospital-server/internal/core/entity/response"
 
@@ -26,6 +27,16 @@ func (repo authRepository) Login(email string) (users response.User, err error) 
 		Joins("left join roles on users.role_id = roles.id").
 		Joins("left join medical_facilities on medical_facilities.id = users.medical_facility_id").
 		Where("email = ?", email).Scan(&users).Error
+	return
+}
+
+func (repo *authRepository) Register(reg models.User) (err error) {
+	err = repo.sqldb.Create(reg).Error
+	return
+}
+
+func (repo *authRepository) FindEmail(email string) (err error) {
+	err = repo.sqldb.Model(&m.User{}).Where("email = ?", email).Error
 	return
 }
 
@@ -69,11 +80,11 @@ func (repo authRepository) UpdateToken(old_token m.Token, new_token m.Token) (er
 
 	filter := bson.D{
 		{
-			Key: "$set",
+			Key:   "$set",
 			Value: bson.D{{Key: "refresh_token", Value: new_token.RefreshToken}},
 		},
 		{
-			Key: "$set",
+			Key:   "$set",
 			Value: bson.D{{Key: "access_token", Value: new_token.AccessToken}},
 		},
 	}
