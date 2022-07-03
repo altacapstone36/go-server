@@ -21,9 +21,10 @@ func (srv OutPatientService) NewMedicRecord(req request.AdminMedicRecord) (err e
 
 	mr, _ = utils.TypeConverter[models.MedicRecord](req)
 	mr.MedicalSession, _ = utils.TypeConverter[models.MedicalSession](req)
+	mr.MedicalSession.UserCode = req.UserCode
 	mr.Status = 0
 
-	err  = srv.repo.NewMedicalRecord(mr)
+	err = srv.repo.NewMedicalRecord(mr)
 	return
 }
 
@@ -34,7 +35,7 @@ func (srv OutPatientService) ProcessDoctor(id int, req interface{}) (err error) 
 	mr.ID = uint(id)
 	mr.Status = 1
 
-	err  = srv.repo.ProceedDoctor(mr)
+	err = srv.repo.ProceedDoctor(mr)
 	return
 }
 
@@ -42,45 +43,45 @@ func (srv OutPatientService) ProcessNurse(id int, req interface{}) (err error) {
 	var mr models.MedicCheck
 
 	mr, _ = utils.TypeConverter[models.MedicCheck](req)
-	mr.ID = uint(id)
+	mr.MedicRecordID = uint(id)
 	mr.Status = 1
 
-	err  = srv.repo.ProceedNurse(mr)
+	err = srv.repo.ProceedNurse(mr)
 	return
 }
 
-func (srv OutPatientService) ListPatient(id float64, role string) (res []response.OutPatient, err error) {
+func (srv OutPatientService) ListPatient(code, role string) (res []response.OutPatient, err error) {
 	if role == "doctor" {
-		res, err  = srv.repo.DoctorFindAll(int(id))
+		res, err = srv.repo.DoctorFindAll(code)
 	} else if role == "nurse" {
-		res, err  = srv.repo.NurseFindAll(int(id))
+		res, err = srv.repo.NurseFindAll(code)
 	}
 	return
 }
 
-func (srv OutPatientService) FindByDate(id float64, start, end string) (res []response.OutPatient, err error) {
-	res, err  = srv.repo.FindByDate(start, end)
+func (srv OutPatientService) FindByDate(code, start, end string) (res []response.OutPatient, err error) {
+	res, err = srv.repo.FindByDate(start, end)
 	return
 }
 
-func (srv OutPatientService) FindByID(id int) (res []response.OutPatientSimple, err error) {
-	res, err  = srv.repo.FindByID(id)
+func (srv OutPatientService) FindByID(id int) (res response.OutPatientDetails, err error) {
+	res, err = srv.repo.FindByID(id)
 	return
 }
 
-func (srv OutPatientService) Report() (res []response.OutPatientReport, err error) {
-	res, err  = srv.repo.Report()
+func (srv OutPatientService) Report() (res []response.OutPatientDetails, err error) {
+	res, err = srv.repo.Report()
 	return
 }
 
-func (srv OutPatientService) ReportLog(id float64, role string) (res []response.OutPatientReportLog, err error) {
-	res, err  = srv.repo.ReportLog(int(id), role)
+func (srv OutPatientService) ReportLog(code, role string) (res []response.OutPatientReportLog, err error) {
+	res, err = srv.repo.ReportLog(code, role)
 	return
 }
 
 func (srv OutPatientService) AssignNurse(id int, mc request.AssignNurse) (err error) {
 	mcheck, _ := utils.TypeConverter[models.MedicCheck](mc)
-	mcheck.ID = uint(id)
+	mcheck.MedicRecordID = uint(id)
 	err = srv.repo.AssignNurse(mcheck)
 	return
 }

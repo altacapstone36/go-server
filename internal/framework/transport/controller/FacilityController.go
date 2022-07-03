@@ -39,7 +39,7 @@ func (acon FacilityController) GetAllFacility(c echo.Context) error {
 
 	return c.JSON(200, response.MessageData{
 		Message: "Facility Fetched",
-		Data: res,
+		Data:    res,
 	})
 }
 
@@ -65,7 +65,7 @@ func (acon FacilityController) GetFacilityByID(c echo.Context) error {
 
 	return c.JSON(200, response.MessageData{
 		Message: "Facility Fetched",
-		Data: res,
+		Data:    res,
 	})
 }
 
@@ -84,11 +84,10 @@ func (acon FacilityController) GetFacilityByID(c echo.Context) error {
 func (acon FacilityController) Create(c echo.Context) error {
 	var req request.Facility
 	c.Bind(&req)
-	
+
 	if r, ok := check.HTTP(nil, req.Validate(), "Validate"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}
-
 
 	err := acon.srv.Create(req)
 	if r, ok := check.HTTP(nil, err, "Create Facility"); !ok {
@@ -117,8 +116,13 @@ func (acon FacilityController) Update(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	var req request.Facility
 	c.Bind(&req)
+	req.ID = id
 
-	err := acon.srv.Update(id, req)
+	if r, ok := check.HTTP(nil, req.Validate(), "Validate"); !ok {
+		return c.JSON(r.Code, r.Result)
+	}
+
+	err := acon.srv.Update(req)
 
 	if r, ok := check.HTTP(nil, err, "Update Facility"); !ok {
 		return c.JSON(r.Code, r.Result)

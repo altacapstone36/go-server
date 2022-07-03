@@ -24,10 +24,10 @@ func (srv UserService) Create(req request.UserRequest) (err error) {
 	return
 }
 
-func (srv UserService) Update(id int, req request.UserRequest) (err error) {
+func (srv UserService) Update(req request.UserRequest) (err error) {
 	m, _ := utils.TypeConverter[models.User](req)
 	m.Password, _ = utils.HashPassword(req.Password)
-	m.ID = uint(id)
+	m.ID = uint(req.ID)
 	err = srv.repo.Update(m)
 	return
 }

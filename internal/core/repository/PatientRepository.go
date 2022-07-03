@@ -9,7 +9,7 @@ type PatientRepository interface {
 	GetPatientByID(uint) (response.PatientDetails, error)
 	GetPatientByName(string) ([]response.Patient, error)
 	GetAllPatient() ([]response.Patient, error)
-	CreatePatient(models.Patient) (error)
-	UpdatePatient(models.Patient) (error)
-	DeletePatientByID(uint) (error)
+	CreatePatient(models.Patient) error
+	UpdatePatient(models.Patient) error
+	DeletePatientByID(uint) error
 }

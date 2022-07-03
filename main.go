@@ -6,13 +6,15 @@ import (
 	"go-hospital-server/internal/framework/repository"
 	"go-hospital-server/internal/framework/routes"
 	"go-hospital-server/internal/framework/transport/controller"
-	"go-hospital-server/internal/framework/transport/middleware"
+	mw "go-hospital-server/internal/framework/transport/middleware"
 	"go-hospital-server/internal/utils/config"
 	"go-hospital-server/internal/utils/logger"
+	"go-hospital-server/internal/utils/validators"
 
 	_ "go-hospital-server/docs"
 
 	"github.com/labstack/echo/v4"
+	emw "github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
@@ -39,15 +41,17 @@ func main() {
 	serv := service.NewService(repo)
 	ctrl := controller.NewController(serv)
 	logger.NewLogger(mongodb)
+	validators.NewValidator(db)
 
 	e := echo.New()
+	e.Use(emw.CORS())
 	e.GET("/*", echoSwagger.WrapHandler)
 
 	api := e.Group("/api")
-	middleware.NewJWTConnection(mongodb)
-	routes.NewRoutes(api, ctrl, middleware.JWT)
+	mw.NewJWTConnection(mongodb)
+	routes.NewRoutes(api, ctrl, mw.JWT)
 
-	middleware.Logging(e)
+	mw.Logging(e)
 
 	e.Start(":" + config.SERVER_PORT)
 }

@@ -20,7 +20,7 @@ func NewAuthService(repo repository.AuthRepository) *AuthService {
 
 func (srv AuthService) Login(login request.Login) (res response.User, err error) {
 	var checkPassword bool
-	res, err  = srv.repo.Login(login.Email)
+	res, err = srv.repo.Login(login.Email)
 
 	if err == nil {
 		checkPassword = utils.ComparePassword(login.Password, res.Password)
@@ -37,8 +37,8 @@ func (srv AuthService) Logout(token string) (err error) {
 	return
 }
 
-func (srv AuthService) CreateToken(id uint, facility_id, level string) (t models.Token, err error) {
-	t, err = jwt.CreateToken(float64(id), facility_id, level)
+func (srv AuthService) CreateToken(code, facility_id, level string) (t models.Token, err error) {
+	t, _ = jwt.CreateToken(code, facility_id, level)
 	err = srv.repo.SaveToken(t)
 	return
 }

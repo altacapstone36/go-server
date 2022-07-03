@@ -10,12 +10,12 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-func CreateToken(id float64, facility_id, level string) (t models.Token, err error) {
+func CreateToken(code, facility_id, level string) (t models.Token, err error) {
 	role := strings.ToLower(level)
 
 	expTime := time.Now().Add(time.Hour * 24).Unix()
 	claims := jwt.MapClaims{}
-	claims["user_id"] = id
+	claims["code"] = code
 	claims["facility"] = facility_id
 	claims["role"] = role
 	claims["exp"] = expTime
@@ -39,11 +39,11 @@ func RefreshToken(token_string models.Token) (t models.Token, err error) {
 
 	if _, ok := token.(jwt.MapClaims); ok {
 		tkn, _ := ExtractToken(token_string.AccessToken)
-		user_id := tkn.(jwt.MapClaims)["user_id"]
+		code := tkn.(jwt.MapClaims)["code"]
 		facility := tkn.(jwt.MapClaims)["facility"]
 		role := tkn.(jwt.MapClaims)["role"]
-		if user_id != nil && role != nil && facility != nil {
-			return CreateToken(user_id.(float64), facility.(string), role.(string))
+		if code != nil && role != nil && facility != nil {
+			return CreateToken(code.(string), facility.(string), role.(string))
 		}
 	}
 	return t, errors.New(500, "failed to generate new token")

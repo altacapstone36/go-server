@@ -15,24 +15,24 @@ definitions:
       date_check:
         example: "2022-06-24"
         type: string
-      medical_facility_id:
+      doctor_code:
+        example: DR00002
+        type: string
+      facility_id:
         example: 1
         type: integer
-      medical_staff_id:
-        example: 1
-        type: integer
-      patient_id:
-        example: 1
-        type: integer
+      patient_code:
+        example: "1"
+        type: string
       session_id:
         example: 1
         type: integer
     type: object
   request.AssignNurse:
     properties:
-      nurse_id:
-        example: 1
-        type: integer
+      nurse_code:
+        example: NR00003
+        type: string
     type: object
   request.DoctorMedicRecord:
     properties:
@@ -84,16 +84,13 @@ definitions:
       blood_type:
         example: A
         type: string
-      code:
-        example: RM0001
-        type: string
       full_name:
         example: Faizur Ramadhan
         type: string
       gender:
         example: Male
         type: string
-      resident_registration:
+      national_id:
         example: "8729301745162748"
         type: string
     type: object
@@ -146,6 +143,24 @@ definitions:
           $ref: '#/definitions/response.Staff'
         type: array
     type: object
+  response.MedicCheck:
+    properties:
+      blood_tension:
+        example: 124
+        type: integer
+      body_temp:
+        example: 34
+        type: integer
+      height:
+        example: 55
+        type: integer
+      nurse:
+        example: Priscilla Halim
+        type: string
+      weight:
+        example: 150
+        type: integer
+    type: object
   response.MedicRecord:
     properties:
       complaint:
@@ -163,6 +178,8 @@ definitions:
       facility:
         example: General
         type: string
+      medic_check:
+        $ref: '#/definitions/response.MedicCheck'
       prescription:
         example: Entrostop
         type: string
@@ -183,9 +200,6 @@ definitions:
     type: object
   response.OutPatient:
     properties:
-      code:
-        example: RM0001
-        type: string
       complaint:
         example: sakit perut
         type: string
@@ -201,6 +215,9 @@ definitions:
       id:
         example: 1
         type: integer
+      patient_code:
+        example: RM0001
+        type: string
       queue:
         example: 1
         type: integer
@@ -234,7 +251,7 @@ definitions:
       id:
         example: 1
         type: integer
-      resident_registration:
+      national_id:
         example: "8729301745162748"
         type: string
     type: object
@@ -265,7 +282,7 @@ definitions:
         items:
           $ref: '#/definitions/response.MedicRecord'
         type: array
-      resident_registration:
+      national_id:
         example: "8729301745162748"
         type: string
     type: object
@@ -719,7 +736,7 @@ paths:
       tags:
       - OutPatient
   /outpatient/log:
-    post:
+    get:
       consumes:
       - application/json
       description: Show Report of Submitted data by Medical Staff
@@ -749,7 +766,7 @@ paths:
       tags:
       - OutPatient
   /outpatient/report:
-    post:
+    get:
       consumes:
       - application/json
       description: Show Report of Submitted data by All Medical Staff

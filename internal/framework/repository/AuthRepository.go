@@ -26,7 +26,7 @@ func (repo authRepository) Login(email string) (users response.User, err error) 
 		Select(`users.*, roles.name as role, medical_facilities.name as facility`).
 		Joins("left join roles on users.role_id = roles.id").
 		Joins("left join medical_facilities on medical_facilities.id = users.medical_facility_id").
-		Where("email = ?", email).Scan(&users)
+		Where("email = ?", email).Find(&users)
 	err = check.DBRecord(db, check.FIND)
 	return
 }

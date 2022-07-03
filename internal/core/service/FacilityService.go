@@ -22,9 +22,9 @@ func (srv FacilityService) Create(req request.Facility) (err error) {
 	return
 }
 
-func (srv FacilityService) Update(id int, req request.Facility) (err error) {
+func (srv FacilityService) Update(req request.Facility) (err error) {
 	m, _ := utils.TypeConverter[models.MedicalFacility](req)
-	m.ID = uint(id)
+	m.ID = uint(req.ID)
 	err = srv.repo.Update(m)
 	return
 }

@@ -10,7 +10,7 @@ import (
 
 func NewUserRoutes(e *echo.Group, acon *controller.UserController, middleware ...echo.MiddlewareFunc) {
 	patient := e.Group("/user", middleware...)
-	patient.Use(mw.AdminPermission)
+	// patient.Use(mw.AdminPermission)
 	patient.POST("", acon.Create)
 	patient.GET("", acon.GetAllUser)
 	patient.GET("/:id", acon.GetUserByID)

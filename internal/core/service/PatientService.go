@@ -12,7 +12,7 @@ type PatientService struct {
 	repo repository.PatientRepository
 }
 
-func NewPatientService (repo repository.PatientRepository) *PatientService {
+func NewPatientService(repo repository.PatientRepository) *PatientService {
 	return &PatientService{repo: repo}
 }
 
@@ -37,9 +37,10 @@ func (srv PatientService) CreatePatient(patient request.Patient) (err error) {
 	return
 }
 
-func (srv PatientService) UpdatePatient(id uint, patient request.Patient) (err error) {
+func (srv PatientService) UpdatePatient(patient request.Patient) (err error) {
 	p, _ := utils.TypeConverter[models.Patient](patient)
-	p.ID = id
+	p.ID = uint(patient.ID)
+
 	err = srv.repo.UpdatePatient(p)
 	return
 }

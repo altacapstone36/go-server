@@ -670,7 +670,7 @@ const docTemplate = `{
             }
         },
         "/outpatient/log": {
-            "post": {
+            "get": {
                 "security": [
                     {
                         "ApiKey": []
@@ -722,7 +722,7 @@ const docTemplate = `{
             }
         },
         "/outpatient/report": {
-            "post": {
+            "get": {
                 "security": [
                     {
                         "ApiKey": []
@@ -1390,17 +1390,17 @@ const docTemplate = `{
                     "type": "string",
                     "example": "2022-06-24"
                 },
-                "medical_facility_id": {
+                "doctor_code": {
+                    "type": "string",
+                    "example": "DR00002"
+                },
+                "facility_id": {
                     "type": "integer",
                     "example": 1
                 },
-                "medical_staff_id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "patient_id": {
-                    "type": "integer",
-                    "example": 1
+                "patient_code": {
+                    "type": "string",
+                    "example": "1"
                 },
                 "session_id": {
                     "type": "integer",
@@ -1411,9 +1411,9 @@ const docTemplate = `{
         "request.AssignNurse": {
             "type": "object",
             "properties": {
-                "nurse_id": {
-                    "type": "integer",
-                    "example": 1
+                "nurse_code": {
+                    "type": "string",
+                    "example": "NR00003"
                 }
             }
         },
@@ -1488,10 +1488,6 @@ const docTemplate = `{
                     "type": "string",
                     "example": "A"
                 },
-                "code": {
-                    "type": "string",
-                    "example": "RM0001"
-                },
                 "full_name": {
                     "type": "string",
                     "example": "Faizur Ramadhan"
@@ -1500,7 +1496,7 @@ const docTemplate = `{
                     "type": "string",
                     "example": "Male"
                 },
-                "resident_registration": {
+                "national_id": {
                     "type": "string",
                     "example": "8729301745162748"
                 }
@@ -1576,6 +1572,31 @@ const docTemplate = `{
                 }
             }
         },
+        "response.MedicCheck": {
+            "type": "object",
+            "properties": {
+                "blood_tension": {
+                    "type": "integer",
+                    "example": 124
+                },
+                "body_temp": {
+                    "type": "integer",
+                    "example": 34
+                },
+                "height": {
+                    "type": "integer",
+                    "example": 55
+                },
+                "nurse": {
+                    "type": "string",
+                    "example": "Priscilla Halim"
+                },
+                "weight": {
+                    "type": "integer",
+                    "example": 150
+                }
+            }
+        },
         "response.MedicRecord": {
             "type": "object",
             "properties": {
@@ -1598,6 +1619,9 @@ const docTemplate = `{
                 "facility": {
                     "type": "string",
                     "example": "General"
+                },
+                "medic_check": {
+                    "$ref": "#/definitions/response.MedicCheck"
                 },
                 "prescription": {
                     "type": "string",
@@ -1629,10 +1653,6 @@ const docTemplate = `{
         "response.OutPatient": {
             "type": "object",
             "properties": {
-                "code": {
-                    "type": "string",
-                    "example": "RM0001"
-                },
                 "complaint": {
                     "type": "string",
                     "example": "sakit perut"
@@ -1652,6 +1672,10 @@ const docTemplate = `{
                 "id": {
                     "type": "integer",
                     "example": 1
+                },
+                "patient_code": {
+                    "type": "string",
+                    "example": "RM0001"
                 },
                 "queue": {
                     "type": "integer",
@@ -1699,7 +1723,7 @@ const docTemplate = `{
                     "type": "integer",
                     "example": 1
                 },
-                "resident_registration": {
+                "national_id": {
                     "type": "string",
                     "example": "8729301745162748"
                 }
@@ -1742,7 +1766,7 @@ const docTemplate = `{
                         "$ref": "#/definitions/response.MedicRecord"
                     }
                 },
-                "resident_registration": {
+                "national_id": {
                     "type": "string",
                     "example": "8729301745162748"
                 }

@@ -39,7 +39,7 @@ func (acon UserController) GetAllUser(c echo.Context) error {
 
 	return c.JSON(200, response.MessageData{
 		Message: "User Fetched",
-		Data: res,
+		Data:    res,
 	})
 }
 
@@ -65,7 +65,7 @@ func (acon UserController) GetUserByID(c echo.Context) error {
 
 	return c.JSON(200, response.MessageData{
 		Message: "User Fetched",
-		Data: res,
+		Data:    res,
 	})
 }
 
@@ -84,11 +84,10 @@ func (acon UserController) GetUserByID(c echo.Context) error {
 func (acon UserController) Create(c echo.Context) error {
 	var req request.UserRequest
 	c.Bind(&req)
-	
+
 	if r, ok := check.HTTP(nil, req.Validate(), "Validate"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}
-
 
 	err := acon.srv.Create(req)
 	if r, ok := check.HTTP(nil, err, "Create User"); !ok {
@@ -117,8 +116,13 @@ func (acon UserController) Update(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	var req request.UserRequest
 	c.Bind(&req)
+	req.ID = id
 
-	err := acon.srv.Update(id, req)
+	if r, ok := check.HTTP(nil, req.Validate(), "Validate"); !ok {
+		return c.JSON(r.Code, r.Result)
+	}
+
+	err := acon.srv.Update(req)
 
 	if r, ok := check.HTTP(nil, err, "Update User"); !ok {
 		return c.JSON(r.Code, r.Result)

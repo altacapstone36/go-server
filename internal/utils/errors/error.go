@@ -1,6 +1,6 @@
 package errors
 
-var ErrNoChange = New(204, "Nothing Changed")
+var ErrNoChange = New(202, "Nothing Changed")
 var ErrNoRecord = New(404, "No Record Found")
 var ErrInternalServer = New(500, "Internal Server Error")
 

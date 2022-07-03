@@ -36,7 +36,7 @@ func NewOutPatientController(srv *service.OutPatientService) *OutPatientControll
 // @Router /outpatient [get]
 func (acon OutPatientController) GetAllOutPatient(c echo.Context) error {
 	role, _ := jwt.GetTokenData(c, "role")
-	id, _ := jwt.GetTokenData(c, "user_id")
+	code, _ := jwt.GetTokenData(c, "code")
 	var res []response.OutPatient
 	var err error
 
@@ -44,9 +44,9 @@ func (acon OutPatientController) GetAllOutPatient(c echo.Context) error {
 	date_end := c.QueryParam("date_end")
 
 	if date_start != "" {
-		res, err = acon.srv.FindByDate(id.(float64), date_start, date_end)
+		res, err = acon.srv.FindByDate(code.(string), date_start, date_end)
 	} else {
-		res, err = acon.srv.ListPatient(id.(float64), role.(string))
+		res, err = acon.srv.ListPatient(code.(string), role.(string))
 	}
 
 	if r, ok := check.HTTP(res, err, "Fetch OutPatient"); !ok {
@@ -55,7 +55,7 @@ func (acon OutPatientController) GetAllOutPatient(c echo.Context) error {
 
 	return c.JSON(200, response.MessageData{
 		Message: "OutPatient Fetched",
-		Data: res,
+		Data:    res,
 	})
 }
 
@@ -112,12 +112,14 @@ func (acon OutPatientController) Process(c echo.Context) error {
 
 	if role.(string) == "doctor" {
 		r, _ := utils.TypeConverter[request.DoctorMedicRecord](req)
+		r.ID = id
 		err = r.Validate()
 		process = func(id int, t any) error {
 			return acon.srv.ProcessDoctor(id, t)
 		}
 	} else if role.(string) == "nurse" {
 		r, _ := utils.TypeConverter[request.NurseMedicRecord](req)
+		r.ID = id
 		err = r.Validate()
 		process = func(id int, t any) error {
 			return acon.srv.ProcessNurse(id, t)
@@ -154,6 +156,7 @@ func (acon OutPatientController) AssignNurse(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	var req request.AssignNurse
 	c.Bind(&req)
+	req.ID = id
 
 	if r, ok := check.HTTP(nil, req.Validate(), "Validate"); !ok {
 		return c.JSON(r.Code, r.Result)
@@ -165,7 +168,7 @@ func (acon OutPatientController) AssignNurse(c echo.Context) error {
 	}
 
 	return c.JSON(201, response.MessageOnly{
-		Message: fmt.Sprintf("Nurse #%d assigned to Medic Record #%d", req.NurseID, id),
+		Message: fmt.Sprintf("Nurse %s assigned to Medic Record #%d", req.Code, id),
 	})
 }
 
@@ -191,9 +194,10 @@ func (acon OutPatientController) FindByID(c echo.Context) error {
 
 	return c.JSON(200, response.MessageData{
 		Message: "Medic Record Fetched",
-		Data: res,
+		Data:    res,
 	})
 }
+
 // godoc
 // @Summary Report Log
 // @Description Show Report of Submitted data by Medical Staff
@@ -206,17 +210,17 @@ func (acon OutPatientController) FindByID(c echo.Context) error {
 // @Failure 500 {object} response.Error{} error
 // @Router /outpatient/log [get]
 func (acon OutPatientController) ReportLog(c echo.Context) error {
-	id, _ := jwt.GetTokenData(c, "user_id")
+	code, _ := jwt.GetTokenData(c, "code")
 	role, _ := jwt.GetTokenData(c, "role")
 
-	res, err := acon.srv.ReportLog(id.(float64), role.(string))
+	res, err := acon.srv.ReportLog(code.(string), role.(string))
 	if r, ok := check.HTTP(nil, err, "Fetch Report Data"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}
 
 	return c.JSON(200, response.MessageData{
 		Message: "Report Fetched",
-		Data: res,
+		Data:    res,
 	})
 }
 
@@ -240,6 +244,6 @@ func (acon OutPatientController) Report(c echo.Context) error {
 
 	return c.JSON(200, response.MessageData{
 		Message: "Report Fetched",
-		Data: res,
+		Data:    res,
 	})
 }

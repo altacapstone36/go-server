@@ -1,8 +1,8 @@
 package models
 
 type Schedule struct {
-	UserID uint
+	UserID            uint
 	MedicalFacilityID uint
-	SessionID uint
-	Date string
+	SessionID         uint
+	Date              string
 }
