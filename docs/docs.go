@@ -360,7 +360,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Token"
+                            "$ref": "#/definitions/response.MessageOnly"
                         }
                     },
                     "417": {
@@ -590,8 +590,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/response.MessageOnly"
                         }
@@ -670,7 +670,7 @@ const docTemplate = `{
             }
         },
         "/outpatient/log": {
-            "post": {
+            "get": {
                 "security": [
                     {
                         "ApiKey": []
@@ -722,7 +722,7 @@ const docTemplate = `{
             }
         },
         "/outpatient/report": {
-            "post": {
+            "get": {
                 "security": [
                     {
                         "ApiKey": []
@@ -1177,8 +1177,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/response.MessageOnly"
                         }
@@ -1390,17 +1390,17 @@ const docTemplate = `{
                     "type": "string",
                     "example": "2022-06-24"
                 },
-                "medical_facility_id": {
+                "doctor_code": {
+                    "type": "string",
+                    "example": "DR00002"
+                },
+                "facility_id": {
                     "type": "integer",
                     "example": 1
                 },
-                "medical_staff_id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "patient_id": {
-                    "type": "integer",
-                    "example": 1
+                "patient_code": {
+                    "type": "string",
+                    "example": "1"
                 },
                 "session_id": {
                     "type": "integer",
@@ -1411,9 +1411,9 @@ const docTemplate = `{
         "request.AssignNurse": {
             "type": "object",
             "properties": {
-                "nurse_id": {
-                    "type": "integer",
-                    "example": 1
+                "nurse_code": {
+                    "type": "string",
+                    "example": "NR00003"
                 }
             }
         },
@@ -1434,7 +1434,8 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "General"
                 }
             }
         },
@@ -1487,10 +1488,6 @@ const docTemplate = `{
                     "type": "string",
                     "example": "A"
                 },
-                "code": {
-                    "type": "string",
-                    "example": "RM0001"
-                },
                 "full_name": {
                     "type": "string",
                     "example": "Faizur Ramadhan"
@@ -1499,7 +1496,7 @@ const docTemplate = `{
                     "type": "string",
                     "example": "Male"
                 },
-                "resident_registration": {
+                "national_id": {
                     "type": "string",
                     "example": "8729301745162748"
                 }
@@ -1547,10 +1544,12 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "General"
                 }
             }
         },
@@ -1558,16 +1557,43 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "General"
                 },
                 "staff": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/response.Staff"
                     }
+                }
+            }
+        },
+        "response.MedicCheck": {
+            "type": "object",
+            "properties": {
+                "blood_tension": {
+                    "type": "integer",
+                    "example": 124
+                },
+                "body_temp": {
+                    "type": "integer",
+                    "example": 34
+                },
+                "height": {
+                    "type": "integer",
+                    "example": 55
+                },
+                "nurse": {
+                    "type": "string",
+                    "example": "Priscilla Halim"
+                },
+                "weight": {
+                    "type": "integer",
+                    "example": 150
                 }
             }
         },
@@ -1593,6 +1619,9 @@ const docTemplate = `{
                 "facility": {
                     "type": "string",
                     "example": "General"
+                },
+                "medic_check": {
+                    "$ref": "#/definitions/response.MedicCheck"
                 },
                 "prescription": {
                     "type": "string",
@@ -1624,32 +1653,41 @@ const docTemplate = `{
         "response.OutPatient": {
             "type": "object",
             "properties": {
-                "code": {
-                    "type": "string"
-                },
                 "complaint": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "sakit perut"
                 },
                 "date_check": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "2022-06-22"
                 },
                 "doctor": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Alsyad Ahmad"
                 },
                 "full_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Faizur Ramadhan"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
+                },
+                "patient_code": {
+                    "type": "string",
+                    "example": "RM0001"
                 },
                 "queue": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "serial_number": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "RM/748/2022/001"
                 },
                 "session": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "08:00"
                 }
             }
         },
@@ -1657,7 +1695,8 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "serial_number": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "RM/748/2022/001"
                 }
             }
         },
@@ -1684,7 +1723,7 @@ const docTemplate = `{
                     "type": "integer",
                     "example": 1
                 },
-                "resident_registration": {
+                "national_id": {
                     "type": "string",
                     "example": "8729301745162748"
                 }
@@ -1727,7 +1766,7 @@ const docTemplate = `{
                         "$ref": "#/definitions/response.MedicRecord"
                     }
                 },
-                "resident_registration": {
+                "national_id": {
                     "type": "string",
                     "example": "8729301745162748"
                 }
@@ -1737,13 +1776,16 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "code": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "DR00001"
                 },
                 "full_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Alsyad Ahmad"
                 },
                 "role": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Doctor"
                 }
             }
         },
@@ -1797,9 +1839,9 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "ec2-3-91-177-221.compute-1.amazonaws.com",
+	Host:             "go-hospital-server.herokuapp.com",
 	BasePath:         "/api",
-	Schemes:          []string{"http"},
+	Schemes:          []string{"http", "https"},
 	Title:            "Holy Hospital Sever API",
 	Description:      "server API for Holy Hospital Application.",
 	InfoInstanceName: "swagger",

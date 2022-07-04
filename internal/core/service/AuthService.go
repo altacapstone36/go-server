@@ -7,7 +7,6 @@ import (
 	"go-hospital-server/internal/core/repository"
 	"go-hospital-server/internal/utils"
 	"go-hospital-server/internal/utils/errors"
-	"go-hospital-server/internal/utils/errors/check"
 	"go-hospital-server/internal/utils/jwt"
 )
 
@@ -23,8 +22,6 @@ func (srv AuthService) Login(login request.Login) (res response.User, err error)
 	var checkPassword bool
 	res, err = srv.repo.Login(login.Email)
 
-	err = check.Record(res, err)
-
 	if err == nil {
 		checkPassword = utils.ComparePassword(login.Password, res.Password)
 		if !checkPassword {
@@ -38,7 +35,6 @@ func (srv AuthService) Login(login request.Login) (res response.User, err error)
 func (srv AuthService) Register(req request.RegisterRequest) (err error) {
 	r, _ := utils.TypeConverter[models.User](req)
 	err = srv.repo.Register(r)
-	err = check.Record(nil, err)
 	return
 }
 
@@ -56,8 +52,6 @@ func (srv AuthService) ChangePassword(change request.ChangePassword) (res respon
 	var checkPassword bool
 	res, err = srv.repo.ChangePassword(change.Password)
 
-	err = check.Record(res, err)
-
 	if err == nil {
 		checkPassword = utils.ComparePassword(change.Password, res.Password)
 		if !checkPassword {
@@ -72,8 +66,8 @@ func (srv AuthService) Logout(token string) (err error) {
 	return
 }
 
-func (srv AuthService) CreateToken(id uint, facility_id, level string) (t models.Token, err error) {
-	t, err = jwt.CreateToken(float64(id), facility_id, level)
+func (srv AuthService) CreateToken(code, facility_id, level string) (t models.Token, err error) {
+	t, _ = jwt.CreateToken(code, facility_id, level)
 	err = srv.repo.SaveToken(t)
 	return
 }

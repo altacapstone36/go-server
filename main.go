@@ -6,13 +6,15 @@ import (
 	"go-hospital-server/internal/framework/repository"
 	"go-hospital-server/internal/framework/routes"
 	"go-hospital-server/internal/framework/transport/controller"
-	"go-hospital-server/internal/framework/transport/middleware"
+	mw "go-hospital-server/internal/framework/transport/middleware"
 	"go-hospital-server/internal/utils/config"
 	"go-hospital-server/internal/utils/logger"
+	"go-hospital-server/internal/utils/validators"
 
 	_ "go-hospital-server/docs"
 
 	"github.com/labstack/echo/v4"
+	emw "github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
@@ -27,9 +29,9 @@ import (
 // @license.name  Apache 2.0
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host      ec2-3-91-177-221.compute-1.amazonaws.com
+// @host     go-hospital-server.herokuapp.com
 // @BasePath  /api
-// @schemes http
+// @schemes http https
 func main() {
 
 	config.LoadConfig()
@@ -39,15 +41,17 @@ func main() {
 	serv := service.NewService(repo)
 	ctrl := controller.NewController(serv)
 	logger.NewLogger(mongodb)
+	validators.NewValidator(db)
 
 	e := echo.New()
+	e.Use(emw.CORS())
 	e.GET("/*", echoSwagger.WrapHandler)
 
 	api := e.Group("/api")
-	middleware.NewJWTConnection(mongodb)
-	routes.NewRoutes(api, ctrl, middleware.JWT)
+	mw.NewJWTConnection(mongodb)
+	routes.NewRoutes(api, ctrl, mw.JWT)
 
-	middleware.Logging(e)
+	mw.Logging(e)
 
 	e.Start(":" + config.SERVER_PORT)
 }

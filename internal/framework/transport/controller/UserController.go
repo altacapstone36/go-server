@@ -26,12 +26,22 @@ func NewUserController(srv *service.UserService) *UserController {
 // @Security ApiKey
 // @Accept json
 // @Produce json
+// @Param role_id query string false "Date Filter By Role ID"
 // @Success 200 {object} response.MessageData{data=[]response.User} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /user [get]
 func (acon UserController) GetAllUser(c echo.Context) error {
-	res, err := acon.srv.FindAll()
+	var res []response.User
+	var err error
+	role_id, _ := strconv.Atoi(c.QueryParam("role_id"))
+	facility_id, _ := strconv.Atoi(c.QueryParam("facility_id"))
+
+	if role_id == 0 && facility_id == 0{
+		res, err = acon.srv.FindAll()
+	} else {
+		res, err = acon.srv.FindByRoleFacility(role_id, facility_id)
+	}
 
 	if r, ok := check.HTTP(res, err, "Fetch User"); !ok {
 		return c.JSON(r.Code, r.Result)
@@ -39,7 +49,7 @@ func (acon UserController) GetAllUser(c echo.Context) error {
 
 	return c.JSON(200, response.MessageData{
 		Message: "User Fetched",
-		Data: res,
+		Data:    res,
 	})
 }
 
@@ -65,7 +75,7 @@ func (acon UserController) GetUserByID(c echo.Context) error {
 
 	return c.JSON(200, response.MessageData{
 		Message: "User Fetched",
-		Data: res,
+		Data:    res,
 	})
 }
 
@@ -77,18 +87,17 @@ func (acon UserController) GetUserByID(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param body body request.UserRequest true "user data"
-// @Success 200 {object} response.MessageOnly{} success
+// @Success 201 {object} response.MessageOnly{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /user [post]
 func (acon UserController) Create(c echo.Context) error {
 	var req request.UserRequest
 	c.Bind(&req)
-	
+
 	if r, ok := check.HTTP(nil, req.Validate(), "Validate"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}
-
 
 	err := acon.srv.Create(req)
 	if r, ok := check.HTTP(nil, err, "Create User"); !ok {
@@ -117,8 +126,13 @@ func (acon UserController) Update(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	var req request.UserRequest
 	c.Bind(&req)
+	req.ID = id
 
-	err := acon.srv.Update(id, req)
+	if r, ok := check.HTTP(nil, req.Validate(), "Validate"); !ok {
+		return c.JSON(r.Code, r.Result)
+	}
+
+	err := acon.srv.Update(req)
 
 	if r, ok := check.HTTP(nil, err, "Update User"); !ok {
 		return c.JSON(r.Code, r.Result)
@@ -146,11 +160,11 @@ func (acon UserController) Delete(c echo.Context) error {
 
 	err := acon.srv.Delete(id)
 
-	if r, ok := check.HTTP(nil, err, "Update User"); !ok {
+	if r, ok := check.HTTP(nil, err, "Delete User"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}
 
 	return c.JSON(200, response.MessageOnly{
-		Message: fmt.Sprintf("User #%d Updated", id),
+		Message: fmt.Sprintf("User #%d Deleted", id),
 	})
 }

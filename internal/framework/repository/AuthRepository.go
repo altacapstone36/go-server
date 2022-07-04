@@ -6,6 +6,7 @@ import (
 	"go-hospital-server/internal/core/entity/models"
 	m "go-hospital-server/internal/core/entity/models"
 	"go-hospital-server/internal/core/entity/response"
+	"go-hospital-server/internal/utils/errors/check"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -22,11 +23,12 @@ func NewAuthRepository(sqldb *gorm.DB, mongodb *mongo.Database) *authRepository 
 }
 
 func (repo authRepository) Login(email string) (users response.User, err error) {
-	err = repo.sqldb.Model(&m.User{}).
+	db := repo.sqldb.Model(&m.User{}).
 		Select(`users.*, roles.name as role, medical_facilities.name as facility`).
 		Joins("left join roles on users.role_id = roles.id").
 		Joins("left join medical_facilities on medical_facilities.id = users.medical_facility_id").
-		Where("email = ?", email).Scan(&users).Error
+		Where("email = ?", email).Find(&users)
+	err = check.DBRecord(db, check.FIND)
 	return
 }
 

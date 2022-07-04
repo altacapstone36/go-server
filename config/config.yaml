@@ -2,11 +2,10 @@ server:
   SECRET: "6568135b96cd0a3d6adcae0a475f0da473e8e2bee0d800b2ba5010186b37d950"
   PORT: "8080"
 mysql:
-  DATABASE: "gUGPoju0JQ"
-  USERNAME: "gUGPoju0JQ"
-  PASSWORD: "UaGsjVxSZ9"
-  HOST: "remotemysql.com"
+  DATABASE: "hospital"
+  USERNAME: "admin"
+  PASSWORD: "hospitaldb"
+  HOST: "holydb.c1nbzhugrsmo.ap-southeast-1.rds.amazonaws.com"
 mongo:
   STRING: "mongodb://mongo:enX6qBHuf85i1OAZe6Hx@containers-us-west-68.railway.app:7025"
   DATABASE: "hospital"
-

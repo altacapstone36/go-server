@@ -3,6 +3,7 @@ package repository
 import (
 	"go-hospital-server/internal/core/entity/models"
 	"go-hospital-server/internal/core/entity/response"
+	"go-hospital-server/internal/utils/errors/check"
 
 	"gorm.io/gorm"
 )
@@ -16,39 +17,47 @@ func NewPatientRepository(sqldb *gorm.DB) *patientRepository {
 }
 
 func (repo patientRepository) GetPatientByID(id uint) (patient response.PatientDetails, err error) {
-	err = repo.sqldb.Model(models.Patient{}).
+	db := repo.sqldb.Model(models.Patient{}).
 		Where("id = ?", id).
-		Scan(&patient).
-		Error
+		Scan(&patient)
 
-	err = repo.sqldb.Model(models.MedicRecord{}).
-		Select(`medic_records.*, medical_facilities.name as facility, medical_sessions.date_check,
-						users.full_name as doctor`).
-		Joins("join medical_sessions on medical_sessions.medic_record_id = medic_records.id").
-		Joins("join users on users.id = medical_sessions.user_id").
-		Joins("join medical_facilities on medical_facilities.id = medical_sessions.medical_facility_id").
-		Where("medic_records.patient_id = ?", id).
-		Scan(&patient.MedicRecord).
-		Error
+	err = check.DBRecord(db, check.FIND)
+	if err != nil {
+		return
+	}
+
+	err = repo.sqldb.Model(models.MedicalSession{}).
+		Select("MedicRecord.*", "medical_sessions.*",
+			"MC.blood_tension AS MedicCheck__blood_tension",
+			"MC.height AS MedicCheck__height",
+			"MC.weight AS MedicCheck__weight",
+			"MC.body_temperature AS MedicCheck__body_temperature",
+			"U.full_name AS MedicCheck__nurse",
+			"User.full_name as doctor", "MedicalFacility.name as facility").
+		Joins("MedicRecord").Joins("User").Joins("MedicalFacility").
+		Joins("LEFT JOIN medic_checks MC ON MC.medic_record_id = MedicRecord.id").
+		Joins("LEFT JOIN users U ON U.code = MC.user_code").
+		Where("MedicRecord.patient_code = ? AND MedicRecord.status = 1", patient.Code).
+		Find(&patient.MedicRecord).Error
 
 	return
 }
 
 func (repo patientRepository) GetPatientByName(name string) (patient []response.Patient, err error) {
 	name = "%" + name + "%"
-	err = repo.sqldb.Model(models.Patient{}).
-		Where("full_name = ?", name).
-		Scan(&patient).
-		Error
+	db := repo.sqldb.Model(models.Patient{}).
+		Where("full_name LIKE ?", name).
+		Scan(&patient)
 
+	err = check.DBRecord(db, check.FIND)
 	return
 }
 
 func (repo patientRepository) GetAllPatient() (patient []response.Patient, err error) {
-	err = repo.sqldb.Model(models.Patient{}).
-		Scan(&patient).
-		Error
+	db := repo.sqldb.Model(models.Patient{}).
+		Scan(&patient)
 
+	err = check.DBRecord(db, check.FIND)
 	return
 }
 
@@ -59,19 +68,15 @@ func (repo patientRepository) CreatePatient(patient models.Patient) (err error) 
 }
 
 func (repo patientRepository) UpdatePatient(patient models.Patient) (err error) {
-	up := repo.sqldb.Updates(&patient)
-	if up.RowsAffected == 0 {
-		err = gorm.ErrRecordNotFound
-	}
+	db := repo.sqldb.Debug().Updates(&patient)
 
+	err = check.DBRecord(db, check.UPDATE)
 	return
 }
 
 func (repo patientRepository) DeletePatientByID(id uint) (err error) {
-	del := repo.sqldb.Delete(models.Patient{}, id)
-	if del.RowsAffected == 0 {
-		err = gorm.ErrRecordNotFound
-	}
+	db := repo.sqldb.Delete(&models.Patient{}, id)
 
+	err = check.DBRecord(db, check.DELETE)
 	return
 }

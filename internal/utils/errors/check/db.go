@@ -1,29 +1,38 @@
 package check
 
 import (
-	e "errors"
-	"go-hospital-server/internal/utils"
 	"go-hospital-server/internal/utils/errors"
-	"go-hospital-server/internal/utils/logger"
-	"reflect"
 
 	"gorm.io/gorm"
 )
 
+type DBAction string
+const DELETE DBAction = "delete"
+const FIND DBAction = "find"
+const UPDATE DBAction = "update"
 
-func Record(res interface{}, err error) error {
-	if utils.IsEmpty(res) && res != nil || e.Is(err, gorm.ErrRecordNotFound) {
-		return errors.New(404, "record not found")
+// check database error
+// with parameter *gorm.DB and DBAction
+// example:
+// DB := *gorm.DB
+// db := DB.Find(models.User{})
+// err := check.DBRecord(db, check.FIND)
+// DBAction available in DELETE, UPDATE, FIND.
+func DBRecord(db *gorm.DB, action DBAction) (err error) {
+	if db.Error != nil {
+		err = errors.ErrInternalServer
+		return
 	}
 
-	if err != nil {
-		if reflect.TypeOf(err).String() == "*errors.RequestError" {
-			return err
-		}
-
-		logger.WriteLog(err)
-		return errors.New(500, "internal server error")
+	if db.RowsAffected != 0 {
+		return
 	}
 
-	return nil
+	if action == DELETE || action == FIND {
+		err = errors.ErrNoRecord
+	} else if action == UPDATE {
+		err = errors.ErrNoChange
+	}
+
+	return
 }

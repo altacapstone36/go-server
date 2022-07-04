@@ -44,7 +44,7 @@ func (acon AuthController) Login(c echo.Context) error {
 		return c.JSON(r.Code, r.Result)
 	}
 
-	jwt, err := acon.srv.CreateToken(res.ID, res.Facility, res.Role)
+	jwt, err := acon.srv.CreateToken(res.Code, res.Facility, res.Role)
 	if r, ok := check.HTTP(res, err, "Create Authentication Token"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}
@@ -128,7 +128,7 @@ func (acon AuthController) RefreshToken(c echo.Context) error {
 // @Security ApiKey
 // @Accept json
 // @Produce json
-// @Success 200 {object} models.Token{} success
+// @Success 200 {object} response.MessageOnly{} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /logout [post]
