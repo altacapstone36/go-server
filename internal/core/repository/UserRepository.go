@@ -8,6 +8,7 @@ import (
 type UserRepository interface {
 	FindAll() ([]response.User, error)
 	FindByID(int) (response.User, error)
+	FindByRoleFacility(int, int) ([]response.User, error)
 	Create(models.User) error
 	Update(models.User) error
 	Delete(int) error
