@@ -1,6 +1,7 @@
 {
     "schemes": [
-        "http"
+        "http",
+        "https"
     ],
     "swagger": "2.0",
     "info": {
@@ -13,7 +14,7 @@
         },
         "version": "1.0"
     },
-    "host": "ec2-3-91-177-221.compute-1.amazonaws.com",
+    "host": "go-hospital-server.herokuapp.com",
     "basePath": "/api",
     "paths": {
         "/facility": {
@@ -356,7 +357,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Token"
+                            "$ref": "#/definitions/response.MessageOnly"
                         }
                     },
                     "417": {
@@ -586,8 +587,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/response.MessageOnly"
                         }
@@ -666,7 +667,7 @@
             }
         },
         "/outpatient/log": {
-            "post": {
+            "get": {
                 "security": [
                     {
                         "ApiKey": []
@@ -718,7 +719,7 @@
             }
         },
         "/outpatient/report": {
-            "post": {
+            "get": {
                 "security": [
                     {
                         "ApiKey": []
@@ -1173,8 +1174,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/response.MessageOnly"
                         }
@@ -1386,17 +1387,17 @@
                     "type": "string",
                     "example": "2022-06-24"
                 },
-                "medical_facility_id": {
+                "doctor_code": {
+                    "type": "string",
+                    "example": "DR00002"
+                },
+                "facility_id": {
                     "type": "integer",
                     "example": 1
                 },
-                "medical_staff_id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "patient_id": {
-                    "type": "integer",
-                    "example": 1
+                "patient_code": {
+                    "type": "string",
+                    "example": "1"
                 },
                 "session_id": {
                     "type": "integer",
@@ -1407,9 +1408,9 @@
         "request.AssignNurse": {
             "type": "object",
             "properties": {
-                "nurse_id": {
-                    "type": "integer",
-                    "example": 1
+                "nurse_code": {
+                    "type": "string",
+                    "example": "NR00003"
                 }
             }
         },
@@ -1430,7 +1431,8 @@
             "type": "object",
             "properties": {
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "General"
                 }
             }
         },
@@ -1483,10 +1485,6 @@
                     "type": "string",
                     "example": "A"
                 },
-                "code": {
-                    "type": "string",
-                    "example": "RM0001"
-                },
                 "full_name": {
                     "type": "string",
                     "example": "Faizur Ramadhan"
@@ -1495,7 +1493,7 @@
                     "type": "string",
                     "example": "Male"
                 },
-                "resident_registration": {
+                "national_id": {
                     "type": "string",
                     "example": "8729301745162748"
                 }
@@ -1543,10 +1541,12 @@
             "type": "object",
             "properties": {
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "General"
                 }
             }
         },
@@ -1554,16 +1554,43 @@
             "type": "object",
             "properties": {
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "General"
                 },
                 "staff": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/response.Staff"
                     }
+                }
+            }
+        },
+        "response.MedicCheck": {
+            "type": "object",
+            "properties": {
+                "blood_tension": {
+                    "type": "integer",
+                    "example": 124
+                },
+                "body_temp": {
+                    "type": "integer",
+                    "example": 34
+                },
+                "height": {
+                    "type": "integer",
+                    "example": 55
+                },
+                "nurse": {
+                    "type": "string",
+                    "example": "Priscilla Halim"
+                },
+                "weight": {
+                    "type": "integer",
+                    "example": 150
                 }
             }
         },
@@ -1589,6 +1616,9 @@
                 "facility": {
                     "type": "string",
                     "example": "General"
+                },
+                "medic_check": {
+                    "$ref": "#/definitions/response.MedicCheck"
                 },
                 "prescription": {
                     "type": "string",
@@ -1620,32 +1650,41 @@
         "response.OutPatient": {
             "type": "object",
             "properties": {
-                "code": {
-                    "type": "string"
-                },
                 "complaint": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "sakit perut"
                 },
                 "date_check": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "2022-06-22"
                 },
                 "doctor": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Alsyad Ahmad"
                 },
                 "full_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Faizur Ramadhan"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
+                },
+                "patient_code": {
+                    "type": "string",
+                    "example": "RM0001"
                 },
                 "queue": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "serial_number": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "RM/748/2022/001"
                 },
                 "session": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "08:00"
                 }
             }
         },
@@ -1653,7 +1692,8 @@
             "type": "object",
             "properties": {
                 "serial_number": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "RM/748/2022/001"
                 }
             }
         },
@@ -1680,7 +1720,7 @@
                     "type": "integer",
                     "example": 1
                 },
-                "resident_registration": {
+                "national_id": {
                     "type": "string",
                     "example": "8729301745162748"
                 }
@@ -1723,7 +1763,7 @@
                         "$ref": "#/definitions/response.MedicRecord"
                     }
                 },
-                "resident_registration": {
+                "national_id": {
                     "type": "string",
                     "example": "8729301745162748"
                 }
@@ -1733,13 +1773,16 @@
             "type": "object",
             "properties": {
                 "code": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "DR00001"
                 },
                 "full_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Alsyad Ahmad"
                 },
                 "role": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Doctor"
                 }
             }
         },

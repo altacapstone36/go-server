@@ -11,7 +11,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-
 type PatientController struct {
 	srv *service.PatientService
 }
@@ -48,7 +47,7 @@ func (acon PatientController) GetAllPatient(c echo.Context) error {
 
 	return c.JSON(200, response.MessageData{
 		Message: "Patient Fetched",
-		Data: res,
+		Data:    res,
 	})
 }
 
@@ -65,7 +64,7 @@ func (acon PatientController) GetAllPatient(c echo.Context) error {
 // @Failure 500 {object} response.Error{} error
 // @Router /patient/:id [get]
 func (acon PatientController) GetPatientByID(c echo.Context) error {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, _ := strconv.Atoi(c.Param("id"))
 
 	res, err := acon.srv.GetPatientByID(uint(id))
 	if r, ok := check.HTTP(res, err, "Fetch Patient"); !ok {
@@ -74,7 +73,7 @@ func (acon PatientController) GetPatientByID(c echo.Context) error {
 
 	return c.JSON(200, response.MessageData{
 		Message: "Patient Fetched",
-		Data: res,
+		Data:    res,
 	})
 }
 
@@ -94,7 +93,7 @@ func (acon PatientController) CreatePatient(c echo.Context) error {
 	var patient request.Patient
 
 	c.Bind(&patient)
-	
+
 	if r, ok := check.HTTP(nil, patient.Validate(), "Validate Patient"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}
@@ -123,16 +122,17 @@ func (acon PatientController) CreatePatient(c echo.Context) error {
 // @Failure 500 {object} response.Error{} error
 // @Router /patient/:id/update [put]
 func (acon PatientController) UpdatePatient(c echo.Context) error {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, _ := strconv.Atoi(c.Param("id"))
 	var patient request.Patient
 
 	c.Bind(&patient)
+	patient.ID = id
 
 	if r, ok := check.HTTP(nil, patient.Validate(), "Validate Patient"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}
 
-	err = acon.srv.UpdatePatient(uint(id), patient)
+	err := acon.srv.UpdatePatient(patient)
 	if r, ok := check.HTTP(nil, err, "Update Patient"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}
@@ -155,9 +155,9 @@ func (acon PatientController) UpdatePatient(c echo.Context) error {
 // @Failure 500 {object} response.Error{} error
 // @Router /patient/:id/delete [delete]
 func (acon PatientController) DeletePatient(c echo.Context) error {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, _ := strconv.Atoi(c.Param("id"))
 
-	err = acon.srv.DeletePatient(uint(id))
+	err := acon.srv.DeletePatient(uint(id))
 	if r, ok := check.HTTP(nil, err, "Update Patient"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}

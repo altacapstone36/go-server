@@ -3,6 +3,7 @@ package repository
 import (
 	"go-hospital-server/internal/core/entity/models"
 	"go-hospital-server/internal/core/entity/response"
+	"go-hospital-server/internal/utils/errors/check"
 
 	"gorm.io/gorm"
 )
@@ -17,21 +18,23 @@ func NewUserRepository(sqldb *gorm.DB) *userRepository{
 }
 
 func (repo *userRepository) FindAll() (res []response.User, err error) {
-	err = repo.sqldb.Model(&models.User{}).
-		Select(`users.*, roles.name as role, medical_facilities.name as facility`).
-		Joins("left join roles on users.role_id = roles.id").
-		Joins("left join medical_facilities on medical_facilities.id = users.medical_facility_id").
-		Scan(&res).Error
+	db := repo.sqldb.Model(&models.User{}).
+		Select("users.*", "Role.name as role", "MedicalFacility.name as facility").
+		Joins("Role").Joins("MedicalFacility").
+		Find(&res)
+
+	err = check.DBRecord(db, check.FIND)
 	return
 }
 
 func (repo *userRepository) FindByID(id int) (res response.User, err error) {
-	err = repo.sqldb.Model(&models.User{}).
-		Select(`users.*, roles.name as role, medical_facilities.name as facility`).
-		Joins("left join roles on users.role_id = roles.id").
-		Joins("left join medical_facilities on medical_facilities.id = users.medical_facility_id").
+	db := repo.sqldb.Model(&models.User{}).
+		Select(`users.*, Role.name as role, MedicalFacility.name as facility`).
+		Joins("Role").Joins("MedicalFacility").
 		Where("users.id = ?", id).
-		Scan(&res).Error
+		Scan(&res)
+
+	err = check.DBRecord(db, check.FIND)
 	return
 }
 
@@ -41,17 +44,13 @@ func (repo *userRepository) Create(us models.User) (err error) {
 }
 
 func (repo *userRepository) Update(us models.User) (err error) {
-	up := repo.sqldb.Updates(&us)
-	if up.RowsAffected == 0 {
-		err = gorm.ErrRecordNotFound
-	}
+	db := repo.sqldb.Updates(&us)
+	err = check.DBRecord(db, check.UPDATE)
 	return
 }
 
 func (repo *userRepository) Delete(id int) (err error) {
-	del := repo.sqldb.Delete(models.Patient{}, id)
-	if del.RowsAffected == 0 {
-		err = gorm.ErrRecordNotFound
-	}
+	db := repo.sqldb.Delete(&models.User{}, id)
+	err = check.DBRecord(db, check.DELETE)
 	return
 }

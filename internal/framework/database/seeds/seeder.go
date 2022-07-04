@@ -33,7 +33,6 @@ func seedAll() []Seed {
 		userSeeder(),
 		patientSeeder(),
 		scheduleSeeder(),
-		medicRecordSeeder(),
 	}
 }
 

@@ -1,12 +1,12 @@
 package request
 
 import (
-	"github.com/go-ozzo/ozzo-validation/v4"
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
 )
 
 type Login struct {
-	Email string `json:"email" example:"alsyadahmad@holyhos.co.id"`
+	Email    string `json:"email" example:"alsyadahmad@holyhos.co.id"`
 	Password string `json:"password" example:"password"`
 }
 

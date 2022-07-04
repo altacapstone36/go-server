@@ -1,18 +1,19 @@
 package response
 
 type Facility struct {
-	ID int `json:"id"`
-	Name string `json:"name"`
+	ID   int    `json:"id" example:"1"`
+	Name string `json:"name" example:"General"`
 }
 
 type FacilityDetails struct {
-	ID int `json:"id"`
-	Name string `json:"name"`
+	ID    int     `json:"id" example:"1"`
+	Name  string  `json:"name" example:"General"`
 	Staff []Staff `json:"staff"`
 }
 
 type Staff struct {
-	Code string `json:"code"`
-	FullName string `json:"full_name"`
-	Role string `json:"role"`
+	Code              string `json:"code" example:"DR00001"`
+	FullName          string `json:"full_name" example:"Alsyad Ahmad"`
+	Role              string `json:"role" example:"Doctor"`
+	FacilityDetailsID int    `json:"-"`
 }
