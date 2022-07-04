@@ -115,6 +115,7 @@ func MedicRecordCheck(value interface{}) (err error) {
 
 	_DB.Table("medic_checks").
 		Where("medic_record_id = ?", value).
+		Where("status = 0").
 		Count(&c)
 
 	if c != 0 {
@@ -190,6 +191,7 @@ func ProcessNurse(value interface{}) (err error) {
 
 	_DB.Table("medic_checks").
 		Where("medic_record_id = ?", value).
+		Where("status = 1").
 		Count(&c)
 
 	if c != 0 {
