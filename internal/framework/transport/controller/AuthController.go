@@ -5,9 +5,9 @@ import (
 	"go-hospital-server/internal/core/entity/request"
 	"go-hospital-server/internal/core/entity/response"
 	"go-hospital-server/internal/core/service"
+	"go-hospital-server/internal/utils/config"
 	"go-hospital-server/internal/utils/errors/check"
 	"go-hospital-server/internal/utils/jwt"
-	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
@@ -27,7 +27,7 @@ func NewAuthController(srv *service.AuthService) *AuthController {
 // @Accept json
 // @Produce json
 // @Param body  body  request.Login{}  true "Send Request Email and Password"
-// @Success 200 {object} response.User{} success
+// @Success 200 {object} response.MessageDataJWT{data=response.User{}} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /login [post]
@@ -44,23 +44,79 @@ func (acon AuthController) Login(c echo.Context) error {
 		return c.JSON(r.Code, r.Result)
 	}
 
-	jwt, err := acon.srv.CreateToken(res.Code, res.Facility, res.Role)
+	jwt, err := acon.srv.CreateToken(res.Code, res.Role, config.JWT_ACCESS_EXPIRE_TIME)
 	if r, ok := check.HTTP(res, err, "Create Authentication Token"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}
 
-	return c.JSON(http.StatusOK, response.MessageDataJWT{
+	return c.JSON(200, response.MessageDataJWT{
 		Message: "User Logged In",
 		Data:    res,
 		JWT:     jwt,
 	})
 }
 
+// godoc
+// @Summary Forgot Password
+// @Description Login and get Authorization Token
+// @Tags Authorization
+// @Accept json
+// @Produce json
+// @Param token query string true "token from find email"
+// @Param body body request.ChangePassword{} true "Send Request New Password Password"
+// @Success 200 {object} response.MessageOnly{} success
+// @Failure 417 {object} response.Error{} error
+// @Failure 500 {object} response.Error{} error
+// @Router /forgot_password [post]
+func (acon AuthController) ForgotPassword(c echo.Context) error {
+	token := c.QueryParam("token")
+	code, err := jwt.GetTokenData(token, "code")
+
+	if r, ok := check.HTTP(nil, err, "Validate Token"); !ok {
+		return c.JSON(r.Code, r.Result)
+	}
+
+	var cp request.ChangePassword
+	c.Bind(&cp)
+	cp.Code = code.(string)
+
+	if r, ok := check.HTTP(nil, cp.Validate(), "Validate Data"); !ok {
+		return c.JSON(r.Code, r.Result)
+	}
+
+	err = acon.srv.ChangePassword(cp)
+	if r, ok := check.HTTP(nil, err, "Change Password"); !ok {
+		return c.JSON(r.Code, r.Result)
+	}
+
+	acon.srv.RevokeToken(token)
+
+	return c.JSON(200, response.MessageOnly{
+		Message: "Password Changed",
+	})
+}
+
+// godoc
+// @Summary Register
+// @Description Login and get Authorization Token
+// @Tags Authorization
+// @Accept json
+// @Produce json
+// @Param body body request.UserRequest{} true "Send Request New User"
+// @Success 200 {object} response.MessageOnly{} success
+// @Failure 417 {object} response.Error{} error
+// @Failure 500 {object} response.Error{} error
+// @Router /register [post]
 func (acon AuthController) Register(c echo.Context) error {
-	var req request.RegisterRequest
+	var req request.UserRequest
 	c.Bind(&req)
 
 	if r, ok := check.HTTP(nil, req.Validate(), "Validate"); !ok {
+		return c.JSON(r.Code, r.Result)
+	}
+
+	err := acon.srv.Register(req)
+	if r, ok := check.HTTP(nil, err, "Register"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}
 
@@ -69,16 +125,96 @@ func (acon AuthController) Register(c echo.Context) error {
 	})
 }
 
-func (acon AuthController) FindEmail(c echo.Context) error {
-	var find request.FindEmail
+// godoc
+// @Summary UserProfile
+// @Description Show Profile from Logged in User
+// @Tags Authorization
+// @Security ApiKey
+// @Accept json
+// @Produce json
+// @Success 200 {object} response.MessageDataJWT{data=response.User{}} success
+// @Failure 417 {object} response.Error{} error
+// @Failure 500 {object} response.Error{} error
+// @Router /profile [get]
+func (acon AuthController) Profile(c echo.Context) error {
+	token, err := jwt.GetToken(c)
+	code, _ := jwt.GetTokenData(token, "code")
+	res, err := acon.srv.MyProfile(code.(string))
+	if r, ok := check.HTTP(res, err, "Get User Profile"); !ok {
+		return c.JSON(r.Code, r.Result)
+	}
 
-	return c.JSON(http.StatusOK, response.MessageData{
-		Message: "Email found",
-		Data:    find,
+	return c.JSON(200, response.MessageData{
+		Message: "User Profile Fetched",
+		Data:    res,
 	})
 }
 
+// godoc
+// @Summary FindEmail
+// @Description Find Email and Get Token to Change Password
+// @Tags Authorization
+// @Accept json
+// @Produce json
+// @Param body body request.FindEmail{} true "Send Request Email to change password"
+// @Success 200 {object} response.MessageDataJWT{data=response.User{}} success
+// @Failure 417 {object} response.Error{} error
+// @Failure 500 {object} response.Error{} error
+// @Router /find_email [get]
+func (acon AuthController) FindEmail(c echo.Context) error {
+	var fe request.FindEmail
+
+	c.Bind(&fe)
+
+	res, err := acon.srv.FindEmail(fe)
+	if r, ok := check.HTTP(res, err, "Find Email"); !ok {
+		return c.JSON(r.Code, r.Result)
+	}
+
+	jwt, err := acon.srv.CreateToken(res.Code, res.Role, config.JWT_FORGOT_PASSWORD_EXPIRE_TIME)
+	if r, ok := check.HTTP(res, err, "Create Authentication Token"); !ok {
+		return c.JSON(r.Code, r.Result)
+	}
+
+	return c.JSON(200, response.MessageDataJWT{
+		Message: "Email found",
+		Data:    res,
+		JWT: jwt,
+	})
+}
+
+// godoc
+// @Summary Change Password
+// @Description Change Password in Profile Level
+// @Tags Authorization
+// @Security ApiKey
+// @Accept json
+// @Produce json
+// @Param body body request.ChangePassword{} true "Send New Password"
+// @Success 200 {object} response.MessageOnly{} success
+// @Failure 417 {object} response.Error{} error
+// @Failure 500 {object} response.Error{} error
+// @Router /profile/change_password [post]
 func (acon AuthController) ChangePassword(c echo.Context) error {
+	token, err := jwt.GetToken(c)
+	if r, ok := check.HTTP(nil, err, "Validate Token"); !ok {
+		return c.JSON(r.Code, r.Result)
+	}
+
+	code, err := jwt.GetTokenData(token, "code")
+
+	var cp request.ChangePassword
+	c.Bind(&cp)
+	cp.Code = code.(string)
+
+	if r, ok := check.HTTP(nil, cp.Validate(), "Validate Data"); !ok {
+		return c.JSON(r.Code, r.Result)
+	}
+
+	err = acon.srv.ChangePassword(cp)
+	if r, ok := check.HTTP(nil, err, "Change Password"); !ok {
+		return c.JSON(r.Code, r.Result)
+	}
 
 	return c.JSON(201, response.MessageOnly{
 		Message: "Password changed",
@@ -93,7 +229,7 @@ func (acon AuthController) ChangePassword(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param token  query  string  true "Pass access_token Here"
-// @Success 200 {object} models.Token{} success
+// @Success 200 {object} response.MessageData{data=models.Token{}} success
 // @Failure 417 {object} response.Error{} error
 // @Failure 500 {object} response.Error{} error
 // @Router /refresh_token [post]
@@ -109,13 +245,13 @@ func (acon AuthController) RefreshToken(c echo.Context) error {
 	}
 
 	if err != nil {
-		return c.JSON(http.StatusExpectationFailed, response.Error{
+		return c.JSON(417, response.Error{
 			Message: "Failed to Generate New Token",
 			Error:   err.Error(),
 		})
 	}
 
-	return c.JSON(http.StatusOK, response.MessageData{
+	return c.JSON(200, response.MessageData{
 		Message: "New Token Generated",
 		Data:    t,
 	})
@@ -136,18 +272,17 @@ func (acon AuthController) Logout(c echo.Context) error {
 	token, err := jwt.GetToken(c)
 
 	if err == nil {
-		err = acon.srv.Logout(token)
-
+		err = acon.srv.RevokeToken(token)
 	}
 
 	if err != nil {
-		return c.JSON(http.StatusExpectationFailed, echo.Map{
+		return c.JSON(417, echo.Map{
 			"message": "Failed to Revoke Token",
 			"error":   err.Error(),
 		})
 	}
 
-	return c.JSON(http.StatusOK, echo.Map{
+	return c.JSON(200, echo.Map{
 		"message": "User Logged Out",
 	})
 }

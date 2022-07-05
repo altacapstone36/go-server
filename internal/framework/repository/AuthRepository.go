@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"errors"
-	"go-hospital-server/internal/core/entity/models"
 	m "go-hospital-server/internal/core/entity/models"
 	"go-hospital-server/internal/core/entity/response"
 	"go-hospital-server/internal/utils/errors/check"
@@ -22,23 +21,33 @@ func NewAuthRepository(sqldb *gorm.DB, mongodb *mongo.Database) *authRepository 
 	return &authRepository{sqldb: sqldb, mongo: mongodb}
 }
 
-func (repo authRepository) Login(email string) (users response.User, err error) {
+func (repo authRepository) FindByCode(code string) (users response.User, err error) {
 	db := repo.sqldb.Model(&m.User{}).
-		Select(`users.*, roles.name as role, medical_facilities.name as facility`).
-		Joins("left join roles on users.role_id = roles.id").
-		Joins("left join medical_facilities on medical_facilities.id = users.medical_facility_id").
-		Where("email = ?", email).Find(&users)
+		Select(`users.*, Role.name as role, MedicalFacility.name as facility`).
+		Joins("Role").Joins("MedicalFacility").
+		Where("users.code = ?", code).Find(&users)
 	err = check.DBRecord(db, check.FIND)
 	return
 }
 
-func (repo *authRepository) Register(reg models.User) (err error) {
-	err = repo.sqldb.Create(reg).Error
+func (repo *authRepository) Register(reg m.User) (err error) {
+	db := repo.sqldb.Create(&reg)
+	err = check.DBRecord(db, check.CREATE)
 	return
 }
 
-func (repo *authRepository) FindEmail(email string) (err error) {
-	err = repo.sqldb.Model(&m.User{}).Where("email = ?", email).Error
+func (repo *authRepository) FindByEmail(email string) (res response.User, err error) {
+	db := repo.sqldb.Model(&m.User{}).
+		Select(`users.*, Role.name as role, MedicalFacility.name as facility`).
+		Joins("Role").Joins("MedicalFacility").
+		Where("users.email = ?", email).Find(&res)
+	err = check.DBRecord(db, check.FIND)
+	return
+}
+
+func (repo *authRepository) ChangePassword(u m.User) (err error) {
+	db := repo.sqldb.Where("code = ?", u.Code).Updates(&u)
+	err = check.DBRecord(db, check.UPDATE)
 	return
 }
 

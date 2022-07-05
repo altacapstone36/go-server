@@ -9,3 +9,8 @@ mysql:
 mongo:
   STRING: "mongodb://mongo:enX6qBHuf85i1OAZe6Hx@containers-us-west-68.railway.app:7025"
   DATABASE: "hospital"
+jwt:
+# Token Time in Hours
+  ACCESS_TIME: 24
+  REFRESH_TIME: 240
+  FORGOT_PASSWORD_TIME: 1

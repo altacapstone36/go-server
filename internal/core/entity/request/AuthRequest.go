@@ -10,20 +10,12 @@ type Login struct {
 	Password string `json:"password" example:"password"`
 }
 
-type RegisterRequest struct {
-	FullName          string `json:"full_name"`
-	Email             string `json:"email"`
-	Password          string `json:"password"`
-	Gender            string `json:"gender"`
-	RoleID            int    `json:"role_id"`
-	MedicalFacilityID *uint  `json:"facility_id"`
-}
-
 type FindEmail struct {
 	Email string `json:"email"`
 }
 
 type ChangePassword struct {
+	Code string `json:"-"`
 	Password string `json:"password"`
 }
 
@@ -34,13 +26,14 @@ func (lr Login) Validate() error {
 	)
 }
 
-func (reg RegisterRequest) Validate() (err error) {
-	err = validation.ValidateStruct(&reg,
-		validation.Field(&reg.Email, validation.Required, is.EmailFormat),
-		validation.Field(&reg.FullName, validation.Required, validation.Length(5, 0)),
-		validation.Field(&reg.Gender, validation.Required, validation.In("Male", "Female")),
-		validation.Field(&reg.RoleID, validation.Required, validation.NilOrNotEmpty),
-		validation.Field(&reg.MedicalFacilityID, validation.Required, validation.NilOrNotEmpty),
+func (fe FindEmail) Validate() error {
+	return validation.ValidateStruct(&fe,
+		validation.Field(&fe.Email, validation.Required, is.EmailFormat),
 	)
-	return
+}
+
+func (cp ChangePassword) Validate() error {
+	return validation.ValidateStruct(&cp,
+		validation.Field(&cp.Password, validation.Required, validation.RuneLength(8, 0)),
+	)
 }

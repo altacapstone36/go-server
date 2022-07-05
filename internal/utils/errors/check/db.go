@@ -10,6 +10,7 @@ type DBAction string
 const DELETE DBAction = "delete"
 const FIND DBAction = "find"
 const UPDATE DBAction = "update"
+const CREATE DBAction = "create"
 
 // check database error
 // with parameter *gorm.DB and DBAction

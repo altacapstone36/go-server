@@ -64,7 +64,8 @@ func (repo *userRepository) FindByID(id int) (res response.User, err error) {
 }
 
 func (repo *userRepository) Create(us models.User) (err error) {
-	err = repo.sqldb.Create(&us).Error
+	db := repo.sqldb.Create(&us)
+	err = check.DBRecord(db, check.CREATE)
 	return
 }
 

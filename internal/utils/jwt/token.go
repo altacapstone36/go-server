@@ -1,6 +1,7 @@
 package jwt
 
 import (
+	"fmt"
 	"go-hospital-server/internal/core/entity/models"
 	"go-hospital-server/internal/utils/config"
 	"go-hospital-server/internal/utils/errors"
@@ -10,25 +11,38 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-func CreateToken(code, facility_id, level string) (t models.Token, err error) {
+type mapClaims struct {
+	Code string `json:"code"`
+	Role string `json:"role"`
+	jwt.StandardClaims
+}
+
+// Crate New Create
+// Param user_code string
+// Param user_facility_id string
+// Param user_level string
+// Param exp_time int
+func CreateToken(code,level string, exp_time int64) (t models.Token, err error) {
 	role := strings.ToLower(level)
 
-	expTime := time.Now().Add(time.Hour * 24).Unix()
-	claims := jwt.MapClaims{}
-	claims["code"] = code
-	claims["facility"] = facility_id
-	claims["role"] = role
-	claims["exp"] = expTime
-	claims["iat"] = time.Now().Unix()
-	claims["nbf"] = time.Now().Unix()
+	expTime := time.Now().Add(time.Hour * time.Duration(exp_time)).Unix()
+	fmt.Println(expTime, time.Now().Unix())
+	claims := mapClaims{
+		Code: code,
+		Role: role,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: expTime,
+		},
+	}
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	t.AccessToken, err = token.SignedString(config.SERVER_SECRET)
 
-	rexpTime := time.Now().Add(time.Hour * 168).Unix()
-	rclaims := jwt.MapClaims{}
-	rclaims["exp"] = rexpTime
-	rclaims["iat"] = time.Now().Unix()
-	rclaims["nbf"] = time.Now().Unix()
+	rexpTime := time.Now().Add(time.Hour * time.Duration(config.JWT_REFRESH_EXPIRE_TIME)).Unix()
+	rclaims := jwt.StandardClaims{
+		ExpiresAt: rexpTime,
+	}
+
 	rtoken := jwt.NewWithClaims(jwt.SigningMethodHS256, rclaims)
 	t.RefreshToken, err = rtoken.SignedString(config.SERVER_SECRET)
 	return
@@ -40,10 +54,9 @@ func RefreshToken(token_string models.Token) (t models.Token, err error) {
 	if _, ok := token.(jwt.MapClaims); ok {
 		tkn, _ := ExtractToken(token_string.AccessToken)
 		code := tkn.(jwt.MapClaims)["code"]
-		facility := tkn.(jwt.MapClaims)["facility"]
 		role := tkn.(jwt.MapClaims)["role"]
-		if code != nil && role != nil && facility != nil {
-			return CreateToken(code.(string), facility.(string), role.(string))
+		if code != nil && role != nil {
+			return CreateToken(code.(string), role.(string), config.JWT_ACCESS_EXPIRE_TIME)
 		}
 	}
 	return t, errors.New(500, "failed to generate new token")

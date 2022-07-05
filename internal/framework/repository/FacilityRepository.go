@@ -43,7 +43,8 @@ func (repo *facilityRepository) FindByID(id int) (res response.FacilityDetails, 
 }
 
 func (repo *facilityRepository) Create(mf models.MedicalFacility) (err error) {
-	err = repo.sqldb.Create(&mf).Error
+	db := repo.sqldb.Create(&mf)
+	err = check.DBRecord(db, check.CREATE)
 	return
 }
 
