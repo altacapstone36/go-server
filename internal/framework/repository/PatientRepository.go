@@ -62,7 +62,8 @@ func (repo patientRepository) GetAllPatient() (patient []response.Patient, err e
 }
 
 func (repo patientRepository) CreatePatient(patient models.Patient) (err error) {
-	err = repo.sqldb.Create(&patient).Error
+	db := repo.sqldb.Create(&patient)
+	err = check.DBRecord(db, check.CREATE)
 
 	return
 }

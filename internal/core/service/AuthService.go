@@ -1,7 +1,7 @@
 package service
 
 import (
-	"go-hospital-server/internal/core/entity/models"
+	m "go-hospital-server/internal/core/entity/models"
 	"go-hospital-server/internal/core/entity/request"
 	"go-hospital-server/internal/core/entity/response"
 	"go-hospital-server/internal/core/repository"
@@ -20,7 +20,7 @@ func NewAuthService(repo repository.AuthRepository) *AuthService {
 
 func (srv AuthService) Login(login request.Login) (res response.User, err error) {
 	var checkPassword bool
-	res, err = srv.repo.Login(login.Email)
+	res, err = srv.repo.FindByEmail(login.Email)
 
 	if err == nil {
 		checkPassword = utils.ComparePassword(login.Password, res.Password)
@@ -32,18 +32,42 @@ func (srv AuthService) Login(login request.Login) (res response.User, err error)
 	return
 }
 
-func (srv AuthService) Logout(token string) (err error) {
+func (srv AuthService) Register(req request.UserRequest) (err error) {
+	r, _ := utils.TypeConverter[m.User](req)
+	err = srv.repo.Register(r)
+	return
+}
+
+func (srv AuthService) MyProfile(code string) (res response.User, err error) {
+	res, err = srv.repo.FindByCode(code)
+	return
+}
+
+func (srv AuthService) FindEmail(find request.FindEmail) (res response.User, err error) {
+	res, err = srv.repo.FindByEmail(find.Email)
+	return
+}
+
+func (srv AuthService) ChangePassword(change request.ChangePassword) (err error) {
+	var cp m.User
+	cp.Code = change.Code
+	cp.Password, _ = utils.HashPassword(change.Password)
+	err = srv.repo.ChangePassword(cp)
+	return
+}
+
+func (srv AuthService) RevokeToken(token string) (err error) {
 	err = srv.repo.RevokeToken(token)
 	return
 }
 
-func (srv AuthService) CreateToken(code, facility_id, level string) (t models.Token, err error) {
-	t, _ = jwt.CreateToken(code, facility_id, level)
+func (srv AuthService) CreateToken(code, level string, time int64) (t m.Token, err error) {
+	t, _ = jwt.CreateToken(code, level, time)
 	err = srv.repo.SaveToken(t)
 	return
 }
 
-func (srv AuthService) RefreshToken(tkn models.Token) (token models.Token, err error) {
+func (srv AuthService) RefreshToken(tkn m.Token) (token m.Token, err error) {
 
 	if tkn.AccessToken == "" {
 		err = errors.New(401, "Token Not Provided")

@@ -34,6 +34,11 @@ definitions:
         example: NR00003
         type: string
     type: object
+  request.ChangePassword:
+    properties:
+      password:
+        type: string
+    type: object
   request.DoctorMedicRecord:
     properties:
       diagnose:
@@ -47,6 +52,11 @@ definitions:
     properties:
       name:
         example: General
+        type: string
+    type: object
+  request.FindEmail:
+    properties:
+      email:
         type: string
     type: object
   request.Login:
@@ -190,6 +200,14 @@ definitions:
   response.MessageData:
     properties:
       data: {}
+      message:
+        type: string
+    type: object
+  response.MessageDataJWT:
+    properties:
+      data: {}
+      jwt:
+        $ref: '#/definitions/models.Token'
       message:
         type: string
     type: object
@@ -502,6 +520,76 @@ paths:
       summary: UpdateFacility
       tags:
       - Facility
+  /find_email:
+    get:
+      consumes:
+      - application/json
+      description: Find Email and Get Token to Change Password
+      parameters:
+      - description: Send Request Email to change password
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.FindEmail'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.MessageDataJWT'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.User'
+              type: object
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: FindEmail
+      tags:
+      - Authorization
+  /forgot_password:
+    post:
+      consumes:
+      - application/json
+      description: Login and get Authorization Token
+      parameters:
+      - description: token from find email
+        in: query
+        name: token
+        required: true
+        type: string
+      - description: Send Request New Password Password
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.ChangePassword'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MessageOnly'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Forgot Password
+      tags:
+      - Authorization
   /login:
     post:
       consumes:
@@ -520,7 +608,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.User'
+            allOf:
+            - $ref: '#/definitions/response.MessageDataJWT'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.User'
+              type: object
         "417":
           description: Expectation Failed
           schema:
@@ -962,6 +1055,68 @@ paths:
       summary: UpdatePatient
       tags:
       - Patient
+  /profile:
+    get:
+      consumes:
+      - application/json
+      description: Show Profile from Logged in User
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.MessageDataJWT'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.User'
+              type: object
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: UserProfile
+      tags:
+      - Authorization
+  /profile/change_password:
+    post:
+      consumes:
+      - application/json
+      description: Change Password in Profile Level
+      parameters:
+      - description: Send New Password
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.ChangePassword'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MessageOnly'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      security:
+      - ApiKey: []
+      summary: Change Password
+      tags:
+      - Authorization
   /refresh_token:
     post:
       consumes:
@@ -979,7 +1134,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Token'
+            allOf:
+            - $ref: '#/definitions/response.MessageData'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Token'
+              type: object
         "417":
           description: Expectation Failed
           schema:
@@ -993,11 +1153,46 @@ paths:
       summary: Refresh Token
       tags:
       - Authorization
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Login and get Authorization Token
+      parameters:
+      - description: Send Request New User
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.MessageOnly'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Register
+      tags:
+      - Authorization
   /user:
     get:
       consumes:
       - application/json
       description: Fetch All User Data
+      parameters:
+      - description: Date Filter By Role ID
+        in: query
+        name: role_id
+        type: string
       produces:
       - application/json
       responses:

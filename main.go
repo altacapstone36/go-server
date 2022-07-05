@@ -8,6 +8,7 @@ import (
 	"go-hospital-server/internal/framework/transport/controller"
 	mw "go-hospital-server/internal/framework/transport/middleware"
 	"go-hospital-server/internal/utils/config"
+	"go-hospital-server/internal/utils/jwt"
 	"go-hospital-server/internal/utils/logger"
 	"go-hospital-server/internal/utils/validators"
 
@@ -48,7 +49,7 @@ func main() {
 	e.GET("/*", echoSwagger.WrapHandler)
 
 	api := e.Group("/api")
-	mw.NewJWTConnection(mongodb)
+	jwt.NewJWTConnection(mongodb)
 	routes.NewRoutes(api, ctrl, mw.JWT)
 
 	mw.Logging(e)

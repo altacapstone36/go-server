@@ -35,10 +35,10 @@ func NewOutPatientController(srv *service.OutPatientService) *OutPatientControll
 // @Failure 500 {object} response.Error{} error
 // @Router /outpatient [get]
 func (acon OutPatientController) GetAllOutPatient(c echo.Context) error {
-	role, _ := jwt.GetTokenData(c, "role")
-	code, _ := jwt.GetTokenData(c, "code")
+	token, err := jwt.GetToken(c)
+	role, _ := jwt.GetTokenData(token, "role")
+	code, _ := jwt.GetTokenData(token, "code")
 	var res []response.OutPatient
-	var err error
 
 	date_start := c.QueryParam("date_start")
 	date_end := c.QueryParam("date_end")
@@ -104,9 +104,9 @@ func (acon OutPatientController) NewMedicRecord(c echo.Context) error {
 // @Router /outpatient/:id/process [post]
 func (acon OutPatientController) Process(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	role, _ := jwt.GetTokenData(c, "role")
+	token, err := jwt.GetToken(c)
+	role, _ := jwt.GetTokenData(token, "role")
 	var req any
-	var err error
 	var process func(int, any) error
 	c.Bind(&req)
 
@@ -210,8 +210,9 @@ func (acon OutPatientController) FindByID(c echo.Context) error {
 // @Failure 500 {object} response.Error{} error
 // @Router /outpatient/log [get]
 func (acon OutPatientController) ReportLog(c echo.Context) error {
-	code, _ := jwt.GetTokenData(c, "code")
-	role, _ := jwt.GetTokenData(c, "role")
+	token, err := jwt.GetToken(c)
+	role, _ := jwt.GetTokenData(token, "role")
+	code, _ := jwt.GetTokenData(token, "code")
 
 	res, err := acon.srv.ReportLog(code.(string), role.(string))
 	if r, ok := check.HTTP(nil, err, "Fetch Report Data"); !ok {

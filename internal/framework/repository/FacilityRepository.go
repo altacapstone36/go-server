@@ -9,12 +9,11 @@ import (
 	"gorm.io/gorm"
 )
 
-
 type facilityRepository struct {
 	sqldb *gorm.DB
 }
 
-func NewFacilityRepository(sqldb *gorm.DB) *facilityRepository{
+func NewFacilityRepository(sqldb *gorm.DB) *facilityRepository {
 	return &facilityRepository{sqldb: sqldb}
 }
 
@@ -44,7 +43,8 @@ func (repo *facilityRepository) FindByID(id int) (res response.FacilityDetails, 
 }
 
 func (repo *facilityRepository) Create(mf models.MedicalFacility) (err error) {
-	err = repo.sqldb.Create(&mf).Error
+	db := repo.sqldb.Create(&mf)
+	err = check.DBRecord(db, check.CREATE)
 	return
 }
 

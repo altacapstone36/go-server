@@ -9,10 +9,10 @@ import (
 
 func NewRepository(db *gorm.DB, mongo *mongo.Database) *repository.Repository {
 	return &repository.Repository{
-		Auth: NewAuthRepository(db, mongo),
-		Patient: NewPatientRepository(db),
+		Auth:       NewAuthRepository(db, mongo),
+		Patient:    NewPatientRepository(db),
 		OutPatient: NewOutPatientRepository(db),
-		User: NewUserRepository(db),
-		Facility: NewFacilityRepository(db),
+		User:       NewUserRepository(db),
+		Facility:   NewFacilityRepository(db),
 	}
 }

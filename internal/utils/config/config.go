@@ -20,6 +20,9 @@ var (
 	SMTP_PORT string
 	EMAIL string
 	PASSWORD string
+	JWT_ACCESS_EXPIRE_TIME int64
+	JWT_REFRESH_EXPIRE_TIME int64
+	JWT_FORGOT_PASSWORD_EXPIRE_TIME int64
 )
 
 func LoadConfig() {
@@ -50,6 +53,9 @@ func LoadConfig() {
 	SMTP_PORT = viper.GetString("smtp.PORT")
 	EMAIL = viper.GetString("smtp.EMAIL")
 	PASSWORD = viper.GetString("smtp.PASSWORD")
+	JWT_ACCESS_EXPIRE_TIME = viper.GetInt64("jwt.ACCESS_TIME")
+	JWT_REFRESH_EXPIRE_TIME = viper.GetInt64("jwt.REFRESH_TIME")
+	JWT_FORGOT_PASSWORD_EXPIRE_TIME = viper.GetInt64("jwt.FORGOT_PASSWORD_TIME")
 }
 
 func checkEnv(env, viperStr string) string {
