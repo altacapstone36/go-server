@@ -34,6 +34,7 @@ func (srv AuthService) Login(login request.Login) (res response.User, err error)
 
 func (srv AuthService) Register(req request.UserRequest) (err error) {
 	r, _ := utils.TypeConverter[m.User](req)
+	r.Password, _ = utils.HashPassword(req.Password)
 	err = srv.repo.Register(r)
 	return
 }
