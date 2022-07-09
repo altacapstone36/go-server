@@ -61,8 +61,8 @@ func (srv AuthService) RevokeToken(token string) (err error) {
 	return
 }
 
-func (srv AuthService) CreateToken(code, level string, time int64) (t m.Token, err error) {
-	t, _ = jwt.CreateToken(code, level, time)
+func (srv AuthService) CreateToken(code, level string, tokenType jwt.Token) (t m.Token, err error) {
+	t, _ = jwt.CreateToken(code, level, tokenType)
 	err = srv.repo.SaveToken(t)
 	return
 }

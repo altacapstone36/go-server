@@ -15,7 +15,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"alsyadahmad@holyhos.co.id\",\n    \"password\": \"password\"\n}",
+							"raw": "{\n    \"email\": \"rimurutempest@holyhos.co.id\",\n    \"password\": \"password\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -30,6 +30,157 @@
 							"path": [
 								"api",
 								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"musashi@holyhos.co.id\",\n    \"facility_id\": 2,\n    \"full_name\": \"Haruno Musashi\",\n    \"password\": \"password\",\n    \"gender\": \"Male\",\n    \"role_id\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"password1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/forgot_password?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RlIjoiTlJTMDAwMDEiLCJyb2xlIjoibnVyc2UiLCJleHAiOjE2NTczNTI1MjB9.ASl8kibKuZ90qx9qGnnjJcn-GEI5BWdQDkULIiYyEEg",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"forgot_password"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RlIjoiTlJTMDAwMDEiLCJyb2xlIjoibnVyc2UiLCJleHAiOjE2NTczNTI1MjB9.ASl8kibKuZ90qx9qGnnjJcn-GEI5BWdQDkULIiYyEEg"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/profile/change_password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"profile",
+								"change_password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find Email",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"priscillahalim@holyhos.co.id\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/find_email",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"find_email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MyProfile",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"priscillahalim@holyhos.co.id\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"profile"
 							]
 						}
 					},
@@ -172,14 +323,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/user/4",
+							"raw": "{{base_url}}/api/user/1",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"user",
-								"4"
+								"1"
 							]
 						}
 					},
@@ -215,7 +366,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/user?facility_id=1",
+							"raw": "{{base_url}}/api/user?facility_id=1&session_id=1",
 							"host": [
 								"{{base_url}}"
 							],
@@ -226,6 +377,10 @@
 							"query": [
 								{
 									"key": "facility_id",
+									"value": "1"
+								},
+								{
+									"key": "session_id",
 									"value": "1"
 								}
 							]
@@ -525,7 +680,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"patient_code\": \"RM00002\",\n    \"doctor_code\": \"DCR00001\",\n    \"facility_id\": 1,\n    \"complaint\": \"Sakit Kepala\",\n    \"session_id\": 1,\n    \"date_check\": \"2022-06-17\"\n}",
+							"raw": "{\n    \"national_id\": \"1244812940121171\",\n    \"full_name\": \"Dave John\",\n    \"address\": \"Batuan, Sumenep\",\n    \"gender\": \"Male\",\n    \"birthdate\": \"2001-02-22\",\n    \"blood_type\": \"O\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -533,13 +688,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/outpatient",
+							"raw": "{{base_url}}/api/patient",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
-								"outpatient"
+								"patient"
 							]
 						}
 					},
@@ -609,13 +764,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/outpatient",
+							"raw": "{{base_url}}/api/outpatient/2",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
-								"outpatient"
+								"outpatient",
+								"2"
 							]
 						}
 					},
@@ -627,14 +783,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/outpatient/1",
+							"raw": "{{base_url}}/api/outpatient/2",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"outpatient",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -696,7 +852,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/outpatient?date_start=2022-06-16&date_end=2022-06-18",
+							"raw": "{{base_url}}/api/outpatient?date_end=2022-07-18",
 							"host": [
 								"{{base_url}}"
 							],
@@ -706,12 +862,8 @@
 							],
 							"query": [
 								{
-									"key": "date_start",
-									"value": "2022-06-16"
-								},
-								{
 									"key": "date_end",
-									"value": "2022-06-18"
+									"value": "2022-07-18"
 								}
 							]
 						}

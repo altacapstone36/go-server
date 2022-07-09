@@ -13,7 +13,7 @@ type OutPatientRepository interface {
 	DoctorFindAll(string) ([]response.OutPatient, error)
 	NurseFindAll(string) ([]response.OutPatient, error)
 	FindByID(int) (response.OutPatientDetails, error)
-	FindByDate(string, string) ([]response.OutPatient, error)
+	FindByDate(string, string, string) ([]response.OutPatient, error)
 	Report() ([]response.OutPatientDetails, error)
 	ReportLog(string, string) ([]response.OutPatientReportLog, error)
 }

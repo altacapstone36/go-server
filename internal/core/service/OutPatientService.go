@@ -60,7 +60,7 @@ func (srv OutPatientService) ListPatient(code, role string) (res []response.OutP
 }
 
 func (srv OutPatientService) FindByDate(code, start, end string) (res []response.OutPatient, err error) {
-	res, err = srv.repo.FindByDate(start, end)
+	res, err = srv.repo.FindByDate(code, start, end)
 	return
 }
 

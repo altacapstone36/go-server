@@ -1,9 +1,11 @@
 package repository
 
 import (
+	"fmt"
 	m "go-hospital-server/internal/core/entity/models"
 	"go-hospital-server/internal/core/entity/response"
 	"go-hospital-server/internal/utils/errors/check"
+	"strings"
 
 	"gorm.io/gorm"
 )
@@ -103,17 +105,28 @@ func (repo outPatientRepository) ReportLog(code, role string) (res []response.Ou
 	return
 }
 
-func (repo outPatientRepository) FindByDate(date_start, date_end string) (res []response.OutPatient, err error) {
+func (repo outPatientRepository) FindByDate(code, date_start, date_end string) (res []response.OutPatient, err error) {
 
-	db := repo.sqldb.Model(m.MedicRecord{}).
-		Select(`medic_records.*, medical_sessions.queue, medical_sessions.date_check,
-						patients.full_name, patients.code, sessions.time_start,
-						users.full_name as doctor`).
-		Joins("left join patients on patients.id = medic_records.patient_id").
-		Joins("left join medical_sessions on medical_sessions.medic_record_id = medic_records.id").
-		Joins("left join sessions on medical_sessions.session_id = sessions.id").
-		Joins("left join users on users.id = medical_sessions.user_id").
-		Where("medical_sessions.date_check BETWEEN ? AND ?", date_start, date_end).
+	var where []string
+
+	if date_start == "" {
+		where = append(where, fmt.Sprintf("medical_sessions.date_check <= '%s'", date_end))
+	} else if date_end == "" {
+		where = append(where, fmt.Sprintf("medical_sessions.date_check >= '%s'", date_start))
+	} else {
+		where = append(where, fmt.Sprintf("medical_sessions.date_check BETWEEN '%s' AND '%s'", date_start, date_end))
+	}
+
+	if strings.Compare(code, "ADM") != 1 {
+		where = append(where, fmt.Sprintf("MedicRecord.user_code = '%s'", code))
+	}
+
+	db := repo.sqldb.Debug().Model(m.MedicalSession{}).
+		Select("MedicRecord.*", "medical_sessions.*", "User.full_name as doctor", "Session.time_start as session",
+					 "MedicalFacility.name as facility", "P.full_name", "P.code as code").
+		Joins("MedicRecord").Joins("User").Joins("MedicalFacility").Joins("Session").
+		Joins("JOIN patients P ON MedicRecord.patient_code = P.code").
+		Where(strings.Join(where, " AND ")).
 		Find(&res)
 
 	err = check.DBRecord(db, check.FIND)

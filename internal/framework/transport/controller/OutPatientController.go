@@ -35,15 +35,15 @@ func NewOutPatientController(srv *service.OutPatientService) *OutPatientControll
 // @Failure 500 {object} response.Error{} error
 // @Router /outpatient [get]
 func (acon OutPatientController) GetAllOutPatient(c echo.Context) error {
-	token, err := jwt.GetToken(c)
-	role, _ := jwt.GetTokenData(token, "role")
-	code, _ := jwt.GetTokenData(token, "code")
+	token, err := jwt.GetToken(c, jwt.ACCESS)
+	role, _ := jwt.GetTokenData(token, "role", jwt.ACCESS)
+	code, _ := jwt.GetTokenData(token, "code", jwt.ACCESS)
 	var res []response.OutPatient
 
 	date_start := c.QueryParam("date_start")
 	date_end := c.QueryParam("date_end")
 
-	if date_start != "" {
+	if date_start != "" || date_end != "" {
 		res, err = acon.srv.FindByDate(code.(string), date_start, date_end)
 	} else {
 		res, err = acon.srv.ListPatient(code.(string), role.(string))
@@ -104,8 +104,8 @@ func (acon OutPatientController) NewMedicRecord(c echo.Context) error {
 // @Router /outpatient/:id/process [post]
 func (acon OutPatientController) Process(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	token, err := jwt.GetToken(c)
-	role, _ := jwt.GetTokenData(token, "role")
+	token, err := jwt.GetToken(c, jwt.ACCESS)
+	role, _ := jwt.GetTokenData(token, "role", jwt.ACCESS)
 	var req any
 	var process func(int, any) error
 	c.Bind(&req)
@@ -210,9 +210,9 @@ func (acon OutPatientController) FindByID(c echo.Context) error {
 // @Failure 500 {object} response.Error{} error
 // @Router /outpatient/log [get]
 func (acon OutPatientController) ReportLog(c echo.Context) error {
-	token, err := jwt.GetToken(c)
-	role, _ := jwt.GetTokenData(token, "role")
-	code, _ := jwt.GetTokenData(token, "code")
+	token, err := jwt.GetToken(c, jwt.ACCESS)
+	role, _ := jwt.GetTokenData(token, "role", jwt.ACCESS)
+	code, _ := jwt.GetTokenData(token, "code", jwt.ACCESS)
 
 	res, err := acon.srv.ReportLog(code.(string), role.(string))
 	if r, ok := check.HTTP(nil, err, "Fetch Report Data"); !ok {

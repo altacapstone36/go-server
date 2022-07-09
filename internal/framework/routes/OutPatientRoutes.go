@@ -15,5 +15,5 @@ func NewOutPatientRoutes(e *echo.Group, acon *controller.OutPatientController, m
 	patient.GET("/report", acon.Report, mw.AdminPermission)
 	patient.GET("/log", acon.ReportLog, mw.DoctorNursePermission)
 	patient.POST("/:id/process", acon.Process, mw.DoctorNursePermission)
-	patient.POST("/:id/assign", acon.AssignNurse, mw.DoctorNursePermission)
+	patient.POST("/:id/assign", acon.AssignNurse, mw.DoctorPermission)
 }

@@ -12,7 +12,7 @@ func NewAuthRoutes(e *echo.Group, acon *controller.AuthController, middleware ..
 	e.POST("/login", acon.Login)
 	e.POST("/register", acon.Register)
 	e.POST("/forgot_password", acon.ForgotPassword)
-	e.GET("/find_email", acon.FindEmail)
+	e.POST("/find_email", acon.FindEmail)
 	e.GET("/profile", acon.Profile, middleware...)
 	e.POST("/profile/change_password", acon.ChangePassword, middleware...)
 }
