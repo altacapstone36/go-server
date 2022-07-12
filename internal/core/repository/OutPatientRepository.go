@@ -10,6 +10,7 @@ type OutPatientRepository interface {
 	ProceedDoctor(models.MedicRecord) (error)
 	AssignNurse(models.MedicCheck) (error)
 	ProceedNurse(models.MedicCheck) (error)
+	AdminFindAll() ([]response.OutPatient, error)
 	DoctorFindAll(string) ([]response.OutPatient, error)
 	NurseFindAll(string) ([]response.OutPatient, error)
 	FindByID(int) (response.OutPatientDetails, error)

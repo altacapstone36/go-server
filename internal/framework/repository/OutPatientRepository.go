@@ -36,13 +36,32 @@ func (repo outPatientRepository) ProceedNurse(mr m.MedicCheck) (err error) {
 	return
 }
 
+func (repo outPatientRepository) AdminFindAll() (res []response.OutPatient, err error) {
+
+	db := repo.sqldb.Debug().Model(m.MedicalSession{}).
+		Select("MedicRecord.*", "medical_sessions.*", "User.full_name as doctor", "Session.time_start as session",
+					 "MedicalFacility.name as facility", "P.full_name", "P.code as code", "U.full_name as nurse").
+		Joins("MedicRecord").Joins("User").Joins("MedicalFacility").Joins("Session").
+		Joins("JOIN medic_checks MC ON MedicRecord.id = MC.medic_record_id").
+		Joins("JOIN users U ON MC.user_code = U.code").
+		Joins("JOIN patients P ON MedicRecord.patient_code = P.code").
+		Where("MedicRecord.status = 0").
+		Find(&res)
+
+	err = check.DBRecord(db, check.FIND)
+	return
+}
+
+
 func (repo outPatientRepository) DoctorFindAll(code string) (res []response.OutPatient, err error) {
 
 	db := repo.sqldb.Model(m.MedicalSession{}).
 		Select("MedicRecord.*", "medical_sessions.*", "User.full_name as doctor", "Session.time_start as session",
-					 "MedicalFacility.name as facility", "P.full_name", "P.code as code").
+					 "MedicalFacility.name as facility", "P.full_name", "P.code as code", "U.full_name as nurse").
 		Joins("MedicRecord").Joins("User").Joins("MedicalFacility").Joins("Session").
 		Joins("JOIN patients P ON MedicRecord.patient_code = P.code").
+		Joins("JOIN medic_checks MC ON MedicRecord.id = MC.medic_record_id").
+		Joins("JOIN users U ON MC.user_code = U.code").
 		Where("medical_sessions.user_code = ? AND MedicRecord.status = 0", code).
 		Find(&res)
 
@@ -53,9 +72,14 @@ func (repo outPatientRepository) DoctorFindAll(code string) (res []response.OutP
 func (repo outPatientRepository) NurseFindAll(code string) (res []response.OutPatient, err error) {
 
 	db := repo.sqldb.Model(m.MedicCheck{}).
-		Select("MedicRecord.*", "User.full_name as doctor").
+		Select("MedicRecord.*", "P.full_name", "P.code", "U.full_name as doctor",
+					 "User.full_name as nurse", "S.time_start as session", "MS.*").
 		Joins("MedicRecord").Joins("User").
-		Where("medic_checks.user_code = ? AND medic_checks.status = 0", code).
+		Joins("JOIN medical_sessions MS ON MS.medic_record_id = MedicRecord.id").
+		Joins("JOIN users AS U ON U.code = MS.user_code").
+		Joins("JOIN sessions S ON MS.session_id = S.id").
+		Joins("JOIN patients P ON MedicRecord.patient_code = P.code").
+		Where("User.code = ? AND medic_checks.status = 0", code).
 		Find(&res)
 
 	err = check.DBRecord(db, check.FIND)

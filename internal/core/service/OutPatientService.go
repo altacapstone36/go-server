@@ -51,7 +51,9 @@ func (srv OutPatientService) ProcessNurse(id int, req interface{}) (err error) {
 }
 
 func (srv OutPatientService) ListPatient(code, role string) (res []response.OutPatient, err error) {
-	if role == "doctor" {
+	if role == "admin" {
+		res, err = srv.repo.AdminFindAll()
+	} else if role == "doctor" {
 		res, err = srv.repo.DoctorFindAll(code)
 	} else if role == "nurse" {
 		res, err = srv.repo.NurseFindAll(code)
