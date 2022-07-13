@@ -115,14 +115,14 @@ func (acon OutPatientController) Process(c echo.Context) error {
 		r.ID = id
 		err = r.Validate()
 		process = func(id int, t any) error {
-			return acon.srv.ProcessDoctor(id, t)
+			return acon.srv.ProcessDoctor(r)
 		}
 	} else if role.(string) == "nurse" {
 		r, _ := utils.TypeConverter[request.NurseMedicRecord](req)
 		r.ID = id
 		err = r.Validate()
 		process = func(id int, t any) error {
-			return acon.srv.ProcessNurse(id, t)
+			return acon.srv.ProcessNurse(r)
 		}
 	}
 

@@ -38,6 +38,7 @@ type AssignNurse struct {
 func (s AdminMedicRecord) Validate() (err error) {
 	err = v.ValidateStruct(&s,
 		v.Field(&s.PatientCode, v.Required, v.By(vs.AvailablePatient), v.By(vs.PatientMedicRecord)),
+		v.Field(&s.Complaint, v.Required),
 		v.Field(&s.MedicalFacilityID, v.NilOrNotEmpty, v.By(vs.AvailableFacility)),
 		v.Field(&s.UserCode, v.Required, v.By(vs.StaffCheck(int(s.MedicalFacilityID))), v.By(vs.CodeCheck("DCR"))),
 		v.Field(&s.SessionID, v.NilOrNotEmpty),

@@ -10,11 +10,18 @@ require (
 	github.com/labstack/echo/v4 v4.7.2
 	github.com/labstack/gommon v0.3.1
 	github.com/spf13/viper v1.12.0
+	github.com/stretchr/testify v1.7.1
 	github.com/swaggo/echo-swagger v1.3.2
 	go.mongodb.org/mongo-driver v1.9.1
 	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e
 	gorm.io/driver/mysql v1.3.4
 	gorm.io/gorm v1.23.5
+)
+
+require (
+	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/stretchr/objx v0.1.0 // indirect
 )
 
 require (

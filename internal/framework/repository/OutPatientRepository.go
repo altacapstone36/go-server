@@ -38,12 +38,12 @@ func (repo outPatientRepository) ProceedNurse(mr m.MedicCheck) (err error) {
 
 func (repo outPatientRepository) AdminFindAll() (res []response.OutPatient, err error) {
 
-	db := repo.sqldb.Debug().Model(m.MedicalSession{}).
+	db := repo.sqldb.Model(m.MedicalSession{}).
 		Select("MedicRecord.*", "medical_sessions.*", "User.full_name as doctor", "Session.time_start as session",
 					 "MedicalFacility.name as facility", "P.full_name", "P.code as code", "U.full_name as nurse").
 		Joins("MedicRecord").Joins("User").Joins("MedicalFacility").Joins("Session").
-		Joins("JOIN medic_checks MC ON MedicRecord.id = MC.medic_record_id").
-		Joins("JOIN users U ON MC.user_code = U.code").
+		Joins("LEFT JOIN medic_checks MC ON MedicRecord.id = MC.medic_record_id").
+		Joins("LEFT JOIN users U ON MC.user_code = U.code").
 		Joins("JOIN patients P ON MedicRecord.patient_code = P.code").
 		Where("MedicRecord.status = 0").
 		Find(&res)
@@ -60,8 +60,8 @@ func (repo outPatientRepository) DoctorFindAll(code string) (res []response.OutP
 					 "MedicalFacility.name as facility", "P.full_name", "P.code as code", "U.full_name as nurse").
 		Joins("MedicRecord").Joins("User").Joins("MedicalFacility").Joins("Session").
 		Joins("JOIN patients P ON MedicRecord.patient_code = P.code").
-		Joins("JOIN medic_checks MC ON MedicRecord.id = MC.medic_record_id").
-		Joins("JOIN users U ON MC.user_code = U.code").
+		Joins("LEFT JOIN medic_checks MC ON MedicRecord.id = MC.medic_record_id").
+		Joins("LEFT JOIN users U ON MC.user_code = U.code").
 		Where("medical_sessions.user_code = ? AND MedicRecord.status = 0", code).
 		Find(&res)
 
