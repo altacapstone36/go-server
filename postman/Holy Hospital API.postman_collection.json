@@ -15,7 +15,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"rimurutempest@holyhos.co.id\",\n    \"password\": \"password\"\n}",
+							"raw": "{\n    \"email\": \"priscillahalim@holyhos.co.id\",\n    \"password\": \"password1\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -80,7 +80,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/forgot_password?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RlIjoiTlJTMDAwMDEiLCJyb2xlIjoibnVyc2UiLCJleHAiOjE2NTczNTI1MjB9.ASl8kibKuZ90qx9qGnnjJcn-GEI5BWdQDkULIiYyEEg",
+							"raw": "{{base_url}}/api/forgot_password?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RlIjoiTlJTMDAwMDEiLCJyb2xlIjoibnVyc2UiLCJleHAiOjE2NTczNTc2NzB9.ZBxrTEBUocQRjLBQKDfBPbmGsYBN3y5WUENGrGvrysA",
 							"host": [
 								"{{base_url}}"
 							],
@@ -91,7 +91,7 @@
 							"query": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RlIjoiTlJTMDAwMDEiLCJyb2xlIjoibnVyc2UiLCJleHAiOjE2NTczNTI1MjB9.ASl8kibKuZ90qx9qGnnjJcn-GEI5BWdQDkULIiYyEEg"
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2RlIjoiTlJTMDAwMDEiLCJyb2xlIjoibnVyc2UiLCJleHAiOjE2NTczNTc2NzB9.ZBxrTEBUocQRjLBQKDfBPbmGsYBN3y5WUENGrGvrysA"
 								}
 							]
 						}
@@ -680,7 +680,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"national_id\": \"1244812940121171\",\n    \"full_name\": \"Dave John\",\n    \"address\": \"Batuan, Sumenep\",\n    \"gender\": \"Male\",\n    \"birthdate\": \"2001-02-22\",\n    \"blood_type\": \"O\"\n}",
+							"raw": "{\n    \"date_check\": \"2022-07-31\",\n    \"doctor_code\": \"DCR00001\",\n    \"facility_id\": 1,\n    \"patient_code\": \"RM00003\",\n    \"session_id\": 2,\n    \"complaint\": \"sakit kepala\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -688,13 +688,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/patient",
+							"raw": "{{base_url}}/api/outpatient",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
-								"patient"
+								"outpatient"
 							]
 						}
 					},
@@ -744,14 +744,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/outpatient/1/process",
+							"raw": "{{base_url}}/api/outpatient/2/process",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"outpatient",
-								"1",
+								"2",
 								"process"
 							]
 						}
@@ -764,14 +764,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/outpatient/2",
+							"raw": "{{base_url}}/api/outpatient",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
-								"outpatient",
-								"2"
+								"outpatient"
 							]
 						}
 					},

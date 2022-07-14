@@ -28,22 +28,22 @@ func (srv OutPatientService) NewMedicRecord(req request.AdminMedicRecord) (err e
 	return
 }
 
-func (srv OutPatientService) ProcessDoctor(id int, req interface{}) (err error) {
+func (srv OutPatientService) ProcessDoctor(req request.DoctorMedicRecord) (err error) {
 	var mr models.MedicRecord
 
 	mr, _ = utils.TypeConverter[models.MedicRecord](req)
-	mr.ID = uint(id)
+	mr.ID = uint(req.ID)
 	mr.Status = 1
 
 	err = srv.repo.ProceedDoctor(mr)
 	return
 }
 
-func (srv OutPatientService) ProcessNurse(id int, req interface{}) (err error) {
+func (srv OutPatientService) ProcessNurse(req request.NurseMedicRecord) (err error) {
 	var mr models.MedicCheck
 
 	mr, _ = utils.TypeConverter[models.MedicCheck](req)
-	mr.MedicRecordID = uint(id)
+	mr.MedicRecordID = uint(req.ID)
 	mr.Status = 1
 
 	err = srv.repo.ProceedNurse(mr)
