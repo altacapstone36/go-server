@@ -42,8 +42,8 @@ func (srv UserService) FindAll() (user []response.User, err error) {
 	return
 }
 
-func (srv UserService) FindByRoleFacility(role_id, facility_id int) (user []response.User, err error) {
-	user, err = srv.repo.FindByRoleFacility(role_id, facility_id)
+func (srv UserService) FindByRoleFacility(role_id, facility_id, session_id int) (user []response.User, err error) {
+	user, err = srv.repo.FindByRFS(role_id, facility_id, session_id)
 	return
 }
 

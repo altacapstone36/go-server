@@ -15,5 +15,5 @@ func NewFacilityRoutes(e *echo.Group, acon *controller.FacilityController, middl
 	patient.GET("", acon.GetAllFacility)
 	patient.GET("/:id", acon.GetFacilityByID)
 	patient.PUT("/:id/update", acon.Update)
-	patient.DELETE("/:id/delete", acon.Delete, mw.AdminPermission)
+	patient.DELETE("/:id/delete", acon.Delete)
 }

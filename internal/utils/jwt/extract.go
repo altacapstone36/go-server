@@ -21,21 +21,21 @@ func NewJWTConnection(mongo *mongo.Database) {
 	client = mongo
 }
 
-func GetTokenData(header string, data string) (extracted interface{}, err error) {
+func GetTokenData(header string, data string, tokenType Token) (extracted interface{}, err error) {
 	err = FindToken(header)
 	if err != nil {
 		return
 	}
 
-	extract, err := ExtractToken(header)
+	extract, err := ExtractToken(header, tokenType)
 	if extract != nil {
-		extracted = extract.(jwt.MapClaims)[data]
+		extracted, _ = extract.(jwt.MapClaims)[data]
 	}
 
 	return
 }
 
-func GetToken(c echo.Context) (header string, err error) {
+func GetToken(c echo.Context, tokenType Token) (header string, err error) {
 	header = c.Request().Header.Get("Authorization")
 	headers := strings.Split(header, " ")
 
@@ -45,20 +45,35 @@ func GetToken(c echo.Context) (header string, err error) {
 	}
 
 	header = headers[1]
-	_, err = ExtractToken(header)
+	_, err = ExtractToken(header, tokenType)
 	return
 }
 
-func ExtractToken(tkn string) (token interface{}, err error) {
+func ExtractToken(tkn string, tokenType Token) (token interface{}, err error) {
 	token, err = jwt.Parse(tkn, func(t *jwt.Token) (interface{}, error) {
+		var key []byte
+
+		if tokenType == ACCESS {
+			key = config.ACCESS_KEY
+		} else if tokenType == RESET {
+			key = config.RESET_KEY
+		}
+
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", t.Header["alg"])
 		}
-		return config.SERVER_SECRET, nil
+		return key, nil
 	})
+
+	_token := token.(*jwt.Token)
+	if !_token.Valid {
+		return nil, errors.ErrInvalidToken
+	}
+
 	if err != nil {
 		return nil, err
 	}
+
 	return token.(*jwt.Token).Claims, nil
 }
 

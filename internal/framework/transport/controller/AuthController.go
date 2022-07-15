@@ -5,7 +5,6 @@ import (
 	"go-hospital-server/internal/core/entity/request"
 	"go-hospital-server/internal/core/entity/response"
 	"go-hospital-server/internal/core/service"
-	"go-hospital-server/internal/utils/config"
 	"go-hospital-server/internal/utils/errors/check"
 	"go-hospital-server/internal/utils/jwt"
 
@@ -44,7 +43,7 @@ func (acon AuthController) Login(c echo.Context) error {
 		return c.JSON(r.Code, r.Result)
 	}
 
-	jwt, err := acon.srv.CreateToken(res.Code, res.Role, config.JWT_ACCESS_EXPIRE_TIME)
+	jwt, err := acon.srv.CreateToken(res.Code, res.Role, jwt.ACCESS)
 	if r, ok := check.HTTP(res, err, "Create Authentication Token"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}
@@ -70,7 +69,7 @@ func (acon AuthController) Login(c echo.Context) error {
 // @Router /forgot_password [post]
 func (acon AuthController) ForgotPassword(c echo.Context) error {
 	token := c.QueryParam("token")
-	code, err := jwt.GetTokenData(token, "code")
+	code, err := jwt.GetTokenData(token, "code", jwt.RESET)
 
 	if r, ok := check.HTTP(nil, err, "Validate Token"); !ok {
 		return c.JSON(r.Code, r.Result)
@@ -137,8 +136,8 @@ func (acon AuthController) Register(c echo.Context) error {
 // @Failure 500 {object} response.Error{} error
 // @Router /profile [get]
 func (acon AuthController) Profile(c echo.Context) error {
-	token, err := jwt.GetToken(c)
-	code, _ := jwt.GetTokenData(token, "code")
+	token, err := jwt.GetToken(c, jwt.ACCESS)
+	code, _ := jwt.GetTokenData(token, "code", jwt.ACCESS)
 	res, err := acon.srv.MyProfile(code.(string))
 	if r, ok := check.HTTP(res, err, "Get User Profile"); !ok {
 		return c.JSON(r.Code, r.Result)
@@ -171,7 +170,7 @@ func (acon AuthController) FindEmail(c echo.Context) error {
 		return c.JSON(r.Code, r.Result)
 	}
 
-	jwt, err := acon.srv.CreateToken(res.Code, res.Role, config.JWT_FORGOT_PASSWORD_EXPIRE_TIME)
+	jwt, err := acon.srv.CreateToken(res.Code, res.Role, jwt.RESET)
 	if r, ok := check.HTTP(res, err, "Create Authentication Token"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}
@@ -196,12 +195,12 @@ func (acon AuthController) FindEmail(c echo.Context) error {
 // @Failure 500 {object} response.Error{} error
 // @Router /profile/change_password [post]
 func (acon AuthController) ChangePassword(c echo.Context) error {
-	token, err := jwt.GetToken(c)
+	token, err := jwt.GetToken(c, jwt.ACCESS)
 	if r, ok := check.HTTP(nil, err, "Validate Token"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}
 
-	code, err := jwt.GetTokenData(token, "code")
+	code, err := jwt.GetTokenData(token, "code", jwt.ACCESS)
 
 	var cp request.ChangePassword
 	c.Bind(&cp)
@@ -235,7 +234,7 @@ func (acon AuthController) ChangePassword(c echo.Context) error {
 // @Router /refresh_token [post]
 func (acon AuthController) RefreshToken(c echo.Context) error {
 	var t models.Token
-	token, err := jwt.GetToken(c)
+	token, err := jwt.GetToken(c, jwt.ACCESS)
 
 	if err == nil {
 		t.RefreshToken = token
@@ -269,7 +268,7 @@ func (acon AuthController) RefreshToken(c echo.Context) error {
 // @Failure 500 {object} response.Error{} error
 // @Router /logout [post]
 func (acon AuthController) Logout(c echo.Context) error {
-	token, err := jwt.GetToken(c)
+	token, err := jwt.GetToken(c, jwt.ACCESS)
 
 	if err == nil {
 		err = acon.srv.RevokeToken(token)

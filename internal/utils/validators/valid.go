@@ -100,6 +100,7 @@ func PatientMedicRecord(value interface{}) (err error) {
 
 	_DB.Table("medic_records").
 		Where("patient_code = ?", value).
+		Where("status = 0").
 		Count(&c)
 
 	if c != 0 {

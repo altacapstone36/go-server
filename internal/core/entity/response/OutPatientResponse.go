@@ -7,6 +7,7 @@ type OutPatient struct {
 	Code         string `json:"patient_code" example:"RM0001"`
 	Complaint    string `json:"complaint" example:"sakit perut"`
 	Doctor       string `json:"doctor" example:"Alsyad Ahmad"`
+	Nurse	       string `json:"nurse" example:"Priscilla Halim"`
 	Session      string `json:"session" example:"08:00"`
 	DateCheck    string `json:"date_check" example:"2022-06-22"`
 	Queue        int    `json:"queue" example:"1"`

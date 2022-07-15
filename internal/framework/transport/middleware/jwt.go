@@ -12,7 +12,11 @@ import (
 
 func JWT(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		token, err := jwt.GetToken(c)
+		token, err := jwt.GetToken(c, jwt.ACCESS)
+
+		if r, ok := check.HTTP(nil, err, "Validate Token"); !ok {
+			return c.JSON(r.Code, r.Result)
+		}
 
 		err = jwt.FindToken(token)
 
@@ -26,8 +30,8 @@ func JWT(next echo.HandlerFunc) echo.HandlerFunc {
 
 func AdminPermission(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		token, err := jwt.GetToken(c)
-		role, err := jwt.GetTokenData(token, "role")
+		token, err := jwt.GetToken(c, jwt.ACCESS)
+		role, err := jwt.GetTokenData(token, "role", jwt.ACCESS)
 
 		if r, ok := check.HTTP(nil, err, "Validate Token"); !ok {
 			return c.JSON(r.Code, r.Result)
@@ -45,8 +49,8 @@ func AdminPermission(next echo.HandlerFunc) echo.HandlerFunc {
 
 func DoctorPermission(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		token, err := jwt.GetToken(c)
-		role, err := jwt.GetTokenData(token, "role")
+		token, err := jwt.GetToken(c, jwt.ACCESS)
+		role, err := jwt.GetTokenData(token, "role", jwt.ACCESS)
 
 		if r, ok := check.HTTP(nil, err, "Validate Token"); !ok {
 			return c.JSON(r.Code, r.Result)
@@ -64,8 +68,8 @@ func DoctorPermission(next echo.HandlerFunc) echo.HandlerFunc {
 
 func NursePermission(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		token, err := jwt.GetToken(c)
-		role, err := jwt.GetTokenData(token, "role")
+		token, err := jwt.GetToken(c, jwt.ACCESS)
+		role, err := jwt.GetTokenData(token, "role", jwt.ACCESS)
 
 		if r, ok := check.HTTP(nil, err, "Validate Token"); !ok {
 			return c.JSON(r.Code, r.Result)
@@ -83,8 +87,8 @@ func NursePermission(next echo.HandlerFunc) echo.HandlerFunc {
 
 func DoctorNursePermission(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		token, err := jwt.GetToken(c)
-		role, err := jwt.GetTokenData(token, "role")
+		token, err := jwt.GetToken(c, jwt.ACCESS)
+		role, err := jwt.GetTokenData(token, "role", jwt.ACCESS)
 
 		if r, ok := check.HTTP(nil, err, "Validate Token"); !ok {
 			return c.JSON(r.Code, r.Result)

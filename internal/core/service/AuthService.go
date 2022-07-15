@@ -34,6 +34,7 @@ func (srv AuthService) Login(login request.Login) (res response.User, err error)
 
 func (srv AuthService) Register(req request.UserRequest) (err error) {
 	r, _ := utils.TypeConverter[m.User](req)
+	r.Password, _ = utils.HashPassword(req.Password)
 	err = srv.repo.Register(r)
 	return
 }
@@ -61,8 +62,8 @@ func (srv AuthService) RevokeToken(token string) (err error) {
 	return
 }
 
-func (srv AuthService) CreateToken(code, level string, time int64) (t m.Token, err error) {
-	t, _ = jwt.CreateToken(code, level, time)
+func (srv AuthService) CreateToken(code, level string, tokenType jwt.Token) (t m.Token, err error) {
+	t, _ = jwt.CreateToken(code, level, tokenType)
 	err = srv.repo.SaveToken(t)
 	return
 }

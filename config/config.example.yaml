@@ -1,6 +1,8 @@
 server:
-  SECRET: "6568135b96cd0a3d6adcae0a475f0da473e8e2bee0d800b2ba5010186b37d950"
   PORT: "8080"
+secret:
+  ACCESS_KEY: 9851cd6b425d8720ef8e92879f16c95cb788c006
+  RESET_KEY: dbae137398b2aa67b384e67a638f482110cc6257
 mysql:
   DATABASE: "hospital"
   USERNAME: "root"
@@ -9,4 +11,8 @@ mysql:
 mongo:
   STRING: "mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb"
   DATABASE: "hospital"
+jwt:
+  ACCESS_TIME: 24 # in hour
+  REFRESH_TIME: 240
+  FORGOT_PASSWORD_TIME: 5 # in minutes
 
