@@ -78,6 +78,10 @@ func ExtractToken(tkn string, tokenType Token) (token interface{}, err error) {
 }
 
 func FindToken(token string) error {
+	if client == nil {
+		return nil
+	}
+
 	var data []bson.M
 	filter := bson.D{
 		{Key: "access_token", Value: token},
