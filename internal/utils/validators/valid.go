@@ -257,3 +257,26 @@ func CodeCheck(code string) validation.RuleFunc {
 		return
 	}
 }
+
+func AvailableSchedule(id int, code string) validation.RuleFunc {
+	return func(value interface{}) (err error) {
+		var c int64
+		var where []string
+		where = append(where, fmt.Sprintf("user_code = '%s'", code))
+
+		if id != 0 {
+			where = append(where, fmt.Sprintf("session_id = %d", id))
+		}
+
+		_DB.Table("schedules").
+			Where("date = ?", value).
+			Where(strings.Join(where, " AND ")).Count(&c)
+
+		if c != 0 {
+			msg := fmt.Sprintf("doctor with code %s have schedules in session #%d date %s.", code, id, value.(string))
+			err = errors.New(msg)
+		}
+
+		return
+	}
+}

@@ -18,7 +18,7 @@ type User struct {
 	Role              Role            `json:"roles"`
 	MedicalFacilityID *uint           `json:"facility_id"`
 	MedicalFacility   MedicalFacility `json:"facility"`
-	Schedule          []Schedule      `gorm:"constraint:OnDelete:CASCADE,OnUpdate:CASCADE"`
+	Schedule          []Schedule      `gorm:"foreignKey:UserCode;references:code;constraint:OnDelete:CASCADE,OnUpdate:CASCADE"`
 
 	DeletedAt gorm.DeletedAt
 }
