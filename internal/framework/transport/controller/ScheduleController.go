@@ -11,17 +11,18 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type DoctorScheduleController struct {
-	srv *service.DoctorScheduleService
+type ScheduleController struct {
+	srv *service.ScheduleService
 }
 
-func NewDoctorScheduleController(srv *service.DoctorScheduleService) *DoctorScheduleController {
-	return &DoctorScheduleController{srv: srv}
+func NewScheduleController(srv *service.ScheduleService) *ScheduleController {
+	return &ScheduleController{srv: srv}
 }
 
-func (acon DoctorScheduleController) GetAllSchedule(c echo.Context) error {
-	res, err := acon.srv.FindAll()
+func (acon ScheduleController) GetScheduleByDate(c echo.Context) error {
+	date, _ := strconv.Atoi(c.Param("date"))
 
+	res, err := acon.srv.GetScheduleByDate(string(date))
 	if r, ok := check.HTTP(res, err, "Fetch Schedule"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}
@@ -32,8 +33,8 @@ func (acon DoctorScheduleController) GetAllSchedule(c echo.Context) error {
 	})
 }
 
-func (acon DoctorScheduleController) Create(c echo.Context) error {
-	var req request.DoctorSchedule
+func (acon ScheduleController) Create(c echo.Context) error {
+	var req request.Schedule
 	c.Bind(&req)
 
 	if r, ok := check.HTTP(nil, req.Validate(), "Validate"); !ok {
@@ -50,9 +51,9 @@ func (acon DoctorScheduleController) Create(c echo.Context) error {
 	})
 }
 
-func (acon DoctorScheduleController) Update(c echo.Context) error {
+func (acon ScheduleController) Update(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	var req request.DoctorSchedule
+	var req request.Schedule
 	c.Bind(&req)
 	req.SessionID = uint(id)
 
@@ -71,7 +72,7 @@ func (acon DoctorScheduleController) Update(c echo.Context) error {
 	})
 }
 
-func (acon DoctorScheduleController) Delete(c echo.Context) error {
+func (acon ScheduleController) Delete(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	err := acon.srv.Delete(id)
 

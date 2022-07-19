@@ -7,11 +7,11 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func NewDoctorScheduleRoutes(e *echo.Group, acon *controller.DoctorScheduleController, middleware ...echo.MiddlewareFunc) {
+func NewScheduleRoutes(e *echo.Group, acon *controller.ScheduleController, middleware ...echo.MiddlewareFunc) {
 	schedule := e.Group("/schedule", middleware...)
 	schedule.Use(mw.AdminPermission)
-	schedule.GET("", acon.GetAllSchedule)
 	schedule.POST("", acon.Create)
+	schedule.GET("/:date", acon.GetScheduleByDate)
 	schedule.PUT("/:sessionID/update", acon.Update)
 	schedule.DELETE("/:id/delete", acon.Delete, mw.AdminPermission)
 }

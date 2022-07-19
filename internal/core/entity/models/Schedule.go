@@ -1,8 +1,10 @@
 package models
 
 type Schedule struct {
-	UserID            uint
+	UserCode          string `gorm:"index"`
 	MedicalFacilityID uint
 	SessionID         uint
 	Date              string
+
+	// User User `gorm:"foreignkey:UserCode;references:code"`
 }

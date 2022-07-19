@@ -6,4 +6,6 @@ type Repository struct {
 	OutPatient OutPatientRepository
 	User       UserRepository
 	Facility   FacilityRepository
+	Schedule   ScheduleRepository
+	Session    SessionRepository
 }

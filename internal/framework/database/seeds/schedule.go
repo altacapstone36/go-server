@@ -9,13 +9,13 @@ import (
 func scheduleSeeder() Seed {
 	seeds := []models.Schedule{
 		{
-			UserID:    2,
+			UserCode:          "DCR00001",
 			MedicalFacilityID: 1,
 			SessionID:         1,
 			Date:              "2022-06-17",
 		},
 		{
-			UserID:    2,
+			UserCode:          "DCR00001",
 			MedicalFacilityID: 1,
 			SessionID:         1,
 			Date:              "2022-06-18",

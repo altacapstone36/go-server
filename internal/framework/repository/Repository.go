@@ -14,5 +14,7 @@ func NewRepository(db *gorm.DB, mongo *mongo.Database) *repository.Repository {
 		OutPatient: NewOutPatientRepository(db),
 		User:       NewUserRepository(db),
 		Facility:   NewFacilityRepository(db),
+		Schedule:   NewScheduleRepository(db),
+		Session:    NewSessionRepository(db),
 	}
 }
