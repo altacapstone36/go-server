@@ -5,4 +5,6 @@ type Session struct {
 	Name      string
 	TimeStart string
 	TimeEnd   string
+
+	Schedule Schedule `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 }

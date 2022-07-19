@@ -3,7 +3,6 @@ package service
 import (
 	"go-hospital-server/internal/core/entity/models"
 	"go-hospital-server/internal/core/entity/request"
-	"go-hospital-server/internal/core/entity/response"
 	"go-hospital-server/internal/core/repository"
 	"go-hospital-server/internal/utils"
 )
@@ -14,11 +13,6 @@ type ScheduleService struct {
 
 func NewScheduleService(repo repository.ScheduleRepository) *ScheduleService {
 	return &ScheduleService{repo: repo}
-}
-
-func (srv ScheduleService) GetScheduleByDate(date string) (schedule response.Session, err error) {
-	schedule, err = srv.repo.FindByDate(date)
-	return
 }
 
 func (srv ScheduleService) Create(req request.Schedule) (err error) {

@@ -2,7 +2,6 @@ package repository
 
 import (
 	"go-hospital-server/internal/core/entity/models"
-	"go-hospital-server/internal/core/entity/response"
 	"go-hospital-server/internal/utils/errors/check"
 
 	"gorm.io/gorm"
@@ -14,16 +13,6 @@ type ScheduleRepository struct {
 
 func NewScheduleRepository(sqldb *gorm.DB) *ScheduleRepository {
 	return &ScheduleRepository{sqldb: sqldb}
-}
-
-func (repo ScheduleRepository) FindByDate(date string) (schedule response.Session, err error) {
-	date = "%" + date + "%"
-	db := repo.sqldb.Model(models.Schedule{}).
-		Where("date LIKE ?", date).
-		Scan(&schedule)
-
-	err = check.DBRecord(db, check.FIND)
-	return
 }
 
 func (repo ScheduleRepository) Create(ds models.Schedule) (err error) {

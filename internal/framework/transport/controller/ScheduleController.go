@@ -19,19 +19,20 @@ func NewScheduleController(srv *service.ScheduleService) *ScheduleController {
 	return &ScheduleController{srv: srv}
 }
 
-func (acon ScheduleController) GetScheduleByDate(c echo.Context) error {
-	date, _ := strconv.Atoi(c.Param("date"))
-
-	res, err := acon.srv.GetScheduleByDate(string(date))
-	if r, ok := check.HTTP(res, err, "Fetch Schedule"); !ok {
-		return c.JSON(r.Code, r.Result)
-	}
-
-	return c.JSON(200, response.MessageData{
-		Message: "Schedule Fetched",
-		Data:    res,
-	})
-}
+// func (acon ScheduleController) GetScheduleByDate(c echo.Context) error {
+// 	date := c.QueryParam("date")
+// 	fmt.Println(date)
+//
+// 	res, err := acon.srv.GetScheduleByDate(date)
+// 	if r, ok := check.HTTP(res, err, "Fetch Schedule"); !ok {
+// 		return c.JSON(r.Code, r.Result)
+// 	}
+//
+// 	return c.JSON(200, response.MessageData{
+// 		Message: "Schedule Fetched",
+// 		Data:    res,
+// 	})
+// }
 
 func (acon ScheduleController) Create(c echo.Context) error {
 	var req request.Schedule
@@ -42,7 +43,7 @@ func (acon ScheduleController) Create(c echo.Context) error {
 	}
 
 	err := acon.srv.Create(req)
-	if r, ok := check.HTTP(nil, err, "Create Doctor Schedule"); !ok {
+	if r, ok := check.HTTP(nil, err, "Create Schedule"); !ok {
 		return c.JSON(r.Code, r.Result)
 	}
 

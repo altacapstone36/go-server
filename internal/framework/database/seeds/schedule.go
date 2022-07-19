@@ -10,13 +10,11 @@ func scheduleSeeder() Seed {
 	seeds := []models.Schedule{
 		{
 			UserCode:          "DCR00001",
-			MedicalFacilityID: 1,
 			SessionID:         1,
 			Date:              "2022-06-17",
 		},
 		{
 			UserCode:          "DCR00001",
-			MedicalFacilityID: 1,
 			SessionID:         1,
 			Date:              "2022-06-18",
 		},

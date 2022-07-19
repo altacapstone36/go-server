@@ -5,5 +5,6 @@ import (
 )
 
 type SessionRepository interface {
-	FindAllSession() ([]response.Session, error)
+	FindAll() ([]response.Session, error)
+	FindByDateID(int, string) (response.SessionDetails, error)
 }

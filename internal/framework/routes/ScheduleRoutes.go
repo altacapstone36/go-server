@@ -8,10 +8,9 @@ import (
 )
 
 func NewScheduleRoutes(e *echo.Group, acon *controller.ScheduleController, middleware ...echo.MiddlewareFunc) {
-	schedule := e.Group("/schedule", middleware...)
+	schedule := e.Group("/session/schedule", middleware...)
 	schedule.Use(mw.AdminPermission)
 	schedule.POST("", acon.Create)
-	schedule.GET("/:date", acon.GetScheduleByDate)
-	schedule.PUT("/:sessionID/update", acon.Update)
-	schedule.DELETE("/:id/delete", acon.Delete, mw.AdminPermission)
+	// schedule.PUT("/:sessionID/update", acon.Update)
+	// schedule.DELETE("/:id/delete", acon.Delete, mw.AdminPermission)
 }

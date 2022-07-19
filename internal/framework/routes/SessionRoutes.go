@@ -8,5 +8,6 @@ import (
 
 func NewSessionRoutes(e *echo.Group, acon *controller.SessionController, middleware ...echo.MiddlewareFunc) {
 	session := e.Group("/session", middleware...)
-	session.GET("", acon.FindAllSession)
+	session.GET("", acon.FindAll)
+	session.GET("/:id", acon.FindByID)
 }
