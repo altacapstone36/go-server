@@ -27,7 +27,7 @@ func (repo *facilityRepository) FindAll() (res []response.Facility, err error) {
 
 func (repo *facilityRepository) FindByID(id int) (res response.FacilityDetails, err error) {
 	var mf models.MedicalFacility
-	db := repo.sqldb.First(&mf, id).Scan(&res)
+	db := repo.sqldb.Model(&mf).Where("id = ?", id).Scan(&res)
 
 	err = check.DBRecord(db, check.FIND)
 	if err != nil {

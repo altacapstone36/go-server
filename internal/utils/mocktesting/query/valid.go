@@ -22,7 +22,7 @@ func Duplicate(table, field, value string, id int) string {
 			where = append(where, fmt.Sprintf("id != %d", id))
 		}
 
-	return "SELECT count(*) FROM `users` WHERE " + strings.Join(where, " AND ")
+	return "SELECT count(*) FROM `"+ table +"` WHERE " + strings.Join(where, " AND ")
 }
 
 func RoleLimit(facility_id int) string {
@@ -38,4 +38,16 @@ func RoleLimit(facility_id int) string {
 
 func AvailableFacility() string {
 	return "SELECT count(*) FROM `medical_facilities` WHERE id = ?"
+}
+
+func AvailablePatient() string {
+	return "SELECT count(*) FROM `patients` WHERE code = ?"
+}
+
+func PatientMedicRecord() string {
+	return "SELECT count(*) FROM `medic_records` WHERE patient_code = ?"
+}
+
+func StaffCheck(id int) string {
+	return fmt.Sprintf("SELECT count(*) FROM `users` WHERE code = ? AND medical_facility_id = %d", id)
 }
