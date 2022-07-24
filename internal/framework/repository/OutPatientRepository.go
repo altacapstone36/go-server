@@ -19,7 +19,7 @@ func NewOutPatientRepository(sqldb *gorm.DB) *outPatientRepository {
 }
 
 func (repo outPatientRepository) NewMedicalRecord(ms m.MedicRecord) (err error) {
-	db := repo.sqldb.Create(&ms)
+	db := repo.sqldb.Debug().Create(&ms)
 	err = check.DBRecord(db, check.CREATE)
 	return
 }

@@ -215,7 +215,7 @@ func (acon AuthController) ChangePassword(c echo.Context) error {
 		return c.JSON(r.Code, r.Result)
 	}
 
-	return c.JSON(201, response.MessageOnly{
+	return c.JSON(200, response.MessageOnly{
 		Message: "Password changed",
 	})
 }

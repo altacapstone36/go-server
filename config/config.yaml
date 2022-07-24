@@ -5,11 +5,11 @@ secret:
   RESET_KEY: dbae137398b2aa67b384e67a638f482110cc6257
 mysql:
   DATABASE: "hospital"
-  USERNAME: "admin"
-  PASSWORD: "hospitaldb"
-  HOST: "holydb.c1nbzhugrsmo.ap-southeast-1.rds.amazonaws.com"
+  USERNAME: "root"
+  PASSWORD: ""
+  HOST: "localhost"
 mongo:
-  STRING: "mongodb://mongo:enX6qBHuf85i1OAZe6Hx@containers-us-west-68.railway.app:7025"
+  STRING: "mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb"
   DATABASE: "hospital"
 jwt:
   ACCESS_TIME: 24 # in hour
